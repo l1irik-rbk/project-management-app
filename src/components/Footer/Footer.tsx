@@ -1,5 +1,6 @@
 import s from './Footer.module.scss';
+import g from './../../App.module.scss';
 
 export const Footer = () => {
-  return <div>Footer</div>;
+  return <footer className={`${g.wrapper} ${s.footer}`}>Footer</footer>;
 };
