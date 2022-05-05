@@ -9,17 +9,6 @@ html {
   font-family: 'Montserrat', sans-serif;
 }
 
-.root {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
-
-  margin: 0;
-  padding: 0;
-  padding-right: 10px;
-  padding-left: 10px;
-}
-
 .wrapper {
   max-width: 960px;
   margin-left: auto;

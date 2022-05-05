@@ -6,13 +6,13 @@ import { Header } from './components/Header/Header';
 
 const App = () => {
   return (
-    <div className={s.root}>
+    <>
       <Header />
       <main className={`${s.main} ${s.wrapper}`}>
         <Outlet />
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 

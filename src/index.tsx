@@ -8,6 +8,7 @@ import App from './App';
 import { Welcome } from './views/Welcome/Welcome';
 import { Page404 } from './views/Page404/Page404';
 import { Auth } from './views/Auth/Auth';
+import './index.css';
 
 const store = setupStore();
 
