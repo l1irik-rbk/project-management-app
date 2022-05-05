@@ -5,9 +5,9 @@ import { setupStore } from './Redux/store';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import App from './App';
-import { Welcome } from './components/views/Welcome/Welcome';
-import { Page404 } from './components/views/Page404/Page404';
-import { Auth } from './components/views/Auth/Auth';
+import { Welcome } from './views/Welcome/Welcome';
+import { Page404 } from './views/Page404/Page404';
+import { Auth } from './views/Auth/Auth';
 
 const store = setupStore();
 
