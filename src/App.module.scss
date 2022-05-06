@@ -9,6 +9,10 @@ html {
   font-family: 'Montserrat', sans-serif;
 }
 
+a {
+  text-decoration: none;
+}
+
 .wrapper {
   max-width: 960px;
   margin-left: auto;
@@ -17,4 +21,61 @@ html {
 
 .main {
   width: 100%;
+}
+
+$color__mine_shaft: #323232;
+$color__shark: #25272c;
+$color__white: #ffffff;
+$color__black_haze: #f6f8fa;
+$color__iron: #d4d7d9;
+
+.font_logo {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  color: $color__mine_shaft;
+}
+
+.font_title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.button {
+  height: 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+
+  border-radius: 12px;
+  border: 1px solid $color__mine_shaft;
+  background-color: transparent;
+  color: $color__shark;
+
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:active {
+  box-shadow: -2px -2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+  @extend .inner_shadow;
+  padding: 12px;
+  font: inherit;
+  border: 1px solid $color__iron;
+  border-radius: 8px;
+}
+
+.drop_shadow {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.inner_shadow {
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.25);
 }

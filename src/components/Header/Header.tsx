@@ -5,19 +5,17 @@ import g from './../../App.module.scss';
 export const Header = () => {
   return (
     <header className={`${g.wrapper} ${s.header}`}>
-      <h1>KanbanBoar</h1>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/auth">Auth</Link>
-          </li>
-          <li>
-            <Link to="/404">404</Link>
-          </li>
-        </ul>
+      <Link className={s.logo__link} to="/">
+        <div className={s.logo}>
+          <p className={s.logo__icon}>🐗</p>
+          <h1 className={g.font_logo}>KanbanBoar</h1>
+        </div>
+      </Link>
+
+      <nav className={s.nav}>
+        <Link to="/auth">
+          <button className={`${g.button} ${g.drop_shadow}`}>Login / Sign up</button>
+        </Link>
       </nav>
     </header>
   );
