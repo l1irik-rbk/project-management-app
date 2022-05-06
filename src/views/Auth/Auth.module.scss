@@ -1,0 +1,27 @@
+@import './../../App.module.scss';
+
+.content {
+  margin-top: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.button {
+  @extend .drop_shadow;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 274px;
+}
+
+.input {
+  @extend .input;
+  width: 100%;
+}
