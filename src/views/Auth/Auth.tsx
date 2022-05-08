@@ -5,7 +5,6 @@ import s from './Auth.module.scss';
 import g from '../../App.module.scss';
 import { Toggle } from './Toggle/Toggle';
 import { appSlice } from '../../Redux/toolkitSlice';
-import { apiUrl } from '../../services/utils';
 import { useAppDispatch } from '../../Redux/reduxHooks';
 import { useNavigate } from 'react-router-dom';
 

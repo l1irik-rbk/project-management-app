@@ -1,14 +1,10 @@
+import { IInitialStateInt } from './interfaces/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: IInitialStateInt = {
   token: null,
   isTokenLoaded: false,
 };
-
-interface IInitialStateInt {
-  token: string | null;
-  isTokenLoaded: boolean;
-}
 
 export const appSlice = createSlice({
   name: 'app',
