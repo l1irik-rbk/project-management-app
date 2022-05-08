@@ -23,7 +23,7 @@ export const signup = async (
   return await response.json();
 };
 
-export const signin = async (login: string, password: string): Promise<Signin | Error> => {
+export const signin = async (login: string, password: string): Promise<string | Error> => {
   const response = await fetch(`${apiUrl}/signin`, {
     method: 'POST',
     headers: {
