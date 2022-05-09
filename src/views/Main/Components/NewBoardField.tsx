@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
-import { useAppDispatch } from '../../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
 import { appSlice } from '../../../Redux/toolkitSlice';
 import { createBoard } from '../../../services/boards';
 import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
@@ -9,6 +10,8 @@ import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');
   const dispatch = useAppDispatch();
+  const { boards } = useAppSelector((state) => state.appReducer);
+  const { newBoard } = boards;
   const { setNewBoard } = appSlice.actions;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +36,17 @@ export const NewBoardField = () => {
           value={inputValue}
           onChange={handleChange}
         />
-        <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
-          Create
-        </button>
+        <div className={s.buttons}>
+          <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
+            Create
+          </button>
+          <button
+            className={`${g.button} ${g.drop_shadow}`}
+            onClick={() => dispatch(setNewBoard(!newBoard))}
+          >
+            X
+          </button>
+        </div>
       </div>
     </div>
   );
