@@ -1,7 +1,7 @@
 import { BoardArrayInt } from './interfaces/boards';
-import { fetchBoards } from './../views/Main/Main';
 import { IInitialStateInt } from './interfaces/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchBoards } from './actionCreators/fetchBoards';
 
 const initialState: IInitialStateInt = {
   token: null,

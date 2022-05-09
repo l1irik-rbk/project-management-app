@@ -4,7 +4,7 @@ import g from '../../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
 import { appSlice } from '../../../Redux/toolkitSlice';
 import { createBoard } from '../../../services/boards';
-import { fetchBoards } from '../Main';
+import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');

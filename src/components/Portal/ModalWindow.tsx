@@ -5,7 +5,7 @@ import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { appSlice } from '../../Redux/toolkitSlice';
 import { deleteBoard } from '../../services/boards';
-import { fetchBoards } from '../../views/Main/Main';
+import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 
 const ModalWindow = () => {
   const { isPortalVisible, token, boards } = useAppSelector((state) => state.appReducer);
