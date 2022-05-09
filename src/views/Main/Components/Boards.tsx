@@ -7,7 +7,6 @@ export const Boards = () => {
   const { boards } = useAppSelector((state) => state.appReducer);
   const { isBoardsLoaded, boardsArray } = boards;
 
-  console.log(boards);
   return isBoardsLoaded ? (
     <div className={`${s.boards}`}>
       {boardsArray.map((board) => (
