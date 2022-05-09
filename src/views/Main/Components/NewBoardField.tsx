@@ -9,7 +9,7 @@ import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');
-  const { token, boards } = useAppSelector((state) => state.appReducer);
+  const { boards } = useAppSelector((state) => state.appReducer);
   const { newBoard } = boards;
   const dispatch = useAppDispatch();
   const { setNewBoard } = appSlice.actions;
@@ -20,11 +20,9 @@ export const NewBoardField = () => {
   };
 
   const createNewBoard = async () => {
-    if (token) {
-      await createBoard(inputValue, token);
-      dispatch(setNewBoard(false));
-      dispatch(fetchBoards(token));
-    }
+    await createBoard(inputValue);
+    dispatch(setNewBoard(false));
+    dispatch(fetchBoards());
   };
 
   return (

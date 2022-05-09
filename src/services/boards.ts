@@ -1,6 +1,8 @@
-import { apiUrl } from './utils';
+import { apiUrl, getToken } from './utils';
 
-export const getBoards = async (token: string) => {
+const token = getToken();
+
+export const getBoards = async () => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'GET',
     headers: {
@@ -13,7 +15,7 @@ export const getBoards = async (token: string) => {
   return await response.json();
 };
 
-export const createBoard = async (title: string, token: string) => {
+export const createBoard = async (title: string) => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'POST',
     headers: {
@@ -29,7 +31,7 @@ export const createBoard = async (title: string, token: string) => {
   return await response.json();
 };
 
-export const deleteBoard = async (id: string, token: string) => {
+export const deleteBoard = async (id: string) => {
   const response = await fetch(`${apiUrl}/boards/${id}`, {
     method: 'DELETE',
     headers: {
