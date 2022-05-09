@@ -36,7 +36,6 @@ export const deleteBoard = async (id: string, token: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response);
 
   if (!response.ok) return { statusCode: 666, message: 'Server error' };
   return { statusCode: 204, message: 'DELETED' };
