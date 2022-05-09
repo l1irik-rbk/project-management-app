@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import ModalWindow from '../../components/Portal/ModalWindow';
 import { Portal } from '../../components/Portal/Portal';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';

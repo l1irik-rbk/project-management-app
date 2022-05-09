@@ -18,7 +18,7 @@ export const Board = ({ id, boardTitle }: BoardProp) => {
 
   return (
     <Link to={'/404'}>
-      <div className={`${s.board}`}>
+      <div className={`${s.board} ${g.drop_shadow} ${g.button}`}>
         <h5 className={`${g.font_title}`}>{boardTitle}</h5>
         <button className={`${g.button} ${g.drop_shadow}`} onClick={showPortal}>
           X
