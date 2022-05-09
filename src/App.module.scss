@@ -28,6 +28,7 @@ $color__shark: #25272c;
 $color__white: #ffffff;
 $color__black_haze: #f6f8fa;
 $color__iron: #d4d7d9;
+$color__error: #eb3941;
 
 .font_logo {
   font-style: normal;
@@ -42,6 +43,12 @@ $color__iron: #d4d7d9;
   font-weight: 700;
   line-height: 22px;
   color: $color__shark;
+}
+
+.font_error {
+  font-size: 14px;
+  font-weight: bold;
+  color: $color__error;
 }
 
 .button {

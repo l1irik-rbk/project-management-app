@@ -19,11 +19,10 @@ export const signup = async (
     }),
   });
 
-  if (!response.ok) return { statusCode: 666, message: 'Server error' };
   return await response.json();
 };
 
-export const signin = async (login: string, password: string): Promise<string | Error> => {
+export const signin = async (login: string, password: string): Promise<Signin | Error> => {
   const response = await fetch(`${apiUrl}/signin`, {
     method: 'POST',
     headers: {
@@ -35,9 +34,7 @@ export const signin = async (login: string, password: string): Promise<string | 
     }),
   });
 
-  if (!response.ok) return { statusCode: 666, message: 'Server error' };
-  const { token } = await response.json();
-
-  document.cookie = `token=${token}`;
-  return token;
+  const result = await response.json();
+  if (result.hasOwnProperty('token')) document.cookie = `token=${result.token}`;
+  return result;
 };

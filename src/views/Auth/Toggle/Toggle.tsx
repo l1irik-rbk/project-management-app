@@ -35,7 +35,7 @@ export const Toggle = (props: Props) => {
         </button>
       </button>
 
-      <div className={s.content}>{state === 'one' ? props.one : props.two}</div>
+      {state === 'one' ? props.one : props.two}
     </>
   );
 };
