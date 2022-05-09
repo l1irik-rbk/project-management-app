@@ -37,14 +37,14 @@ export const NewBoardField = () => {
           onChange={handleChange}
         />
         <div className={s.buttons}>
+          <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
+            Create
+          </button>
           <button
             className={`${g.button} ${g.drop_shadow}`}
             onClick={() => dispatch(setNewBoard(!newBoard))}
           >
             X
-          </button>
-          <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
-            Create
           </button>
         </div>
       </div>

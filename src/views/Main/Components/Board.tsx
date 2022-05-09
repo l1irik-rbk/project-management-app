@@ -1,4 +1,5 @@
 import React from 'react';
+
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
 import { BoardProp } from './interfaces/BoardProp';
