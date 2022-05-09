@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
-import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../Redux/reduxHooks';
 import { appSlice } from '../../../Redux/toolkitSlice';
 import { createBoard } from '../../../services/boards';
 import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');
-  const { token } = useAppSelector((state) => state.appReducer);
   const dispatch = useAppDispatch();
   const { setNewBoard } = appSlice.actions;
 
@@ -18,11 +17,9 @@ export const NewBoardField = () => {
   };
 
   const createNewBoard = async () => {
-    if (token) {
-      await createBoard(inputValue, token);
-      dispatch(setNewBoard(false));
-      dispatch(fetchBoards(token));
-    }
+    await createBoard(inputValue);
+    dispatch(setNewBoard(false));
+    dispatch(fetchBoards());
   };
 
   return (

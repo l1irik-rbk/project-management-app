@@ -7,12 +7,12 @@ import { Boards } from './Components/Boards';
 import { NewBoardField } from './Components/NewBoardField';
 
 export const Main = () => {
-  const { token, boards } = useAppSelector((state) => state.appReducer);
+  const { boards } = useAppSelector((state) => state.appReducer);
   const dispatch = useAppDispatch();
   const { newBoard } = boards;
 
   useEffect(() => {
-    if (token) dispatch(fetchBoards(token));
+    dispatch(fetchBoards());
   }, []);
 
   return (

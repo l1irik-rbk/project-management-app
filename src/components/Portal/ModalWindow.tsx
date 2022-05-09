@@ -8,7 +8,7 @@ import { deleteBoard } from '../../services/boards';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 
 const ModalWindow = () => {
-  const { isPortalVisible, token, boards } = useAppSelector((state) => state.appReducer);
+  const { isPortalVisible, boards } = useAppSelector((state) => state.appReducer);
   const { selectedBoardId } = boards;
   const dispatch = useAppDispatch();
   const { setPortalVisible, setBoardId } = appSlice.actions;
@@ -21,12 +21,10 @@ const ModalWindow = () => {
   };
 
   const deleteOldBoard = async () => {
-    if (token) {
-      await deleteBoard(selectedBoardId, token);
-      dispatch(setPortalVisible(false));
-      dispatch(fetchBoards(token));
-      dispatch(setBoardId(''));
-    }
+    await deleteBoard(selectedBoardId);
+    dispatch(setPortalVisible(false));
+    dispatch(fetchBoards());
+    dispatch(setBoardId(''));
   };
 
   return (
