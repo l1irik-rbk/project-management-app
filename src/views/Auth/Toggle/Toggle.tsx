@@ -20,7 +20,7 @@ export const Toggle = (props: Props) => {
 
   return (
     <>
-      <button className={`${s.toggle} ${g.drop_shadow} ${g.button}`}>
+      <div className={`${s.toggle} ${g.drop_shadow} ${g.button}`}>
         <button
           onClick={handleClickOne}
           className={`${g.button} ${s.one} ${state === 'one' && s.active}`}
@@ -33,7 +33,7 @@ export const Toggle = (props: Props) => {
         >
           Sign Up
         </button>
-      </button>
+      </div>
 
       {state === 'one' ? props.one : props.two}
     </>
