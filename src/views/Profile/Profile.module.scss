@@ -6,7 +6,17 @@
   margin: 150px auto;
 }
 
+.button {
+  width: 100%;
+}
+
 .row {
   display: flex;
+  flex-direction: row;
+  gap: 8px;
   align-items: center;
+}
+
+.input {
+  width: 100%;
 }

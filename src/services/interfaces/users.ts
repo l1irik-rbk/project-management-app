@@ -1,4 +1,8 @@
-import { Error as UserError } from './error';
+import { Error } from './error';
+
+export type UserError = Error & {
+  error: string;
+};
 
 // UsersController_getAll
 export type GetUsers = User[] | UserError;

@@ -1,17 +1,6 @@
-import { GetUser, GetUsers } from './interfaces/users';
+import { GetUsers, UpdateUser } from './interfaces/users';
 import { apiUrl, getToken } from './utils';
-
-export const getUser = async (id: string): Promise<GetUser> => {
-  const response = await fetch(`${apiUrl}/boards`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return await response.json();
-};
+import { FormData } from './../views/Profile/ProfileEdit/ProfileEdit';
 
 export const getUsers = async (): Promise<GetUsers> => {
   const response = await fetch(`${apiUrl}/users`, {
@@ -31,4 +20,17 @@ export const findUser = async (login: string) => {
 
   if (!user) return null;
   return user;
+};
+
+export const updateUser = async (user: FormData, id: string): Promise<UpdateUser> => {
+  const response = await fetch(`${apiUrl}/users/${id}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  });
+
+  return await response.json();
 };

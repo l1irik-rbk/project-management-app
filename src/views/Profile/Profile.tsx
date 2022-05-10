@@ -1,13 +1,14 @@
-import s from './Profile.module.scss';
-import g from './../../App.module.scss';
-import { getLogin } from '../../services/utils';
 import { useEffect, useState } from 'react';
+
+import { getLogin } from '../../services/utils';
 import { findUser } from '../../services/users';
 import { User } from '../../services/interfaces/users';
-import { ClickChange } from './ClickChange/ClickChange';
+import { ProfileShow } from './ProfileShow/ProfileShow';
+import { ProfileEdit } from './ProfileEdit/ProfileEdit';
 
 export const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [typeForm, setTypeForm] = useState<'edit' | 'show'>('show');
 
   useEffect(() => {
     const users = async () => {
@@ -15,33 +16,16 @@ export const Profile = () => {
       if (typeof login === 'string') setUser(await findUser(login));
     };
     users();
-  }, []);
+  }, [typeForm]);
 
   return (
     <>
-      {user && (
-        <div className={s.content}>
-          <ClickChange
-            one={<button className={`${g.button} ${g.font_title}`}>name: {user.name}</button>}
-            two={<button>V</button>}
-          />
-
-          <ClickChange
-            one={
-              <button className={`${g.button} ${s.name} ${g.font_title}`}>
-                login: {user.login}
-              </button>
-            }
-            two={<button>V</button>}
-          />
-          <ClickChange
-            one={
-              <button className={`${g.button} ${s.name} ${g.font_title}`}>password: hide</button>
-            }
-            two={<button>V</button>}
-          />
-        </div>
-      )}
+      {user &&
+        (typeForm === 'show' ? (
+          <ProfileShow user={user} handleSubmit={() => setTypeForm('edit')} />
+        ) : (
+          <ProfileEdit user={user} onChangeTypeForm={() => setTypeForm('show')} />
+        ))}
     </>
   );
 };
