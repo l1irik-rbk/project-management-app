@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
@@ -11,6 +11,7 @@ export const Header = () => {
   const { newBoard } = boards;
   const dispatch = useAppDispatch();
   const { setToken, setTokenLoaded, setNewBoard } = appSlice.actions;
+  const location = useLocation();
 
   useEffect(() => {
     const token = getToken();
@@ -40,12 +41,17 @@ export const Header = () => {
       <nav className={s.nav}>
         {isTokenLoaded && (
           <>
-            <Link to="/main">
-              <button className={`${g.button} ${g.drop_shadow}`}>Boards</button>
-            </Link>
-            <button className={`${g.button} ${g.drop_shadow} ${s.btn}`} onClick={createNewBoard}>
-              Create new board
-            </button>
+            {location.pathname !== '/main' && (
+              <Link to="/main">
+                <button className={`${g.button} ${g.drop_shadow}`}>Boards</button>
+              </Link>
+            )}
+
+            {location.pathname === '/main' && (
+              <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
+                Create new board
+              </button>
+            )}
           </>
         )}
         {!isTokenLoaded ? (
@@ -53,9 +59,14 @@ export const Header = () => {
             <button className={`${g.button} ${g.drop_shadow}`}>Login / Sign up</button>
           </Link>
         ) : (
-          <button className={`${g.button} ${g.drop_shadow} ${s.btn}`} onClick={logout}>
-            Logout
-          </button>
+          <div className={s.profile}>
+            <Link to="/profile">
+              <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
+            </Link>
+            <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
+              Logout
+            </button>
+          </div>
         )}
       </nav>
     </header>

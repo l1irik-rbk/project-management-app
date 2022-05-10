@@ -1,0 +1,12 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 300px;
+  margin: 150px auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
