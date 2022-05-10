@@ -1,3 +1,5 @@
+@import './../../App.module.scss';
+
 .content {
   display: flex;
   flex-direction: column;
@@ -19,4 +21,9 @@
 
 .input {
   width: 100%;
+}
+
+.delete {
+  @extend .font_error;
+  margin: 0 auto;
 }

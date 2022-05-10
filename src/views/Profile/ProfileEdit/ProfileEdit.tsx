@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { User, UserError } from '../../../services/interfaces/users';
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
-import { updateUser } from '../../../services/users';
+import { deleteUser, updateUser } from '../../../services/users';
 
 type Props = {
   user: User;
@@ -33,6 +33,17 @@ export const ProfileEdit = (props: Props) => {
     } else {
       alert('Профиль обновлен');
       // console.log('>>>', response);
+    }
+  };
+
+  const handleDelete = async () => {
+    const response = await deleteUser(user.id);
+
+    if (response.hasOwnProperty('statusCode')) {
+      const error = response as UserError;
+      alert(`${error.statusCode} ${error.message} ${error.error}`);
+    } else {
+      alert('Профиль удален');
     }
   };
 
@@ -99,6 +110,10 @@ export const ProfileEdit = (props: Props) => {
 
         <button className={`${g.button} ${g.drop_shadow}`}>Update</button>
       </form>
+
+      <button onClick={handleDelete} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+        Delete my profile
+      </button>
     </>
   );
 };

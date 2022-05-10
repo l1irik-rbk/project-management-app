@@ -34,3 +34,15 @@ export const updateUser = async (user: FormData, id: string): Promise<UpdateUser
 
   return await response.json();
 };
+
+export const deleteUser = async (id: string) => {
+  const response = await fetch(`${apiUrl}/users/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  if (response.status === 204) return { success: true };
+  return await response.json();
+};
