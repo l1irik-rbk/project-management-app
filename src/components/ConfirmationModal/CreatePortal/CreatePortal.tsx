@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-export const Portal = ({ children }: { children: React.ReactNode }) => {
+export const CreatePortal = ({ children }: { children: React.ReactNode }) => {
   const el = document.createElement('div');
 
   useEffect(() => {
