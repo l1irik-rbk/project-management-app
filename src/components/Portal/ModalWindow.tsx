@@ -1,5 +1,3 @@
-import React from 'react';
-
 import s from './ModalWindow.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
