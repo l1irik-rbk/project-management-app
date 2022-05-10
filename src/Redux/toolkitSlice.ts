@@ -1,9 +1,18 @@
+import { BoardArrayInt } from './interfaces/boards';
 import { IInitialStateInt } from './interfaces/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchBoards } from './actionCreators/fetchBoards';
 
 const initialState: IInitialStateInt = {
   token: null,
   isTokenLoaded: false,
+  isPortalVisible: false,
+  boards: {
+    newBoard: false,
+    isBoardsLoaded: false,
+    boardsArray: [],
+    selectedBoardId: '',
+  },
 };
 
 export const appSlice = createSlice({
@@ -16,8 +25,26 @@ export const appSlice = createSlice({
     setTokenLoaded: (state, action: PayloadAction<boolean>) => {
       state.isTokenLoaded = action.payload;
     },
+    setNewBoard: (state, action: PayloadAction<boolean>) => {
+      state.boards.newBoard = action.payload;
+    },
+    setBoardId: (state, action: PayloadAction<string>) => {
+      state.boards.selectedBoardId = action.payload;
+    },
+    setPortalVisible: (state, action: PayloadAction<boolean>) => {
+      state.isPortalVisible = action.payload;
+    },
+  },
+  extraReducers: {
+    [fetchBoards.pending.type]: (state) => {
+      state.boards.isBoardsLoaded = false;
+    },
+    [fetchBoards.fulfilled.type]: (state, action: PayloadAction<BoardArrayInt[]>) => {
+      state.boards.isBoardsLoaded = true;
+      state.boards.boardsArray = action.payload;
+    },
   },
 });
 
 export default appSlice.reducer;
-export const { setToken, setTokenLoaded } = appSlice.actions;
+export const { setToken, setTokenLoaded, setNewBoard, setPortalVisible } = appSlice.actions;

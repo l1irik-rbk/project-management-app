@@ -7,9 +7,10 @@ import { useEffect } from 'react';
 import { getToken } from '../../services/utils';
 
 export const Header = () => {
-  const { isTokenLoaded } = useAppSelector((state) => state.appReducer);
+  const { isTokenLoaded, boards } = useAppSelector((state) => state.appReducer);
+  const { newBoard } = boards;
   const dispatch = useAppDispatch();
-  const { setToken, setTokenLoaded } = appSlice.actions;
+  const { setToken, setTokenLoaded, setNewBoard } = appSlice.actions;
 
   useEffect(() => {
     const token = getToken();
@@ -18,10 +19,13 @@ export const Header = () => {
   });
 
   const logout = () => {
-    console.log('logout');
     document.cookie = `token=${''}`;
     dispatch(setToken(null));
     dispatch(setTokenLoaded(false));
+  };
+
+  const createNewBoard = async () => {
+    dispatch(setNewBoard(!newBoard));
   };
 
   return (
@@ -39,7 +43,9 @@ export const Header = () => {
             <Link to="/main">
               <button className={`${g.button} ${g.drop_shadow}`}>Boards</button>
             </Link>
-            <button className={`${g.button} ${g.drop_shadow} ${s.btn}`}>Create new board</button>
+            <button className={`${g.button} ${g.drop_shadow} ${s.btn}`} onClick={createNewBoard}>
+              Create new board
+            </button>
           </>
         )}
         {!isTokenLoaded ? (
