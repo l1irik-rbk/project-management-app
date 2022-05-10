@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import ModalWindow from '../../components/Portal/ModalWindow';
-import { Portal } from '../../components/Portal/Portal';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { Boards } from './Components/Boards';
@@ -20,9 +18,6 @@ export const Main = () => {
     <>
       {newBoard && <NewBoardField />}
       <Boards />
-      <Portal>
-        <ModalWindow />
-      </Portal>
     </>
   );
 };
