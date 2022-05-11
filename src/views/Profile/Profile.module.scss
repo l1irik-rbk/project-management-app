@@ -1,0 +1,29 @@
+@import './../../App.module.scss';
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 300px;
+  margin: 150px auto;
+}
+
+.button {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+}
+
+.delete {
+  @extend .font_error;
+  margin: 0 auto;
+}

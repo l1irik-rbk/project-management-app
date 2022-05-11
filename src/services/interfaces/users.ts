@@ -1,13 +1,17 @@
-import { Error as UserError } from './error';
+import { Error } from './error';
+
+export type UserError = Error & {
+  error: string;
+};
 
 // UsersController_getAll
 export type GetUsers = User[] | UserError;
 
-interface User {
+export type User = {
   id: string;
   name: string;
   login: string;
-}
+};
 
 // UsersController_getOne
 export type GetUser = User | UserError;

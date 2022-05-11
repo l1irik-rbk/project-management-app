@@ -18,9 +18,17 @@
 }
 
 .nav {
-  display: flex; 
+  display: flex;
+  gap: 24px;
 }
 
-.btn{
-  margin-left: 30px;
+.avatar {
+  border-radius: 100%;
+  width: 40px;
+  padding: 0;
+}
+
+.profile {
+  display: flex;
+  gap: 8px;
 }

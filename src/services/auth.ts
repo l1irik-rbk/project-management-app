@@ -18,7 +18,6 @@ export const signup = async (
       password,
     }),
   });
-
   return await response.json();
 };
 
@@ -35,6 +34,14 @@ export const signin = async (login: string, password: string): Promise<Signin | 
   });
 
   const result = await response.json();
-  if (result.hasOwnProperty('token')) document.cookie = `token=${result.token}`;
+
+  if (result.hasOwnProperty('token')) {
+    document.cookie = `token=${result.token}; expires=${new Date(
+      Date.now() + 1000 * 60 * 60 * 24 * 7
+    ).toUTCString()}`;
+    document.cookie = `login=${login}; expires=${new Date(
+      Date.now() + 1000 * 60 * 60 * 24 * 7
+    ).toUTCString()}`;
+  }
   return result;
 };
