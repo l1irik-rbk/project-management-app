@@ -1,3 +1,4 @@
+import { successObject } from '../utils';
 import { Error as TaskError } from './error';
 
 // TasksController_getAll
@@ -8,9 +9,9 @@ export interface Task {
   title: string;
   order: number;
   description: string;
-  userId: string;
-  boardId: string;
-  columnId: string;
+  userId?: string;
+  boardId?: string;
+  columnId?: string;
 }
 
 // TasksController_create
@@ -20,8 +21,7 @@ export type CreateTask = Task;
 export type FullTask = Task;
 
 // TasksController_remove
-export type RemoveTaskRequest = undefined | TaskError;
-// TODO: вместо undefined возвращает code 204
+export type RemoveTaskRequest = typeof successObject | TaskError;
 
 // TasksController_update
 export type UpdateTask = Task;

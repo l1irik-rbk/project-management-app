@@ -1,3 +1,4 @@
+import { successObject } from '../utils';
 import { Error as BoardError } from './error';
 
 // BoardsController_getAll
@@ -41,9 +42,7 @@ export interface File {
 }
 
 // BoardsController_remove
-export type RemoveBoardRequest = undefined | BoardError;
-// TODO: вместо undefined возвращает code 204
-// http://localhost:4000/docs/static/index.html#/Boards/BoardsController_remove
+export type RemoveBoard = typeof successObject | BoardError;
 
 // BoardsController_update
 export type UpdateBoard = Board | BoardError;

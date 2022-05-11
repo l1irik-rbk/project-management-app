@@ -1,5 +1,5 @@
 import { GetUsers, UpdateUser } from './interfaces/users';
-import { apiUrl, getToken } from './utils';
+import { apiUrl, getToken, successObject } from './utils';
 import { FormData } from './../views/Profile/ProfileEdit/ProfileEdit';
 
 export const getUsers = async (): Promise<GetUsers> => {
@@ -43,6 +43,6 @@ export const deleteUser = async (id: string) => {
     },
   });
 
-  if (response.status === 204) return { success: true };
+  if (response.status === 204) successObject;
   return await response.json();
 };

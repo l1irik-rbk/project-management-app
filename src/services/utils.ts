@@ -24,3 +24,5 @@ function getCookie(cname: string) {
   }
   return null;
 }
+
+export const successObject = { success: true };

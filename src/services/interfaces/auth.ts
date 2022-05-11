@@ -1,8 +1,4 @@
 // AuthController_signIn
-// export interface Signin {
-//   login: string;
-//   password: string;
-// }
 export interface Signin {
   token: string;
 }
