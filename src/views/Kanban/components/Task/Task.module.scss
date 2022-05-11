@@ -1,0 +1,17 @@
+.task {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 12px;
+  gap: 12px;
+
+  background: #ffffff;
+
+  border-radius: 8px;
+  border: 1px solid #d4d7d9;
+  width: 100%;
+}
+
+.title {
+  width: 218px;
+}
