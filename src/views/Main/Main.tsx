@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { Boards } from './Components/Boards';
-import { NewBoardField } from './Components/NewBoardField';
+import { Boards } from './components/Boards';
+import { NewBoardField } from './components/NewBoardField';
 
 export const Main = () => {
   const { boards } = useAppSelector((state) => state.appReducer);

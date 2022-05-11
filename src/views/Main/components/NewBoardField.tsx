@@ -19,10 +19,14 @@ export const NewBoardField = () => {
     setInputValue(value);
   };
 
-  const createNewBoard = async () => {
+  const handleCreateNewBoard = async () => {
     await createBoard(inputValue);
     dispatch(setNewBoard(false));
     dispatch(fetchBoards());
+  };
+
+  const handleCancelCreateNewBoard = () => {
+    dispatch(setNewBoard(!newBoard));
   };
 
   return (
@@ -37,13 +41,10 @@ export const NewBoardField = () => {
           onChange={handleChange}
         />
         <div className={s.buttons}>
-          <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
+          <button className={`${g.button} ${g.drop_shadow}`} onClick={handleCreateNewBoard}>
             Create
           </button>
-          <button
-            className={`${g.button} ${g.drop_shadow}`}
-            onClick={() => dispatch(setNewBoard(!newBoard))}
-          >
+          <button className={`${g.button} ${g.drop_shadow}`} onClick={handleCancelCreateNewBoard}>
             X
           </button>
         </div>

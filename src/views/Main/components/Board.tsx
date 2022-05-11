@@ -1,11 +1,11 @@
 import React, { SyntheticEvent } from 'react';
+import { Link } from 'react-router-dom';
 
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
 import { BoardProp } from './interfaces/BoardProp';
 import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
 import { appSlice } from '../../../Redux/toolkitSlice';
-import { Link } from 'react-router-dom';
 import { ConfirmationModal } from '../../../components/ConfirmationModal/ConfirmationModal';
 import { deleteBoard } from '../../../services/boards';
 import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
@@ -31,7 +31,7 @@ export const Board = ({ id, boardTitle }: BoardProp) => {
 
   return (
     <>
-      <Link to={'/404'}>
+      <Link to={`/kanban/${id}`}>
         <div className={`${s.board} ${g.drop_shadow} ${g.button}`}>
           <h5 className={`${g.font_title}`}>{boardTitle}</h5>
           <button className={`${g.button} ${g.drop_shadow}`} onClick={handleRemoveBoard}>
