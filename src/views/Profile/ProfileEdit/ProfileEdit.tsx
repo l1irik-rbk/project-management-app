@@ -4,6 +4,9 @@ import { User, UserError } from '../../../services/interfaces/users';
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
 import { deleteUser, updateUser } from '../../../services/users';
+import { ConfirmationModal } from '../../../components/ConfirmationModal/ConfirmationModal';
+import { useAppDispatch } from '../../../Redux/reduxHooks';
+import { setPortalVisible } from '../../../Redux/toolkitSlice';
 
 type Props = {
   user: User;
@@ -17,6 +20,8 @@ export type FormData = {
 };
 
 export const ProfileEdit = (props: Props) => {
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
@@ -32,7 +37,6 @@ export const ProfileEdit = (props: Props) => {
       alert(`${error.statusCode} ${error.message} ${error.error}`);
     } else {
       alert('Профиль обновлен');
-      // console.log('>>>', response);
     }
   };
 
@@ -111,9 +115,14 @@ export const ProfileEdit = (props: Props) => {
         <button className={`${g.button} ${g.drop_shadow}`}>Update</button>
       </form>
 
-      <button onClick={handleDelete} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+      <button
+        onClick={() => dispatch(setPortalVisible(true))}
+        className={`${g.button} ${g.drop_shadow} ${s.delete}`}
+      >
         Delete my profile
       </button>
+
+      <ConfirmationModal text="Delete your account permanently." action={handleDelete} />
     </>
   );
 };
