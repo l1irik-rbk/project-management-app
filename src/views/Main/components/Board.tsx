@@ -12,7 +12,7 @@ import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 
 export const Board = ({ id, boardTitle }: BoardProp) => {
   const dispatch = useAppDispatch();
-  const { setPortalVisible, setBoardId } = appSlice.actions;
+  const { setPortalVisible, setSelectedBoardId } = appSlice.actions;
 
   const { boards } = useAppSelector((state) => state.appReducer);
   const { selectedBoardId } = boards;
@@ -20,13 +20,13 @@ export const Board = ({ id, boardTitle }: BoardProp) => {
   const handleRemoveBoard = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(setPortalVisible(true));
-    dispatch(setBoardId(id));
+    dispatch(setSelectedBoardId(id));
   };
 
   const handlePortalAction = async () => {
     await deleteBoard(selectedBoardId);
     dispatch(fetchBoards());
-    dispatch(setBoardId(''));
+    dispatch(setSelectedBoardId(''));
   };
 
   return (
