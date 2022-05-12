@@ -42,7 +42,7 @@ export const Board = ({ id, boardTitle }: BoardProp) => {
 
       <ConfirmationModal
         text={'You will remove the board and all of its contents.'}
-        action={handlePortalAction}
+        onConfirm={handlePortalAction}
       />
     </>
   );

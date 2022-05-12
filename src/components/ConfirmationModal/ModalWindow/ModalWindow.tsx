@@ -16,7 +16,7 @@ const ModalWindow = (props: Props) => {
   };
 
   const handlePortalAction = () => {
-    props.action();
+    props.onConfirm();
     dispatch(setPortalVisible(false));
   };
 
