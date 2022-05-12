@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import s from './Modal.module.scss';
-import g from '././../../../../App.module.scss';
+import g from './../../App.module.scss';
 
 type Props = {
   open: boolean;
   title: string;
   content: React.ReactNode;
-  closeAction: () => void;
-  action: () => void;
+  onConfirm: () => void;
+  onClose: () => void;
 };
 
 export const Modal = (props: Props) => {
@@ -18,14 +18,14 @@ export const Modal = (props: Props) => {
 
   const handleClose = () => {
     setIsOpen(false);
-    props.closeAction();
+    props.onClose();
   };
 
   const handleAction = async () => {
-    const result = await props.action();
+    const result = await props.onConfirm();
     if (result !== undefined) {
       setIsOpen(false);
-      props.closeAction();
+      props.onClose();
     }
   };
 
