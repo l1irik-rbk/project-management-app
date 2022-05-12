@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { useAppDispatch } from '../../Redux/reduxHooks';
-import { setBoardId } from '../../Redux/toolkitSlice';
 
 import { getBoard, getBoards } from '../../services/boards';
 import { FullBoard } from '../../services/interfaces/boards';
@@ -14,17 +12,15 @@ export const Kanban = () => {
   const [isTrueId, setIsTrueId] = useState(true);
   const [board, setBoard] = useState<FullBoard | null>(null);
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
+    if (board) document.title = `${board.title}`;
+
     const findBoard = async () => {
       const boards = await getBoards();
       if (Array.isArray(boards)) setIsTrueId(!!boards.find((board) => board.id === params.id));
       else setIsTrueId(false);
     };
     findBoard();
-
-    if (isTrueId && params.id) dispatch(setBoardId(params.id));
 
     const setBoardData = async () => {
       if (params.id) {
@@ -33,20 +29,20 @@ export const Kanban = () => {
       }
     };
     setBoardData();
-  }, [params.id]);
+  }, [board, isTrueId, params.id]);
 
   return (
     <>
       {(!params.id || !isTrueId) && <Navigate to="/" />}
-      <h2>{board?.title}</h2>
 
       <div className={s.content}>
         {board?.columns
           ?.sort((a, b) => a.order - b.order)
-          .map((column) => (
-            <Column key={column.id} column={column} />
-          ))}
-        <CreateColumnButton />
+          .map(
+            (column) => params.id && <Column key={column.id} column={column} boardId={params.id} />
+          )}
+
+        <CreateColumnButton boardId={params.id} />
       </div>
     </>
   );
