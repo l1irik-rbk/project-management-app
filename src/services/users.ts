@@ -14,14 +14,6 @@ export const getUsers = async (): Promise<GetUsers> => {
   return await response.json();
 };
 
-export const findUser = async (login: string) => {
-  const allUser = await getUsers();
-  const user = Array.isArray(allUser) && allUser.find((user) => user.login === login);
-
-  if (!user) return null;
-  return user;
-};
-
 export const updateUser = async (user: FormData, id: string): Promise<UpdateUser> => {
   const response = await fetch(`${apiUrl}/users/${id}`, {
     method: 'PUT',

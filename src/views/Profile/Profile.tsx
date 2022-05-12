@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getLogin } from '../../services/utils';
-import { findUser } from '../../services/users';
+import { findUser, getLogin } from '../../services/utils';
 import { User } from '../../services/interfaces/users';
 import { ProfileShow } from './ProfileShow/ProfileShow';
 import { ProfileEdit } from './ProfileEdit/ProfileEdit';
@@ -13,7 +12,7 @@ export const Profile = () => {
   useEffect(() => {
     const users = async () => {
       const login = getLogin();
-      if (typeof login === 'string') setUser(await findUser(login));
+      if (login) setUser(await findUser(login));
     };
     users();
   }, [typeForm]);

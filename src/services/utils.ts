@@ -1,3 +1,5 @@
+import { getUsers } from './users';
+
 export const apiUrl = 'https://kanbanboar.herokuapp.com';
 
 export const getToken = () => {
@@ -26,3 +28,22 @@ function getCookie(cname: string) {
 }
 
 export const successObject = { success: true };
+
+export const findUser = async (login: string) => {
+  const allUser = await getUsers();
+  const user = Array.isArray(allUser) && allUser.find((user) => user.login === login);
+
+  if (!user) return null;
+  return user;
+};
+
+export const getUserId = async () => {
+  const login = getLogin();
+  if (login) {
+    const user = await findUser(login);
+    const userId = user?.id;
+
+    if (userId) return userId;
+    else return null;
+  } else return null;
+};
