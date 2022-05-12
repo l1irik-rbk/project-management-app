@@ -18,7 +18,7 @@ export type User = {
 export type GetUser = User | UserError;
 
 // UsersController_remove
-export type RemoveUserRequest = typeof successObject | UserError;
+export type RemoveUser = typeof successObject | UserError;
 
 // UsersController_update
 export type UpdateUser = User | UserError;

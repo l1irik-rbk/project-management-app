@@ -1,4 +1,4 @@
-import { GetUsers, UpdateUser } from './interfaces/users';
+import { GetUsers, RemoveUser, UpdateUser } from './interfaces/users';
 import { apiUrl, getToken, successObject } from './utils';
 import { FormData } from './../views/Profile/ProfileEdit/ProfileEdit';
 
@@ -27,7 +27,7 @@ export const updateUser = async (user: FormData, id: string): Promise<UpdateUser
   return await response.json();
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: string): Promise<RemoveUser> => {
   const response = await fetch(`${apiUrl}/users/${id}`, {
     method: 'DELETE',
     headers: {

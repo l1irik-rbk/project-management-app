@@ -41,7 +41,7 @@ export interface File {
 }
 
 // ColumnsController_remove
-export type RemoveColumnRequest = typeof successObject | ColumnError;
+export type RemoveColumn = typeof successObject | ColumnError;
 
 // ColumnsController_update
 export type UpdateColumn = Column | ColumnError;
