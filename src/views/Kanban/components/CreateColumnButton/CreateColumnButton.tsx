@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useAppSelector } from '../../../../Redux/reduxHooks';
-import { createColumn } from '../../../../services/columns';
 
-import { Modal } from '../Modal/Modal';
+import { createColumn } from '../../../../services/columns';
+import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
 
 export type CreateColumnData = {
@@ -11,11 +10,14 @@ export type CreateColumnData = {
   order: number;
 };
 
-export const CreateColumnButton = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const handleOpenModal = () => setModalIsOpen(true);
-  const handleCloseModal = () => setModalIsOpen(false);
-  const boardId = useAppSelector((state) => state.appReducer.board.id);
+type Props = {
+  boardId: string | undefined;
+};
+
+export const CreateColumnButton = (props: Props) => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const handleOpenModal = () => setIsOpenModal(true);
+  const handleCloseModal = () => setIsOpenModal(false);
 
   const {
     register,
@@ -24,7 +26,7 @@ export const CreateColumnButton = () => {
   } = useForm<CreateColumnData>();
 
   const handleCreateColumn = async (data: CreateColumnData) => {
-    console.log(data);
+    const boardId = props.boardId;
     if (boardId) {
       const response = await createColumn(data, boardId);
 
@@ -83,11 +85,11 @@ export const CreateColumnButton = () => {
     <>
       <button onClick={handleOpenModal}>Create new column</button>
       <Modal
+        open={isOpenModal}
         title="Enter a new column"
         content={createContent()}
-        action={handleSubmit(handleCreateColumn)}
-        closeAction={handleCloseModal}
-        open={modalIsOpen}
+        onConfirm={handleSubmit(handleCreateColumn)}
+        onClose={handleCloseModal}
       />
     </>
   );

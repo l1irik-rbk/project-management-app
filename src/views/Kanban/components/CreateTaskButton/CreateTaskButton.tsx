@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useAppSelector } from '../../../../Redux/reduxHooks';
-import { createColumn } from '../../../../services/columns';
-import { createTask } from '../../../../services/tasks';
-import { findUser } from '../../../../services/users';
-import { getLogin } from '../../../../services/utils';
 
-import { Modal } from '../Modal/Modal';
+import { createTask } from '../../../../services/tasks';
+import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
+import { getUserId } from '../../../../services/utils';
 
 export type CreateTaskData = {
   title: string;
@@ -16,14 +13,14 @@ export type CreateTaskData = {
 };
 
 type Props = {
-  columnId: string;
+  boardId: string | undefined;
+  columnId: string | undefined;
 };
 
 export const CreateTaskButton = (props: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
   const handleCloseModal = () => setModalIsOpen(false);
-  const boardId = useAppSelector((state) => state.appReducer.board.id);
 
   const {
     register,
@@ -32,15 +29,14 @@ export const CreateTaskButton = (props: Props) => {
   } = useForm<CreateTaskData>();
 
   const handleCreateTask = async (data: CreateTaskData) => {
-    console.log(data);
+    const userId = await getUserId();
+    const { boardId, columnId } = props;
 
-    const login = getLogin();
-    if (login) {
-      const user = await findUser(login);
-      const userId = user?.id;
+    if (boardId && columnId && userId) {
+      const createResponse = await createTask(data, boardId, columnId, userId);
 
-      if (boardId && userId)
-        console.log('>>>', await createTask(data, boardId, props.columnId, userId));
+      if (createResponse.hasOwnProperty('statusCode')) alert('Error');
+      else alert('Task created');
     }
   };
 
@@ -110,8 +106,8 @@ export const CreateTaskButton = (props: Props) => {
       <Modal
         title="Enter a new column"
         content={createContent()}
-        action={handleSubmit(handleCreateTask)}
-        closeAction={handleCloseModal}
+        onConfirm={handleSubmit(handleCreateTask)}
+        onClose={handleCloseModal}
         open={modalIsOpen}
       />
     </>
