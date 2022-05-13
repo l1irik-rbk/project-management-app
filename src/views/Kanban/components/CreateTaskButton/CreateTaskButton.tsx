@@ -8,13 +8,14 @@ import { getUserId } from '../../../../services/utils';
 
 export type CreateTaskData = {
   title: string;
-  order: number;
   description: string;
 };
 
 type Props = {
   boardId: string | undefined;
   columnId: string | undefined;
+  orderForNewTask: number;
+  onCreateTask: () => void;
 };
 
 export const CreateTaskButton = (props: Props) => {
@@ -26,17 +27,27 @@ export const CreateTaskButton = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreateTaskData>();
 
   const handleCreateTask = async (data: CreateTaskData) => {
     const userId = await getUserId();
     const { boardId, columnId } = props;
+    const { title, description } = data;
+    const order = props.orderForNewTask;
 
     if (boardId && columnId && userId) {
-      const createResponse = await createTask(data, boardId, columnId, userId);
+      const createResponse = await createTask(title, order, description, boardId, columnId, userId);
+      handleCloseModal();
 
       if (createResponse.hasOwnProperty('statusCode')) alert('Error');
-      else alert('Task created');
+      else {
+        reset({
+          title: '',
+          description: '',
+        });
+        props.onCreateTask();
+      }
     }
   };
 
@@ -75,24 +86,6 @@ export const CreateTaskButton = (props: Props) => {
               {errors.description.type === 'required' && 'Login is required'}
               {errors.description.type === 'minLength' && 'Login must be at least 3 characters'}
               {errors.description.type === 'maxLength' && 'Login must be at most 20 characters'}
-            </span>
-          )}
-        </label>
-
-        <label>
-          <p>order:</p>
-          <input
-            {...register('order', { required: true, min: 0, max: 100 })}
-            className={g.input}
-            type="number"
-            placeholder="order task"
-          />
-          <br />
-          {errors.order && (
-            <span className={g.font_error}>
-              {errors.order.type === 'required' && 'Order is required'}
-              {errors.order.type === 'min' && 'Order must be at least 1'}
-              {errors.order.type === 'max' && 'Order must be at most 100'}
             </span>
           )}
         </label>

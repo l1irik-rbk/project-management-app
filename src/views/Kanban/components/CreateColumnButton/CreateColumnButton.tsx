@@ -7,11 +7,12 @@ import g from './../../../../App.module.scss';
 
 export type CreateColumnData = {
   title: string;
-  order: number;
 };
 
 type Props = {
   boardId: string | undefined;
+  orderForNewColumn: number;
+  onCreateColumn: () => void;
 };
 
 export const CreateColumnButton = (props: Props) => {
@@ -23,18 +24,22 @@ export const CreateColumnButton = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreateColumnData>();
 
   const handleCreateColumn = async (data: CreateColumnData) => {
     const boardId = props.boardId;
     if (boardId) {
-      const response = await createColumn(data, boardId);
+      const response = await createColumn(data.title, props.orderForNewColumn, boardId);
 
       if (response.hasOwnProperty('error')) {
         console.log(response);
       } else {
-        console.log(response);
-        alert('Column created');
+        reset({
+          title: '',
+        });
+        props.onCreateColumn();
+        handleCloseModal();
       }
     }
   };
@@ -42,6 +47,7 @@ export const CreateColumnButton = (props: Props) => {
   const createContent = () => {
     return (
       <>
+        {console.log('>>>>>>', props.orderForNewColumn)}
         <label>
           <p>title:</p>
           <input
@@ -56,24 +62,6 @@ export const CreateColumnButton = (props: Props) => {
               {errors.title.type === 'required' && 'Login is required'}
               {errors.title.type === 'minLength' && 'Login must be at least 3 characters'}
               {errors.title.type === 'maxLength' && 'Login must be at most 20 characters'}
-            </span>
-          )}
-        </label>
-
-        <label>
-          <p>order:</p>
-          <input
-            {...register('order', { required: true, min: 0, max: 100 })}
-            className={g.input}
-            type="number"
-            placeholder="order column"
-          />
-          <br />
-          {errors.order && (
-            <span className={g.font_error}>
-              {errors.order.type === 'required' && 'Order is required'}
-              {errors.order.type === 'min' && 'Order must be at least 1'}
-              {errors.order.type === 'max' && 'Order must be at most 100'}
             </span>
           )}
         </label>
