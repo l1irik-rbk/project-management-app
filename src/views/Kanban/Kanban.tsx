@@ -12,7 +12,6 @@ export const Kanban = () => {
   const [board, setBoard] = useState<FullBoard | null>(null);
   const [isBoardLoaded, setBoardLoaded] = useState(false);
   const orderForNewColumn = board?.columns.length || 0;
-  console.log(orderForNewColumn);
   console.log(board);
   useEffect(() => {
     if (board) document.title = `${board.title}`;

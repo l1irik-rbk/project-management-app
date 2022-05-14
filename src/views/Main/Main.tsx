@@ -8,10 +8,12 @@ import { NewBoardField } from './components/NewBoardField';
 export const Main = () => {
   const { boards } = useAppSelector((state) => state.appReducer);
   const dispatch = useAppDispatch();
-  const { newBoard } = boards;
+  const { newBoard, isBoardsLoaded } = boards;
 
   useEffect(() => {
-    dispatch(fetchBoards());
+    if (!isBoardsLoaded) {
+      dispatch(fetchBoards());
+    }
   }, []);
 
   return (

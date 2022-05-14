@@ -1,5 +1,5 @@
 import { BoardArrayInt } from './interfaces/boards';
-import { IInitialStateInt } from './interfaces/initialState';
+import { IInitialStateInt, ActionType } from './interfaces/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchBoards } from './actionCreators/fetchBoards';
 
@@ -7,7 +7,6 @@ const initialState: IInitialStateInt = {
   token: null,
   userId: null,
   isTokenLoaded: false,
-  isPortalVisible: false,
   boards: {
     newBoard: false,
     isBoardsLoaded: false,
@@ -16,6 +15,11 @@ const initialState: IInitialStateInt = {
   },
   board: {
     id: null,
+  },
+  confirmationModal: {
+    isConfirmed: false,
+    type: null,
+    isPortalVisible: false,
   },
 };
 
@@ -42,7 +46,13 @@ export const appSlice = createSlice({
       state.boards.selectedBoardId = action.payload;
     },
     setPortalVisible: (state, action: PayloadAction<boolean>) => {
-      state.isPortalVisible = action.payload;
+      state.confirmationModal.isPortalVisible = action.payload;
+    },
+    setConfirmationModalType: (state, action: PayloadAction<ActionType | null>) => {
+      state.confirmationModal.type = action.payload;
+    },
+    setIsConfirmed: (state, action: PayloadAction<boolean>) => {
+      state.confirmationModal.isConfirmed = action.payload;
     },
   },
   extraReducers: {
@@ -64,4 +74,6 @@ export const {
   setPortalVisible,
   setBoardId,
   setSelectedBoardId,
+  setConfirmationModalType,
+  setIsConfirmed,
 } = appSlice.actions;

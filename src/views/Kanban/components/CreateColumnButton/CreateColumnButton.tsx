@@ -47,7 +47,7 @@ export const CreateColumnButton = (props: Props) => {
   const createContent = () => {
     return (
       <>
-        {console.log('>>>>>>', props.orderForNewColumn)}
+        {/* {console.log('>>>>>>', props.orderForNewColumn)} */}
         <label>
           <p>title:</p>
           <input
@@ -59,9 +59,9 @@ export const CreateColumnButton = (props: Props) => {
           <br />
           {errors.title && (
             <span className={g.font_error}>
-              {errors.title.type === 'required' && 'Login is required'}
-              {errors.title.type === 'minLength' && 'Login must be at least 3 characters'}
-              {errors.title.type === 'maxLength' && 'Login must be at most 20 characters'}
+              {errors.title.type === 'required' && 'Title is required'}
+              {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
+              {errors.title.type === 'maxLength' && 'Title must be at most 20 characters'}
             </span>
           )}
         </label>
@@ -74,7 +74,7 @@ export const CreateColumnButton = (props: Props) => {
       <button onClick={handleOpenModal}>Create new column</button>
       <Modal
         open={isOpenModal}
-        title="Enter a new column"
+        title="Enter a title of new column"
         content={createContent()}
         onConfirm={handleSubmit(handleCreateColumn)}
         onClose={handleCloseModal}

@@ -4,6 +4,8 @@ import { deleteColumn } from '../../../../services/columns';
 import g from '../../../../App.module.scss';
 import s from './DeleteColumnButton.module.scss';
 import { Modal } from '../../../../components/Modal/Modal';
+import { appSlice } from '../../../../Redux/toolkitSlice';
+import { useAppDispatch } from '../../../../Redux/reduxHooks';
 
 type Props = {
   boardId: string | undefined;
@@ -11,6 +13,8 @@ type Props = {
 };
 
 export const DeleteColumnButton = (props: Props) => {
+  const dispatch = useAppDispatch();
+  const { setPortalVisible, setSelectedBoardId, setConfirmationModalType } = appSlice.actions;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
@@ -35,7 +39,7 @@ export const DeleteColumnButton = (props: Props) => {
         X
       </button>
 
-      <Modal
+      {/* <Modal
         open={isOpenModal}
         title={'Are you sure?'}
         content={
@@ -43,7 +47,7 @@ export const DeleteColumnButton = (props: Props) => {
         }
         onConfirm={handleOnConfirm}
         onClose={handleCloseModal}
-      />
+      /> */}
     </>
   );
 };
