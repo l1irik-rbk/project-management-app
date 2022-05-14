@@ -8,7 +8,7 @@ const ModalWindow = (props: Props) => {
   const { isPortalVisible } = useAppSelector((state) => state.appReducer);
   const dispatch = useAppDispatch();
   const { setPortalVisible } = appSlice.actions;
-
+  console.log('ModalWindow');
   const portalVisibility = isPortalVisible ? `${s.overlay}` : `${s.overlay__hidden}`;
 
   const handleClosePortal = () => {

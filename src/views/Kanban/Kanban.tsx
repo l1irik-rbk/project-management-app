@@ -10,8 +10,10 @@ import s from './Kanban.module.scss';
 export const Kanban = () => {
   const params = useParams();
   const [board, setBoard] = useState<FullBoard | null>(null);
+  const [isBoardLoaded, setBoardLoaded] = useState(false);
   const orderForNewColumn = board?.columns.length || 0;
-
+  console.log(orderForNewColumn);
+  console.log(board);
   useEffect(() => {
     if (board) document.title = `${board.title}`;
 
@@ -24,26 +26,31 @@ export const Kanban = () => {
     if (params.id) {
       const board = await getBoard(params.id);
       setBoard(board);
+      setBoardLoaded(true);
     }
   };
 
   return (
     <>
       {!params.id && <Navigate to="/" />}
+      {isBoardLoaded ? (
+        <div className={s.content}>
+          {board?.columns
+            ?.sort((a, b) => a.order - b.order)
+            .map(
+              (column) =>
+                params.id && <Column key={column.id} column={column} boardId={params.id} />
+            )}
 
-      <div className={s.content}>
-        {board?.columns
-          ?.sort((a, b) => a.order - b.order)
-          .map(
-            (column) => params.id && <Column key={column.id} column={column} boardId={params.id} />
-          )}
-
-        <CreateColumnButton
-          boardId={params.id}
-          orderForNewColumn={orderForNewColumn}
-          onCreateColumn={setBoardData}
-        />
-      </div>
+          <CreateColumnButton
+            boardId={params.id}
+            orderForNewColumn={orderForNewColumn}
+            onCreateColumn={setBoardData}
+          />
+        </div>
+      ) : (
+        <div>LOADING...</div>
+      )}
     </>
   );
 };
