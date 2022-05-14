@@ -122,7 +122,7 @@ export const ProfileEdit = (props: Props) => {
         Delete my profile
       </button>
 
-      <ConfirmationModal text="Delete your account permanently." action={handleDelete} />
+      <ConfirmationModal text="Delete your account permanently." onConfirm={handleDelete} />
     </>
   );
 };

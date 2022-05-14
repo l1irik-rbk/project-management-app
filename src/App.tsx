@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout/Layout';
 import { useAppSelector } from './Redux/reduxHooks';
 import { Auth } from './views/Auth/Auth';
+import { Kanban } from './views/Kanban/Kanban';
 import { Main } from './views/Main/Main';
 import { Page404 } from './views/Page404/Page404';
 import { Profile } from './views/Profile/Profile';
@@ -18,8 +19,12 @@ const App = () => {
         <Route path="auth" element={isTokenLoaded ? <Navigate to="/main" /> : <Auth />} />
         <Route path="main" element={isTokenLoaded ? <Main /> : <Navigate to="/" />} />
         <Route path="profile" element={isTokenLoaded ? <Profile /> : <Navigate to="/" />} />
-        <Route path="404" element={<Page404 />} />
-        <Route path="*" element={<Navigate to="404" />} />
+
+        <Route path="kanban" element={isTokenLoaded ? <Kanban /> : <Navigate to="/" />}>
+          <Route path=":id" element={isTokenLoaded ? <Kanban /> : <Navigate to="/" />} />
+        </Route>
+
+        <Route path="*" element={<Page404 />} />
       </Route>
     </Routes>
   );

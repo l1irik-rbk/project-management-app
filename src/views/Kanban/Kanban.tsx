@@ -1,0 +1,49 @@
+import { useEffect, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
+
+import { getBoard, getBoards } from '../../services/boards';
+import { FullBoard } from '../../services/interfaces/boards';
+import { Column } from './components/Column/Column';
+import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
+import s from './Kanban.module.scss';
+
+export const Kanban = () => {
+  const params = useParams();
+  const [isTrueId, setIsTrueId] = useState(true);
+  const [board, setBoard] = useState<FullBoard | null>(null);
+
+  useEffect(() => {
+    if (board) document.title = `${board.title}`;
+
+    const findBoard = async () => {
+      const boards = await getBoards();
+      if (Array.isArray(boards)) setIsTrueId(!!boards.find((board) => board.id === params.id));
+      else setIsTrueId(false);
+    };
+    findBoard();
+
+    const setBoardData = async () => {
+      if (params.id) {
+        const board = await getBoard(params.id);
+        setBoard(board);
+      }
+    };
+    setBoardData();
+  }, [board, isTrueId, params.id]);
+
+  return (
+    <>
+      {(!params.id || !isTrueId) && <Navigate to="/" />}
+
+      <div className={s.content}>
+        {board?.columns
+          ?.sort((a, b) => a.order - b.order)
+          .map(
+            (column) => params.id && <Column key={column.id} column={column} boardId={params.id} />
+          )}
+
+        <CreateColumnButton boardId={params.id} />
+      </div>
+    </>
+  );
+};

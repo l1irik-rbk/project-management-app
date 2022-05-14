@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppSelector } from '../../../Redux/reduxHooks';
 import s from '../Main.module.scss';
 import { Board } from './Board';

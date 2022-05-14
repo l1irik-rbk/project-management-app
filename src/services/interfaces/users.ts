@@ -1,3 +1,4 @@
+import { successObject } from '../utils';
 import { Error } from './error';
 
 export type UserError = Error & {
@@ -17,9 +18,7 @@ export type User = {
 export type GetUser = User | UserError;
 
 // UsersController_remove
-export type RemoveUserRequest = undefined | UserError;
-// TODO: вместо undefined возвращает code 204
-// http://localhost:4000/docs/static/index.html#/Users/UsersController_remove
+export type RemoveUser = typeof successObject | UserError;
 
 // UsersController_update
 export type UpdateUser = User | UserError;

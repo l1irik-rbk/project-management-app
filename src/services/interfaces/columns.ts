@@ -1,4 +1,9 @@
-import { Error as ColumnError } from './error';
+import { successObject } from '../utils';
+import { Error } from './error';
+
+export type ColumnError = Error & {
+  error: string;
+};
 
 // ColumnsController_getAll
 export type GetColumns = Column[] | ColumnError;
@@ -36,9 +41,7 @@ export interface File {
 }
 
 // ColumnsController_remove
-export type RemoveColumnRequest = undefined | ColumnError;
-// TODO: вместо undefined возвращает code 204
-// http://localhost:4000/docs/static/index.html#/Columns/ColumnsController_remove
+export type RemoveColumn = typeof successObject | ColumnError;
 
 // ColumnsController_update
 export type UpdateColumn = Column | ColumnError;

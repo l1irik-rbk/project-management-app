@@ -1,8 +1,9 @@
-import { apiUrl, getToken } from './utils';
+import { CreateBoard, FullBoard, GetBoards, RemoveBoard } from './interfaces/boards';
+import { apiUrl, getToken, successObject } from './utils';
 
 const token = getToken();
 
-export const getBoards = async () => {
+export const getBoards = async (): Promise<GetBoards> => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'GET',
     headers: {
@@ -11,11 +12,10 @@ export const getBoards = async () => {
     },
   });
 
-  if (!response.ok) return { statusCode: 666, message: 'Server error' };
   return await response.json();
 };
 
-export const createBoard = async (title: string) => {
+export const createBoard = async (title: string): Promise<CreateBoard> => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'POST',
     headers: {
@@ -27,11 +27,10 @@ export const createBoard = async (title: string) => {
     }),
   });
 
-  if (!response.ok) return { statusCode: 666, message: 'Server error' };
   return await response.json();
 };
 
-export const deleteBoard = async (id: string) => {
+export const deleteBoard = async (id: string): Promise<RemoveBoard> => {
   const response = await fetch(`${apiUrl}/boards/${id}`, {
     method: 'DELETE',
     headers: {
@@ -39,6 +38,18 @@ export const deleteBoard = async (id: string) => {
     },
   });
 
-  if (!response.ok) return { statusCode: 666, message: 'Server error' };
-  return { statusCode: 204, message: 'DELETED' };
+  if (response.status === 204) return successObject;
+  return await response.json();
+};
+
+export const getBoard = async (id: string): Promise<FullBoard> => {
+  const response = await fetch(`${apiUrl}/boards/${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return await response.json();
 };

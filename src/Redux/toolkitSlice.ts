@@ -5,6 +5,7 @@ import { fetchBoards } from './actionCreators/fetchBoards';
 
 const initialState: IInitialStateInt = {
   token: null,
+  userId: null,
   isTokenLoaded: false,
   isPortalVisible: false,
   boards: {
@@ -13,12 +14,21 @@ const initialState: IInitialStateInt = {
     boardsArray: [],
     selectedBoardId: '',
   },
+  board: {
+    id: null,
+  },
 };
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    setUserId: (state, action: PayloadAction<string | null>) => {
+      state.userId = action.payload;
+    },
+    setBoardId: (state, action: PayloadAction<string | null>) => {
+      state.board.id = action.payload;
+    },
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
@@ -28,7 +38,7 @@ export const appSlice = createSlice({
     setNewBoard: (state, action: PayloadAction<boolean>) => {
       state.boards.newBoard = action.payload;
     },
-    setBoardId: (state, action: PayloadAction<string>) => {
+    setSelectedBoardId: (state, action: PayloadAction<string>) => {
       state.boards.selectedBoardId = action.payload;
     },
     setPortalVisible: (state, action: PayloadAction<boolean>) => {
@@ -47,4 +57,11 @@ export const appSlice = createSlice({
 });
 
 export default appSlice.reducer;
-export const { setToken, setTokenLoaded, setNewBoard, setPortalVisible } = appSlice.actions;
+export const {
+  setToken,
+  setTokenLoaded,
+  setNewBoard,
+  setPortalVisible,
+  setBoardId,
+  setSelectedBoardId,
+} = appSlice.actions;

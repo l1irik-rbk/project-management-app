@@ -1,5 +1,5 @@
-import { GetUsers, UpdateUser } from './interfaces/users';
-import { apiUrl, getToken } from './utils';
+import { GetUsers, RemoveUser, UpdateUser } from './interfaces/users';
+import { apiUrl, getToken, successObject } from './utils';
 import { FormData } from './../views/Profile/ProfileEdit/ProfileEdit';
 
 export const getUsers = async (): Promise<GetUsers> => {
@@ -12,14 +12,6 @@ export const getUsers = async (): Promise<GetUsers> => {
   });
 
   return await response.json();
-};
-
-export const findUser = async (login: string) => {
-  const allUser = await getUsers();
-  const user = Array.isArray(allUser) && allUser.find((user) => user.login === login);
-
-  if (!user) return null;
-  return user;
 };
 
 export const updateUser = async (user: FormData, id: string): Promise<UpdateUser> => {
@@ -35,7 +27,7 @@ export const updateUser = async (user: FormData, id: string): Promise<UpdateUser
   return await response.json();
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: string): Promise<RemoveUser> => {
   const response = await fetch(`${apiUrl}/users/${id}`, {
     method: 'DELETE',
     headers: {
@@ -43,6 +35,6 @@ export const deleteUser = async (id: string) => {
     },
   });
 
-  if (response.status === 204) return { success: true };
+  if (response.status === 204) successObject;
   return await response.json();
 };
