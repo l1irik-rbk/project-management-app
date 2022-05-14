@@ -9,9 +9,9 @@ import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
 
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');
+  const dispatch = useAppDispatch();
   const { boards } = useAppSelector((state) => state.appReducer);
   const { newBoard } = boards;
-  const dispatch = useAppDispatch();
   const { setNewBoard } = appSlice.actions;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
