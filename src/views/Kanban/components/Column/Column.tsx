@@ -70,7 +70,7 @@ export function Column(props: ColumnProps) {
       <Droppable droppableId="todo">
         {(provided) => (
           <div className={s.column} {...provided.droppableProps} ref={provided.innerRef}>
-            {console.log('render')}
+            {/* {console.log('render')} */}
             <ColumnTitle
               taskLength={tasks.length}
               title={column.title}

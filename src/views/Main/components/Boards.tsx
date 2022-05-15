@@ -13,18 +13,18 @@ export const Boards = () => {
   const dispatch = useAppDispatch();
   const { setSelectedBoardId, setIsConfirmed } = appSlice.actions;
 
-  useEffect(() => {
-    if (isConfirmed) {
-      updatesBoards();
-    }
-  }, [isConfirmed]);
+  // useEffect(() => {
+  //   if (isConfirmed) {
+  //     updatesBoards();
+  //   }
+  // }, [isConfirmed]);
 
-  const updatesBoards = async () => {
-    await deleteBoard(selectedBoardId);
-    dispatch(fetchBoards());
-    dispatch(setSelectedBoardId(''));
-    dispatch(setIsConfirmed(false));
-  };
+  // const updatesBoards = async () => {
+  //   await deleteBoard(selectedBoardId);
+  //   dispatch(fetchBoards());
+  //   dispatch(setSelectedBoardId(''));
+  //   dispatch(setIsConfirmed(false));
+  // };
 
   return isBoardsLoaded ? (
     <div className={`${s.boards}`}>

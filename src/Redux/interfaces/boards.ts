@@ -2,7 +2,7 @@ export interface BoardsInt {
   newBoard: boolean;
   isBoardsLoaded: boolean;
   boardsArray: BoardArrayInt[];
-  selectedBoardId: string;
+  selectedBoardId: string | null;
 }
 
 export interface BoardArrayInt {

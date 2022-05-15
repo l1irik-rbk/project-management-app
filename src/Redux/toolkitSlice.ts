@@ -16,7 +16,8 @@ const initialState: IInitialStateInt = {
     selectedBoardId: '',
   },
   currentBoard: {
-    // id: null,
+    selectedColumnId: null,
+    currentBoardId: null,
     isBoardLoaded: false,
     board: null,
   },
@@ -34,9 +35,6 @@ export const appSlice = createSlice({
     setUserId: (state, action: PayloadAction<string | null>) => {
       state.userId = action.payload;
     },
-    // setBoardId: (state, action: PayloadAction<string | null>) => {
-    //   state.board.id = action.payload;
-    // },
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
@@ -46,7 +44,7 @@ export const appSlice = createSlice({
     setNewBoard: (state, action: PayloadAction<boolean>) => {
       state.boards.newBoard = action.payload;
     },
-    setSelectedBoardId: (state, action: PayloadAction<string>) => {
+    setSelectedBoardId: (state, action: PayloadAction<string | null>) => {
       state.boards.selectedBoardId = action.payload;
     },
     setPortalVisible: (state, action: PayloadAction<boolean>) => {
@@ -60,6 +58,12 @@ export const appSlice = createSlice({
     },
     setNewColumn: (state, action: PayloadAction<Column[]>) => {
       if (state.currentBoard.board) state.currentBoard.board.columns = action.payload;
+    },
+    setSelectedColumnId: (state, action: PayloadAction<string | null>) => {
+      state.currentBoard.selectedColumnId = action.payload;
+    },
+    setCurrentBoardId: (state, action: PayloadAction<string | null>) => {
+      state.currentBoard.currentBoardId = action.payload;
     },
   },
   extraReducers: {
@@ -86,9 +90,10 @@ export const {
   setTokenLoaded,
   setNewBoard,
   setPortalVisible,
-  // setBoardId,
+  setSelectedColumnId,
   setSelectedBoardId,
   setConfirmationModalType,
   setIsConfirmed,
   setNewColumn,
+  setCurrentBoardId,
 } = appSlice.actions;

@@ -14,24 +14,32 @@ type Props = {
 };
 
 export const DeleteColumnButton = (props: Props) => {
+  const { boardId, columnId } = props;
   const dispatch = useAppDispatch();
-  const { setPortalVisible, setSelectedBoardId, setConfirmationModalType } = appSlice.actions;
+  const { setPortalVisible, setSelectedColumnId, setConfirmationModalType } = appSlice.actions;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
 
-  const handleDeleteColumn = async () => {
-    const { boardId, columnId } = props;
-    if (boardId && columnId) {
-      const result = await deleteColumn(boardId, columnId);
+  // const handleDeleteColumn = async () => {
+  //   // const { boardId, columnId } = props;
+  //   if (boardId && columnId) {
+  //     const result = await deleteColumn(boardId, columnId);
 
-      if (result.hasOwnProperty('success')) alert('Column deleted');
-      else alert('Error');
-    }
-  };
+  //     if (result.hasOwnProperty('success')) alert('Column deleted');
+  //     else alert('Error');
+  //   }
+  // };
 
-  const handleOnConfirm = () => {
-    handleDeleteColumn();
+  // const handleOnConfirm = () => {
+  //   handleDeleteColumn();
+  // };
+
+  const handleRemoveColumn = (e: SyntheticEvent) => {
+    e.preventDefault();
+    dispatch(setPortalVisible(true));
+    dispatch(setConfirmationModalType(ActionType.DELETE_COLUMN));
+    if (columnId) dispatch(setSelectedColumnId(columnId));
   };
 
   // const handleRemoveColumn = (e: SyntheticEvent) => {
@@ -42,11 +50,11 @@ export const DeleteColumnButton = (props: Props) => {
 
   return (
     <>
-      <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+      <button onClick={handleRemoveColumn} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
         X
       </button>
 
-      <Modal
+      {/* <Modal
         open={isOpenModal}
         title={'Are you sure?'}
         content={
@@ -54,7 +62,7 @@ export const DeleteColumnButton = (props: Props) => {
         }
         onConfirm={handleOnConfirm}
         onClose={handleCloseModal}
-      />
+      /> */}
     </>
   );
 };

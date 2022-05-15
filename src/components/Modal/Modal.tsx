@@ -13,7 +13,7 @@ type Props = {
 
 export const Modal = (props: Props) => {
   const [isOpen, setIsOpen] = useState(props.open);
-  console.log('Modal');
+  // console.log('Modal');
   useEffect(() => setIsOpen(props.open), [props.open]);
 
   const handleClose = () => {

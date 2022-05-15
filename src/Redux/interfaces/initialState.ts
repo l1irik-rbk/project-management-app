@@ -14,7 +14,8 @@ export interface IInitialStateInt {
 }
 
 export interface BoardInt {
-  // id: string | null;
+  selectedColumnId: string | null;
+  currentBoardId: string | null;
   isBoardLoaded: boolean;
   board: FullBoard | null;
 }

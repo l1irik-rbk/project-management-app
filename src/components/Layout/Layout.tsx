@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { Footer } from '../Footer/Footer';
 import { Header } from '../Header/Header';
@@ -9,26 +9,54 @@ import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { appSlice } from '../../Redux/toolkitSlice';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/initialState';
+import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
+import { deleteColumn } from '../../services/columns';
+import { getColumns } from '../../helpers/getColumns';
 
 export const Layout = () => {
+  const location = useLocation();
+  const kanbanLocation = location.pathname.split('/')[2];
+  console.log(kanbanLocation);
   const dispatch = useAppDispatch();
-  const { setSelectedBoardId } = appSlice.actions;
-  const { boards, confirmationModal } = useAppSelector((state) => state.appReducer);
+  const {
+    setSelectedBoardId,
+    setSelectedColumnId,
+    setIsConfirmed,
+    setNewColumn,
+    setCurrentBoardId,
+  } = appSlice.actions;
+  const { boards, confirmationModal, currentBoard } = useAppSelector((state) => state.appReducer);
   const { selectedBoardId } = boards;
   const { type } = confirmationModal;
 
+  // const { isConfirmed } = confirmationModal;
+  const { board, selectedColumnId, currentBoardId } = currentBoard;
+
   const handlePortalAction = async () => {
-    // switch (type) {
-    //   case ActionType.DELETE_BOARD:
-    //     await deleteBoard(selectedBoardId);
-    //     dispatch(fetchBoards());
-    //     dispatch(setSelectedBoardId(''));
-    //     break;
-    //   case ActionType.DELETE_COLUMN:
-    //     break;
-    //   default:
-    //     return null;
-    // }
+    switch (type) {
+      case ActionType.DELETE_BOARD:
+        if (selectedBoardId) {
+          await deleteBoard(selectedBoardId);
+          dispatch(fetchBoards());
+          dispatch(setSelectedBoardId(null));
+        }
+        break;
+      case ActionType.DELETE_COLUMN:
+        if (currentBoardId && selectedColumnId) {
+          const result = await deleteColumn(currentBoardId, selectedColumnId);
+          const columns = board ? getColumns(board) : null;
+          const updetedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+          if (updetedColumns) dispatch(setNewColumn(updetedColumns));
+          dispatch(setSelectedColumnId(null));
+          dispatch(setIsConfirmed(false));
+          dispatch(setCurrentBoardId(null));
+          if (result.hasOwnProperty('success')) alert('Column deleted');
+          else alert('Error');
+        }
+        break;
+      default:
+        return null;
+    }
   };
 
   const getConfirmationModalText = () => {
@@ -43,11 +71,13 @@ export const Layout = () => {
   };
 
   const text = getConfirmationModalText();
-
+  const mainClasses = kanbanLocation
+    ? `${s.main} ${s.wrapper} ${s.kanban}`
+    : `${s.main} ${s.wrapper}`;
   return (
     <>
       <Header />
-      <main className={`${s.main} ${s.wrapper}`}>
+      <main className={mainClasses}>
         <Outlet />
         <ConfirmationModal text={text} onConfirm={handlePortalAction} />
       </main>
