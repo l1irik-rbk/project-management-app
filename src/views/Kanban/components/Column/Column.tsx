@@ -49,18 +49,17 @@ export function Column(props: ColumnProps) {
     const { source, destination } = result;
     if (!destination) return;
     if (!tasks) return;
-
     const items = Array.from(tasks);
 
     const from = source.index;
     const to = destination.index;
     if (from === to) return;
-
+    console.log(from, to);
     const [removed] = items.splice(from, 1);
     const formatRemoved = { ...removed, order: to };
     items.splice(to, 0, formatRemoved);
     const newOrdersTasks = items.map((item, index) => ({ ...item, order: index }));
-
+    console.log(newOrdersTasks);
     setTasks(newOrdersTasks);
   };
 
@@ -79,6 +78,7 @@ export function Column(props: ColumnProps) {
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <div className={s.column}>
+              {console.log('render')}
               <ColumnTitle
                 taskLength={tasks.length}
                 title={column.title}
