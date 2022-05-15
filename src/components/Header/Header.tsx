@@ -3,8 +3,6 @@ import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { appSlice } from '../../Redux/toolkitSlice';
-import { useEffect } from 'react';
-import { getToken } from '../../services/utils';
 
 export const Header = () => {
   const { isTokenLoaded, boards } = useAppSelector((state) => state.appReducer);
@@ -12,12 +10,6 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const { setToken, setTokenLoaded, setNewBoard } = appSlice.actions;
   const location = useLocation();
-
-  useEffect(() => {
-    const token = getToken();
-    dispatch(setToken(token));
-    dispatch(setTokenLoaded(Boolean(token)));
-  });
 
   const logout = () => {
     document.cookie = `token=${''}`;

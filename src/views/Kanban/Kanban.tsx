@@ -25,6 +25,10 @@ export const Kanban = () => {
       dispatch(fetchBoard(boardId));
       dispatch(setCurrentBoardId(boardId));
     }
+
+    return () => {
+      dispatch(setCurrentBoardId(null));
+    };
   }, [boardId]);
 
   return (

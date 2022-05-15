@@ -4,11 +4,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchBoards } from './actionCreators/fetchBoards';
 import { fetchBoard } from './actionCreators/fetchBoard';
 import { Column, FullBoard } from '../services/interfaces/boards';
+import { getToken } from '../services/utils';
 
 const initialState: IInitialStateInt = {
-  token: null,
+  token: getToken(),
   userId: null,
-  isTokenLoaded: false,
+  isTokenLoaded: Boolean(getToken()),
   boards: {
     newBoard: false,
     isBoardsLoaded: false,
@@ -22,7 +23,6 @@ const initialState: IInitialStateInt = {
     board: null,
   },
   confirmationModal: {
-    isConfirmed: false,
     type: null,
     isPortalVisible: false,
   },
@@ -52,9 +52,6 @@ export const appSlice = createSlice({
     },
     setConfirmationModalType: (state, action: PayloadAction<ActionType | null>) => {
       state.confirmationModal.type = action.payload;
-    },
-    setIsConfirmed: (state, action: PayloadAction<boolean>) => {
-      state.confirmationModal.isConfirmed = action.payload;
     },
     setNewColumn: (state, action: PayloadAction<Column[]>) => {
       if (state.currentBoard.board) state.currentBoard.board.columns = action.payload;
@@ -93,7 +90,6 @@ export const {
   setSelectedColumnId,
   setSelectedBoardId,
   setConfirmationModalType,
-  setIsConfirmed,
   setNewColumn,
   setCurrentBoardId,
 } = appSlice.actions;

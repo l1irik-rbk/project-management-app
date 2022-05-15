@@ -7,7 +7,6 @@ export interface IInitialStateInt {
   boards: BoardsInt;
   currentBoard: BoardInt;
   confirmationModal: {
-    isConfirmed: boolean;
     type: ActionType | null;
     isPortalVisible: boolean;
   };

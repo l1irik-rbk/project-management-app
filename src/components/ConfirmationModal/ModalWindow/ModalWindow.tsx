@@ -8,7 +8,7 @@ const ModalWindow = ({ text, onConfirm }: Props) => {
   const { confirmationModal } = useAppSelector((state) => state.appReducer);
   const { isPortalVisible } = confirmationModal;
   const dispatch = useAppDispatch();
-  const { setPortalVisible, setConfirmationModalType, setIsConfirmed } = appSlice.actions;
+  const { setPortalVisible, setConfirmationModalType } = appSlice.actions;
   const portalVisibility = isPortalVisible ? `${s.overlay}` : `${s.overlay__hidden}`;
 
   const handleClosePortal = () => {
@@ -18,7 +18,7 @@ const ModalWindow = ({ text, onConfirm }: Props) => {
 
   const handlePortalAction = () => {
     onConfirm();
-    // dispatch(setIsConfirmed(true));
+    console.log('handlePortalAction');
     dispatch(setPortalVisible(false));
     dispatch(setConfirmationModalType(null));
   };

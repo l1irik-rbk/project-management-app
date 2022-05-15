@@ -18,6 +18,8 @@ export function Column(props: ColumnProps) {
   const [column, setColumn] = useState<FullColumn>(props.column);
   const [tasks, setTasks] = useState<TaskType[]>(column.tasks);
   const orderForNewTask = column.tasks.length;
+  const changeTasks = (column: FullColumn) => column.tasks;
+  const updatedTasks = [...changeTasks(column)];
 
   useEffect(() => {
     const update = async () => {
@@ -69,46 +71,48 @@ export function Column(props: ColumnProps) {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="todo">
         {(provided) => (
-          <div className={s.column} {...provided.droppableProps} ref={provided.innerRef}>
-            {/* {console.log('render')} */}
-            <ColumnTitle
-              taskLength={tasks.length}
-              title={column.title}
-              columnId={column.id}
-              boardId={props.boardId}
-            />
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div className={s.column}>
+              {/* {console.log('render')} */}
+              <ColumnTitle
+                taskLength={tasks.length}
+                title={column.title}
+                columnId={column.id}
+                boardId={props.boardId}
+              />
 
-            {tasks
-              .sort((a, b) => a.order - b.order)
-              .map((task, index) => {
-                return (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Task
-                          key={task.id}
-                          boardId={props.boardId}
-                          columnId={column.id}
-                          task={task}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+              {updatedTasks
+                .sort((a, b) => a.order - b.order)
+                .map((task, index) => {
+                  return (
+                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Task
+                            key={task.id}
+                            boardId={props.boardId}
+                            columnId={column.id}
+                            task={task}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
 
-            {provided.placeholder}
+              {provided.placeholder}
 
-            <CreateTaskButton
-              boardId={props.boardId}
-              columnId={column.id}
-              orderForNewTask={orderForNewTask}
-              onCreateTask={getColumnData}
-            />
+              <CreateTaskButton
+                boardId={props.boardId}
+                columnId={column.id}
+                orderForNewTask={orderForNewTask}
+                onCreateTask={getColumnData}
+              />
+            </div>
           </div>
         )}
       </Droppable>

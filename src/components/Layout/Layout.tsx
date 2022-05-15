@@ -16,15 +16,8 @@ import { getColumns } from '../../helpers/getColumns';
 export const Layout = () => {
   const location = useLocation();
   const kanbanLocation = location.pathname.split('/')[2];
-  console.log(kanbanLocation);
   const dispatch = useAppDispatch();
-  const {
-    setSelectedBoardId,
-    setSelectedColumnId,
-    setIsConfirmed,
-    setNewColumn,
-    setCurrentBoardId,
-  } = appSlice.actions;
+  const { setSelectedBoardId, setSelectedColumnId, setNewColumn } = appSlice.actions;
   const { boards, confirmationModal, currentBoard } = useAppSelector((state) => state.appReducer);
   const { selectedBoardId } = boards;
   const { type } = confirmationModal;
@@ -48,8 +41,6 @@ export const Layout = () => {
           const updetedColumns = deleteColumnFromBoard(columns, selectedColumnId);
           if (updetedColumns) dispatch(setNewColumn(updetedColumns));
           dispatch(setSelectedColumnId(null));
-          dispatch(setIsConfirmed(false));
-          dispatch(setCurrentBoardId(null));
           if (result.hasOwnProperty('success')) alert('Column deleted');
           else alert('Error');
         }
@@ -74,6 +65,7 @@ export const Layout = () => {
   const mainClasses = kanbanLocation
     ? `${s.main} ${s.wrapper} ${s.kanban}`
     : `${s.main} ${s.wrapper}`;
+
   return (
     <>
       <Header />
