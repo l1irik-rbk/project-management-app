@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 
 import { createTask } from '../../../../services/tasks';
 import { Modal } from '../../../../components/Modal/Modal';
-import g from './../../../../App.module.scss';
 import { getUserId } from '../../../../services/utils';
+import g from './../../../../App.module.scss';
+import s from './CreateTaskButton.module.scss';
 
 export type CreateTaskData = {
   title: string;
@@ -96,7 +97,12 @@ export const CreateTaskButton = (props: Props) => {
 
   return (
     <>
-      <button onClick={handleOpenModal}>+</button>
+      <button
+        className={`${g.button} ${g.drop_shadow} ${s.create__task}`}
+        onClick={handleOpenModal}
+      >
+        +
+      </button>
       <Modal
         title="Enter a new column"
         content={createContent()}

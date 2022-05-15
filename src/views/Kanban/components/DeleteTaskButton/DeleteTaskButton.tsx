@@ -1,10 +1,10 @@
 import { SyntheticEvent } from 'react';
 
 import g from '../../../../App.module.scss';
+import s from './DeleteTaskButton.module.scss';
 import { ActionType } from '../../../../Redux/interfaces/initialState';
 import { useAppDispatch } from '../../../../Redux/reduxHooks';
 import { appSlice } from '../../../../Redux/toolkitSlice';
-import s from './DeleteTaskButton.module.scss';
 
 type Props = {
   boardId: string | undefined;

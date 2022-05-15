@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { createColumn, getColumn } from '../../../../services/columns';
 import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
+import s from './CreateColumnButton.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
 import { Column } from '../../../../services/interfaces/columns';
 import { appSlice } from '../../../../Redux/toolkitSlice';
@@ -85,7 +86,9 @@ export const CreateColumnButton = (props: Props) => {
 
   return (
     <>
-      <button onClick={handleOpenModal}>Create new column</button>
+      <div onClick={handleOpenModal}>
+        <button className={`${s.create__column}`}>Add Column</button>
+      </div>
       <Modal
         open={isOpenModal}
         title="Enter a title of new column"
