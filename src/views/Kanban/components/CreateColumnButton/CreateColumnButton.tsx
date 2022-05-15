@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createColumn } from '../../../../services/columns';
+import { createColumn, getColumn } from '../../../../services/columns';
 import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
+import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
+import { Column } from '../../../../services/interfaces/columns';
+import { appSlice } from '../../../../Redux/toolkitSlice';
+import { getColumns } from '../../../../helpers/getColumns';
 
 export type CreateColumnData = {
   title: string;
@@ -12,13 +16,17 @@ export type CreateColumnData = {
 type Props = {
   boardId: string | undefined;
   orderForNewColumn: number;
-  onCreateColumn: () => void;
 };
 
 export const CreateColumnButton = (props: Props) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
+
+  const dispatch = useAppDispatch();
+  const { setNewColumn } = appSlice.actions;
+  const { currentBoard } = useAppSelector((state) => state.appReducer);
+  const { board } = currentBoard;
 
   const {
     register,
@@ -31,15 +39,21 @@ export const CreateColumnButton = (props: Props) => {
     const boardId = props.boardId;
     if (boardId) {
       const response = await createColumn(data.title, props.orderForNewColumn, boardId);
-
+      console.log(response);
       if (response.hasOwnProperty('error')) {
+        // Error
         console.log(response);
       } else {
         reset({
           title: '',
         });
-        props.onCreateColumn();
         handleCloseModal();
+        const { id } = response as Column;
+        const newColumn = await getColumn(boardId, id);
+        const columns = board ? getColumns(board) : null;
+        columns?.push(newColumn);
+
+        if (columns) dispatch(setNewColumn(columns));
       }
     }
   };

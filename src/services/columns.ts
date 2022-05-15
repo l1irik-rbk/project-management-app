@@ -1,5 +1,5 @@
-import { CreateColumnData } from '../views/Kanban/components/CreateColumnButton/CreateColumnButton';
-import { CreateColumn, FullColumn, RemoveColumn } from './interfaces/columns';
+import { Column } from './interfaces/boards';
+import { FullColumn, RemoveColumn, ColumnError } from './interfaces/columns';
 import { apiUrl, getToken, successObject } from './utils';
 
 const token = getToken();
@@ -8,7 +8,7 @@ export const createColumn = async (
   title: string,
   order: number,
   boardId: string
-): Promise<CreateColumn> => {
+): Promise<Column | ColumnError> => {
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns`, {
     method: 'POST',
     headers: {

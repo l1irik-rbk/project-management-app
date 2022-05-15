@@ -2,6 +2,8 @@ import { BoardArrayInt } from './interfaces/boards';
 import { IInitialStateInt, ActionType } from './interfaces/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchBoards } from './actionCreators/fetchBoards';
+import { fetchBoard } from './actionCreators/fetchBoard';
+import { Column, FullBoard } from '../services/interfaces/boards';
 
 const initialState: IInitialStateInt = {
   token: null,
@@ -13,8 +15,10 @@ const initialState: IInitialStateInt = {
     boardsArray: [],
     selectedBoardId: '',
   },
-  board: {
-    id: null,
+  currentBoard: {
+    // id: null,
+    isBoardLoaded: false,
+    board: null,
   },
   confirmationModal: {
     isConfirmed: false,
@@ -30,9 +34,9 @@ export const appSlice = createSlice({
     setUserId: (state, action: PayloadAction<string | null>) => {
       state.userId = action.payload;
     },
-    setBoardId: (state, action: PayloadAction<string | null>) => {
-      state.board.id = action.payload;
-    },
+    // setBoardId: (state, action: PayloadAction<string | null>) => {
+    //   state.board.id = action.payload;
+    // },
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
@@ -54,6 +58,9 @@ export const appSlice = createSlice({
     setIsConfirmed: (state, action: PayloadAction<boolean>) => {
       state.confirmationModal.isConfirmed = action.payload;
     },
+    setNewColumn: (state, action: PayloadAction<Column[]>) => {
+      if (state.currentBoard.board) state.currentBoard.board.columns = action.payload;
+    },
   },
   extraReducers: {
     [fetchBoards.pending.type]: (state) => {
@@ -62,6 +69,13 @@ export const appSlice = createSlice({
     [fetchBoards.fulfilled.type]: (state, action: PayloadAction<BoardArrayInt[]>) => {
       state.boards.isBoardsLoaded = true;
       state.boards.boardsArray = action.payload;
+    },
+    [fetchBoard.pending.type]: (state) => {
+      state.currentBoard.isBoardLoaded = false;
+    },
+    [fetchBoard.fulfilled.type]: (state, action: PayloadAction<FullBoard>) => {
+      state.currentBoard.isBoardLoaded = true;
+      state.currentBoard.board = action.payload;
     },
   },
 });
@@ -72,8 +86,9 @@ export const {
   setTokenLoaded,
   setNewBoard,
   setPortalVisible,
-  setBoardId,
+  // setBoardId,
   setSelectedBoardId,
   setConfirmationModalType,
   setIsConfirmed,
+  setNewColumn,
 } = appSlice.actions;

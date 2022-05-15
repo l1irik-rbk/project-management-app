@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 
 import { deleteColumn } from '../../../../services/columns';
 import g from '../../../../App.module.scss';
@@ -6,6 +6,7 @@ import s from './DeleteColumnButton.module.scss';
 import { Modal } from '../../../../components/Modal/Modal';
 import { appSlice } from '../../../../Redux/toolkitSlice';
 import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { ActionType } from '../../../../Redux/interfaces/initialState';
 
 type Props = {
   boardId: string | undefined;
@@ -33,13 +34,19 @@ export const DeleteColumnButton = (props: Props) => {
     handleDeleteColumn();
   };
 
+  // const handleRemoveColumn = (e: SyntheticEvent) => {
+  //   e.preventDefault();
+  //   dispatch(setPortalVisible(true));
+  //   dispatch(setConfirmationModalType(ActionType.DELETE_COLUMN));
+  // };
+
   return (
     <>
       <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
         X
       </button>
 
-      {/* <Modal
+      <Modal
         open={isOpenModal}
         title={'Are you sure?'}
         content={
@@ -47,7 +54,7 @@ export const DeleteColumnButton = (props: Props) => {
         }
         onConfirm={handleOnConfirm}
         onClose={handleCloseModal}
-      /> */}
+      />
     </>
   );
 };

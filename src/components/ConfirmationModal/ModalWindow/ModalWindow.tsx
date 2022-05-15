@@ -17,11 +17,10 @@ const ModalWindow = ({ text, onConfirm }: Props) => {
   };
 
   const handlePortalAction = () => {
-    onConfirm();
+    // onConfirm();
     dispatch(setIsConfirmed(true));
     dispatch(setPortalVisible(false));
     dispatch(setConfirmationModalType(null));
-    // dispatch(setIsConfirmed(false));
   };
 
   return (

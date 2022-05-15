@@ -13,11 +13,11 @@ export interface Board {
 export type CreateBoard = Board | BoardError;
 
 // BoardsController_getOne
-export type FullBoard = {
+export interface FullBoard {
   id: string;
   title: string;
   columns: Column[];
-};
+}
 
 export interface Column {
   id: string;
