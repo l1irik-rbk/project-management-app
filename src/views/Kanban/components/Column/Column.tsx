@@ -8,6 +8,7 @@ import s from './Column.module.scss';
 import { ColumnTitle } from '../ColumnTitle/ColumnTitle';
 import { updateTask } from '../../../../services/tasks';
 import { getColumn } from '../../../../services/columns';
+import { useAppSelector } from '../../../../Redux/reduxHooks';
 
 type ColumnProps = {
   column: FullColumn;
@@ -15,11 +16,13 @@ type ColumnProps = {
 };
 
 export function Column(props: ColumnProps) {
+  const { currentBoard } = useAppSelector((state) => state.appReducer);
+  const { board } = currentBoard;
+  const updatedColumn = board?.columns.filter((column) => column.id === props.column.id)[0];
+
   const [column, setColumn] = useState<FullColumn>(props.column);
   const [tasks, setTasks] = useState<TaskType[]>(column.tasks);
   const orderForNewTask = column.tasks.length;
-  const changeTasks = (column: FullColumn) => column.tasks;
-  const updatedTasks = [...changeTasks(column)];
 
   useEffect(() => {
     const update = async () => {
@@ -33,9 +36,12 @@ export function Column(props: ColumnProps) {
     setTasks(column.tasks);
   }, [column]);
 
+  useEffect(() => {
+    if (updatedColumn) setColumn(updatedColumn);
+  }, [updatedColumn]);
+
   const getColumnData = async () => {
     const data = await getColumn(props.boardId, column.id);
-    // console.log(data);
     setColumn(data);
   };
 
@@ -73,7 +79,6 @@ export function Column(props: ColumnProps) {
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <div className={s.column}>
-              {/* {console.log('render')} */}
               <ColumnTitle
                 taskLength={tasks.length}
                 title={column.title}
@@ -81,7 +86,8 @@ export function Column(props: ColumnProps) {
                 boardId={props.boardId}
               />
 
-              {updatedTasks
+              {tasks
+                .slice()
                 .sort((a, b) => a.order - b.order)
                 .map((task, index) => {
                   return (

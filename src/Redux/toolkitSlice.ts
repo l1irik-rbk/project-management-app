@@ -18,6 +18,7 @@ const initialState: IInitialStateInt = {
   },
   currentBoard: {
     selectedColumnId: null,
+    selectedTaskId: null,
     currentBoardId: null,
     isBoardLoaded: false,
     board: null,
@@ -62,6 +63,9 @@ export const appSlice = createSlice({
     setCurrentBoardId: (state, action: PayloadAction<string | null>) => {
       state.currentBoard.currentBoardId = action.payload;
     },
+    setSelectedTaskId: (state, action: PayloadAction<string | null>) => {
+      state.currentBoard.selectedTaskId = action.payload;
+    },
   },
   extraReducers: {
     [fetchBoards.pending.type]: (state) => {
@@ -92,4 +96,5 @@ export const {
   setConfirmationModalType,
   setNewColumn,
   setCurrentBoardId,
+  setSelectedTaskId,
 } = appSlice.actions;

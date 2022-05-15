@@ -12,18 +12,19 @@ import { ActionType } from '../../Redux/interfaces/initialState';
 import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { deleteColumn } from '../../services/columns';
 import { getColumns } from '../../helpers/getColumns';
+import { deleteTask } from '../../services/tasks';
+import { filterByTasks } from '../../helpers/filterByTasks';
 
 export const Layout = () => {
   const location = useLocation();
   const kanbanLocation = location.pathname.split('/')[2];
   const dispatch = useAppDispatch();
-  const { setSelectedBoardId, setSelectedColumnId, setNewColumn } = appSlice.actions;
+  const { setSelectedBoardId, setSelectedColumnId, setNewColumn, setSelectedTaskId } =
+    appSlice.actions;
   const { boards, confirmationModal, currentBoard } = useAppSelector((state) => state.appReducer);
+  const { board, selectedColumnId, currentBoardId, selectedTaskId } = currentBoard;
   const { selectedBoardId } = boards;
   const { type } = confirmationModal;
-
-  // const { isConfirmed } = confirmationModal;
-  const { board, selectedColumnId, currentBoardId } = currentBoard;
 
   const handlePortalAction = async () => {
     switch (type) {
@@ -38,10 +39,24 @@ export const Layout = () => {
         if (currentBoardId && selectedColumnId) {
           const result = await deleteColumn(currentBoardId, selectedColumnId);
           const columns = board ? getColumns(board) : null;
-          const updetedColumns = deleteColumnFromBoard(columns, selectedColumnId);
-          if (updetedColumns) dispatch(setNewColumn(updetedColumns));
+          const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+          if (updatedColumns) dispatch(setNewColumn(updatedColumns));
           dispatch(setSelectedColumnId(null));
           if (result.hasOwnProperty('success')) alert('Column deleted');
+          else alert('Error');
+        }
+        break;
+      case ActionType.DELETE_TASK:
+        if (currentBoardId && selectedColumnId && selectedTaskId) {
+          const result = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
+          const columns = board ? getColumns(board) : null;
+          const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId).sort(
+            (a, b) => a.order - b.order
+          );
+          dispatch(setNewColumn(updatedColumns));
+          dispatch(setSelectedColumnId(null));
+          dispatch(setSelectedTaskId(null));
+          if (result.hasOwnProperty('success')) alert('Task deleted');
           else alert('Error');
         }
         break;
@@ -56,6 +71,8 @@ export const Layout = () => {
         return 'You will remove the board and all of its contents.';
       case ActionType.DELETE_COLUMN:
         return 'You want to delete this column? All tasks will be deleted. This action cannot be undone.';
+      case ActionType.DELETE_TASK:
+        return 'You want to delete this task? This action cannot be undone.';
       default:
         return '';
     }

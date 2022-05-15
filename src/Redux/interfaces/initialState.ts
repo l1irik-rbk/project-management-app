@@ -15,6 +15,7 @@ export interface IInitialStateInt {
 export interface BoardInt {
   selectedColumnId: string | null;
   currentBoardId: string | null;
+  selectedTaskId: string | null;
   isBoardLoaded: boolean;
   board: FullBoard | null;
 }
@@ -22,4 +23,5 @@ export interface BoardInt {
 export enum ActionType {
   DELETE_BOARD = 'DELETE_BOARD',
   DELETE_COLUMN = 'DELETE_COLUMN',
+  DELETE_TASK = 'DELETE_TASK',
 }

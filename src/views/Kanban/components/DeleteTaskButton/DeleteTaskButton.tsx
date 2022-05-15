@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { SyntheticEvent } from 'react';
 
 import g from '../../../../App.module.scss';
-import { Modal } from '../../../../components/Modal/Modal';
-import { deleteTask } from '../../../../services/tasks';
+import { ActionType } from '../../../../Redux/interfaces/initialState';
+import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { appSlice } from '../../../../Redux/toolkitSlice';
 import s from './DeleteTaskButton.module.scss';
 
 type Props = {
@@ -12,36 +13,24 @@ type Props = {
 };
 
 export const DeleteTaskButton = (props: Props) => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const handleOpenModal = () => setIsOpenModal(true);
-  const handleCloseModal = () => setIsOpenModal(false);
+  const { boardId, columnId, taskId } = props;
+  const dispatch = useAppDispatch();
+  const { setPortalVisible, setSelectedColumnId, setConfirmationModalType, setSelectedTaskId } =
+    appSlice.actions;
 
-  const handleDeleteTask = async () => {
-    const { boardId, columnId, taskId } = props;
+  const handleRemoveColumn = (e: SyntheticEvent) => {
+    e.preventDefault();
+    dispatch(setPortalVisible(true));
+    dispatch(setConfirmationModalType(ActionType.DELETE_TASK));
     if (boardId && columnId && taskId) {
-      const result = await deleteTask(boardId, columnId, taskId);
-      if (result.hasOwnProperty('success')) alert('Task deleted');
-      else alert('Error');
+      dispatch(setSelectedColumnId(columnId));
+      dispatch(setSelectedTaskId(taskId));
     }
   };
 
-  const handleOnConfirm = () => {
-    handleDeleteTask();
-  };
-
   return (
-    <>
-      <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
-        X
-      </button>
-
-      <Modal
-        open={isOpenModal}
-        title={'Are you sure?'}
-        content={'You want to delete this task? This action cannot be undone.'}
-        onConfirm={handleOnConfirm}
-        onClose={handleCloseModal}
-      />
-    </>
+    <button onClick={handleRemoveColumn} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+      X
+    </button>
   );
 };
