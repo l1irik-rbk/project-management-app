@@ -48,7 +48,6 @@ export const CreateTaskButton = (props: Props) => {
           description: '',
         });
         props.onCreateTask();
-        alert('Task created');
       }
     }
   };
@@ -56,7 +55,7 @@ export const CreateTaskButton = (props: Props) => {
   const createContent = () => {
     return (
       <>
-        <label>
+        <label className={s.label}>
           <p>title:</p>
           <input
             {...register('title', { required: true, minLength: 3, maxLength: 20 })}
@@ -65,6 +64,7 @@ export const CreateTaskButton = (props: Props) => {
             placeholder="name task"
           />
           <br />
+
           {errors.title && (
             <span className={g.font_error}>
               {errors.title.type === 'required' && 'Login is required'}
@@ -74,7 +74,7 @@ export const CreateTaskButton = (props: Props) => {
           )}
         </label>
 
-        <label>
+        <label className={s.label}>
           <p>description:</p>
           <input
             {...register('description', { required: true, minLength: 3, maxLength: 20 })}

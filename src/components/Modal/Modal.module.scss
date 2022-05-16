@@ -1,3 +1,5 @@
+@import './../../App.module.scss';
+
 .overlay {
   position: fixed;
   top: 0;
@@ -19,6 +21,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  max-width: 288px;
+  width: 288px;
 
   &_content {
     display: flex;
@@ -26,12 +30,11 @@
     justify-content: space-between;
     align-items: center;
     gap: 32px;
-    padding: 32px 24px 18px 24px;
-    // max-width: 288px;
-    // height: 208px;
-    background-color: #fff;
-    border: 1px solid #323232;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    padding: 32px 24px 24px 24px;
+
+    background-color: $color__white;
+    border: 1px solid $color__mine_shaft;
+    @extend .drop_shadow;
     border-radius: 12px;
 
     .buttons__container {
