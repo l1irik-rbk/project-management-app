@@ -4,8 +4,7 @@ import s from '../Main.module.scss';
 import { Board } from './Board';
 
 export const Boards = () => {
-  const { boards } = useAppSelector((state) => state.appReducer);
-  const { isBoardsLoaded, boardsArray } = boards;
+  const { isBoardsLoaded, boardsArray } = useAppSelector((state) => state.boards);
 
   return isBoardsLoaded ? (
     <div className={`${s.boards}`}>

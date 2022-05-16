@@ -3,16 +3,15 @@ import React, { useState } from 'react';
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
-import { appSlice } from '../../../Redux/toolkitSlice';
 import { createBoard } from '../../../services/boards';
 import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
+import { boardsSlice } from '../../../Redux/slices/boardsSlice';
 
 export const NewBoardField = () => {
   const [inputValue, setInputValue] = useState('');
   const dispatch = useAppDispatch();
-  const { boards } = useAppSelector((state) => state.appReducer);
-  const { newBoard } = boards;
-  const { setNewBoard } = appSlice.actions;
+  const { newBoard } = useAppSelector((state) => state.boards);
+  const { setNewBoard } = boardsSlice.actions;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

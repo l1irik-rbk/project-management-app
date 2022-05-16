@@ -6,7 +6,7 @@ import boar from '../../assets/images/boar.png';
 import { useAppSelector } from '../../Redux/reduxHooks';
 
 export const Welcome = () => {
-  const { isTokenLoaded } = useAppSelector((state) => state.appReducer);
+  const { isTokenLoaded } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     document.title = 'Welcome';

@@ -1,8 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import appReducer from './toolkitSlice';
+import authReducer from './slices/authSlice';
+import boardsReducer from './slices/boardsSlice';
+import confirmationModalReducer from './slices/confirmationModalSlice';
+import boardReducer from './slices/boardSlice';
 
 const rootReducer = combineReducers({
-  appReducer,
+  auth: authReducer,
+  boards: boardsReducer,
+  board: boardReducer,
+  confirmationModal: confirmationModalReducer,
 });
 
 export const setupStore = () => {

@@ -5,12 +5,14 @@ import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
 import { BoardProp } from './interfaces/BoardProp';
 import { useAppDispatch } from '../../../Redux/reduxHooks';
-import { appSlice } from '../../../Redux/toolkitSlice';
-import { ActionType } from '../../../Redux/interfaces/initialState';
+import { boardsSlice } from '../../../Redux/slices/boardsSlice';
+import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
+import { ActionType } from '../../../Redux/interfaces/confirmationModa';
 
 export const Board = ({ id, boardTitle }: BoardProp) => {
   const dispatch = useAppDispatch();
-  const { setPortalVisible, setSelectedBoardId, setConfirmationModalType } = appSlice.actions;
+  const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
+  const { setSelectedBoardId } = boardsSlice.actions;
 
   const handleRemoveBoard = (e: SyntheticEvent) => {
     e.preventDefault();

@@ -1,10 +1,9 @@
-import { SyntheticEvent } from 'react';
+import { useState } from 'react';
 
 import g from '../../../../App.module.scss';
 import s from './DeleteTaskButton.module.scss';
-import { ActionType } from '../../../../Redux/interfaces/initialState';
-import { useAppDispatch } from '../../../../Redux/reduxHooks';
-import { appSlice } from '../../../../Redux/toolkitSlice';
+import { Modal } from '../../../../components/Modal/Modal';
+import { deleteTask } from '../../../../services/tasks';
 
 type Props = {
   boardId: string | undefined;
@@ -14,23 +13,36 @@ type Props = {
 
 export const DeleteTaskButton = (props: Props) => {
   const { boardId, columnId, taskId } = props;
-  const dispatch = useAppDispatch();
-  const { setPortalVisible, setSelectedColumnId, setConfirmationModalType, setSelectedTaskId } =
-    appSlice.actions;
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const handleOpenModal = () => setIsOpenModal(true);
+  const handleCloseModal = () => setIsOpenModal(false);
 
-  const handleRemoveColumn = (e: SyntheticEvent) => {
-    e.preventDefault();
-    dispatch(setPortalVisible(true));
-    dispatch(setConfirmationModalType(ActionType.DELETE_TASK));
+  const handleDeleteTask = async () => {
     if (boardId && columnId && taskId) {
-      dispatch(setSelectedColumnId(columnId));
-      dispatch(setSelectedTaskId(taskId));
+      const result = await deleteTask(boardId, columnId, taskId);
+      if (result.hasOwnProperty('success')) alert('Task deleted');
+      else alert('Error');
+      handleCloseModal();
     }
   };
 
+  const handleOnConfirm = () => {
+    handleDeleteTask();
+  };
+
   return (
-    <button onClick={handleRemoveColumn} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
-      X
-    </button>
+    <>
+      <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+        X
+      </button>
+
+      <Modal
+        open={isOpenModal}
+        title={'Are you sure?'}
+        content={'You want to delete this task? This action cannot be undone.'}
+        onConfirm={handleOnConfirm}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 };

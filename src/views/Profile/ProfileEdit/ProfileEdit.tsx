@@ -6,7 +6,7 @@ import g from './../../../App.module.scss';
 import { deleteUser, updateUser } from '../../../services/users';
 import { ConfirmationModal } from '../../../components/ConfirmationModal/ConfirmationModal';
 import { useAppDispatch } from '../../../Redux/reduxHooks';
-import { setPortalVisible } from '../../../Redux/toolkitSlice';
+import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
 
 type Props = {
   user: User;
@@ -21,7 +21,7 @@ export type FormData = {
 
 export const ProfileEdit = (props: Props) => {
   const dispatch = useAppDispatch();
-
+  const { setPortalVisible } = confirmationModalSlice.actions;
   const {
     register,
     handleSubmit,

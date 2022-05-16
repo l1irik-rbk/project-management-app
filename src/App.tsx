@@ -11,7 +11,7 @@ import { Profile } from './views/Profile/Profile';
 import { Welcome } from './views/Welcome/Welcome';
 
 const App = () => {
-  const { isTokenLoaded } = useAppSelector((state) => state.appReducer);
+  const { isTokenLoaded } = useAppSelector((state) => state.auth);
 
   return (
     <Routes>

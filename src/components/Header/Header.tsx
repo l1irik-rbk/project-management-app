@@ -2,13 +2,15 @@ import { Link, useLocation } from 'react-router-dom';
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { appSlice } from '../../Redux/toolkitSlice';
+import { authSlice } from '../../Redux/slices/authSlice';
+import { boardsSlice } from '../../Redux/slices/boardsSlice';
 
 export const Header = () => {
-  const { isTokenLoaded, boards } = useAppSelector((state) => state.appReducer);
-  const { newBoard } = boards;
+  const { newBoard } = useAppSelector((state) => state.boards);
+  const { isTokenLoaded } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  const { setToken, setTokenLoaded, setNewBoard } = appSlice.actions;
+  const { setNewBoard } = boardsSlice.actions;
+  const { setToken, setTokenLoaded } = authSlice.actions;
   const location = useLocation();
 
   const logout = () => {

@@ -1,14 +1,15 @@
 import s from './ModalWindow.module.scss';
 import g from './../../../App.module.scss';
 import { useAppSelector, useAppDispatch } from '../../../Redux/reduxHooks';
-import { appSlice } from '../../../Redux/toolkitSlice';
 import { Props } from '../ConfirmationModal';
+import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
 
 const ModalWindow = ({ text, onConfirm }: Props) => {
-  const { confirmationModal } = useAppSelector((state) => state.appReducer);
-  const { isPortalVisible } = confirmationModal;
+  const { isPortalVisible } = useAppSelector((state) => state.confirmationModal);
+
   const dispatch = useAppDispatch();
-  const { setPortalVisible, setConfirmationModalType } = appSlice.actions;
+  const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
+
   const portalVisibility = isPortalVisible ? `${s.overlay}` : `${s.overlay__hidden}`;
 
   const handleClosePortal = () => {

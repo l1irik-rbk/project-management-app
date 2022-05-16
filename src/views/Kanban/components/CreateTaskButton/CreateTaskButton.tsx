@@ -48,6 +48,7 @@ export const CreateTaskButton = (props: Props) => {
           description: '',
         });
         props.onCreateTask();
+        alert('Task created');
       }
     }
   };

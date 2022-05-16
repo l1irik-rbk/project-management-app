@@ -23,6 +23,7 @@ export const Kanban = () => {
   const setBoardData = async () => {
     if (params.id) {
       const board = await getBoard(params.id);
+      console.log(board);
       setBoard(board);
       setIsBoardLoaded(true);
     }
@@ -41,7 +42,11 @@ export const Kanban = () => {
                 params.id && <Column key={column.id} column={column} boardId={params.id} />
             )}
 
-          <CreateColumnButton boardId={params.id} orderForNewColumn={orderForNewColumn} />
+          <CreateColumnButton
+            boardId={params.id}
+            orderForNewColumn={orderForNewColumn}
+            onCreateColumn={setBoardData}
+          />
         </div>
       ) : (
         <Spinner />

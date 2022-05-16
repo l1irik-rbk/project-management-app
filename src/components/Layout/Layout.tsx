@@ -6,26 +6,29 @@ import s from '../../App.module.scss';
 import { ConfirmationModal } from '../ConfirmationModal/ConfirmationModal';
 import { deleteBoard } from '../../services/boards';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { appSlice } from '../../Redux/toolkitSlice';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
-import { ActionType } from '../../Redux/interfaces/initialState';
 import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { deleteColumn } from '../../services/columns';
 import { getColumns } from '../../helpers/getColumns';
 import { deleteTask } from '../../services/tasks';
 import { filterByTasks } from '../../helpers/filterByTasks';
+import { boardsSlice } from '../../Redux/slices/boardsSlice';
+import { boardSlice } from '../../Redux/slices/boardSlice';
+import { ActionType } from '../../Redux/interfaces/confirmationModa';
 
 export const Layout = () => {
   const location = useLocation();
   const isKanban = location.pathname.includes('kanban');
 
   const dispatch = useAppDispatch();
-  const { setSelectedBoardId, setSelectedColumnId, setNewColumn, setSelectedTaskId } =
-    appSlice.actions;
-  const { boards, confirmationModal, currentBoard } = useAppSelector((state) => state.appReducer);
-  const { board, selectedColumnId, currentBoardId, selectedTaskId } = currentBoard;
-  const { selectedBoardId } = boards;
-  const { type } = confirmationModal;
+  const { setSelectedColumnId, setNewColumn, setSelectedTaskId } = boardSlice.actions;
+  const { setSelectedBoardId } = boardsSlice.actions;
+
+  const { selectedBoardId } = useAppSelector((state) => state.boards);
+  const { type } = useAppSelector((state) => state.confirmationModal);
+  const { board, selectedColumnId, currentBoardId, selectedTaskId } = useAppSelector(
+    (state) => state.board
+  );
 
   const handlePortalAction = async () => {
     switch (type) {
@@ -80,7 +83,6 @@ export const Layout = () => {
   };
 
   const text = getConfirmationModalText();
-  // const mainClasses = isKanban ? `${s.main} ${s.wrapper} ${s.kanban}` : `${s.main} ${s.wrapper}`;
 
   return (
     <>

@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { useAppDispatch } from '../../../Redux/reduxHooks';
-import { setToken, setTokenLoaded } from '../../../Redux/toolkitSlice';
 import { signin } from '../../../services/auth';
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
 import { Signin } from '../../../services/interfaces/auth';
 import { Error } from './../../../services/interfaces/error';
+import { authSlice } from '../../../Redux/slices/authSlice';
 
 type FormData = {
   login: string;
@@ -23,6 +23,7 @@ export const LoginForm = () => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { setToken, setTokenLoaded } = authSlice.actions;
 
   const loginHandler = async (data: FormData) => {
     const { login, password } = data;
