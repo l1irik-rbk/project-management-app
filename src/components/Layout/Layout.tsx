@@ -17,7 +17,8 @@ import { filterByTasks } from '../../helpers/filterByTasks';
 
 export const Layout = () => {
   const location = useLocation();
-  const kanbanLocation = location.pathname.split('/')[2];
+  const isKanban = location.pathname.includes('kanban');
+
   const dispatch = useAppDispatch();
   const { setSelectedBoardId, setSelectedColumnId, setNewColumn, setSelectedTaskId } =
     appSlice.actions;
@@ -79,17 +80,17 @@ export const Layout = () => {
   };
 
   const text = getConfirmationModalText();
-  const mainClasses = kanbanLocation
-    ? `${s.main} ${s.wrapper} ${s.kanban}`
-    : `${s.main} ${s.wrapper}`;
+  // const mainClasses = isKanban ? `${s.main} ${s.wrapper} ${s.kanban}` : `${s.main} ${s.wrapper}`;
 
   return (
     <>
       <Header />
-      <main className={mainClasses}>
+
+      <main className={`${s.main} ${isKanban ? s.kanban : s.wrapper}`}>
         <Outlet />
         <ConfirmationModal text={text} onConfirm={handlePortalAction} />
       </main>
+
       <Footer />
     </>
   );
