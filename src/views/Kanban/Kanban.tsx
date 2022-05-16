@@ -1,51 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { getColumns } from '../../helpers/getColumns';
-import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
-import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { appSlice } from '../../Redux/toolkitSlice';
+import { Spinner } from '../../components/Spinner/Spinner';
 
+import { getBoard } from '../../services/boards';
+import { FullBoard } from '../../services/interfaces/boards';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
 import s from './Kanban.module.scss';
 
 export const Kanban = () => {
   const params = useParams();
-  const boardId = params.id;
-  const dispatch = useAppDispatch();
-  const { setCurrentBoardId } = appSlice.actions;
-  const { currentBoard } = useAppSelector((state) => state.appReducer);
-  const { board, isBoardLoaded } = currentBoard;
+  const [board, setBoard] = useState<FullBoard | null>(null);
   const orderForNewColumn = board?.columns.length || 0;
-  const columns = board ? getColumns(board) : null;
+  const [isBoardLoaded, setIsBoardLoaded] = useState(false);
 
   useEffect(() => {
     if (board) document.title = `${board.title}`;
-    if (boardId) {
-      dispatch(fetchBoard(boardId));
-      dispatch(setCurrentBoardId(boardId));
-    }
+    setBoardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]);
 
-    return () => {
-      dispatch(setCurrentBoardId(null));
-    };
-  }, [boardId]);
+  const setBoardData = async () => {
+    if (params.id) {
+      const board = await getBoard(params.id);
+      setBoard(board);
+      setIsBoardLoaded(true);
+    }
+  };
 
   return (
     <>
-      {!boardId && <Navigate to="/" />}
+      {!params.id && <Navigate to="/" />}
+
       {isBoardLoaded ? (
         <div className={s.content}>
-          {columns
+          {board?.columns
             ?.sort((a, b) => a.order - b.order)
             .map(
-              (column) => boardId && <Column key={column.id} column={column} boardId={boardId} />
+              (column) =>
+                params.id && <Column key={column.id} column={column} boardId={params.id} />
             )}
 
-          <CreateColumnButton boardId={boardId} orderForNewColumn={orderForNewColumn} />
+          <CreateColumnButton boardId={params.id} orderForNewColumn={orderForNewColumn} />
         </div>
       ) : (
-        <div>LOADING...</div>
+        <Spinner />
       )}
     </>
   );
