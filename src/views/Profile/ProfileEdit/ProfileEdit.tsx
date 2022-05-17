@@ -1,12 +1,15 @@
 import { useForm } from 'react-hook-form';
 
-import { User, UserError } from '../../../services/interfaces/users';
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
-import { deleteUser, updateUser } from '../../../services/users';
-import { ConfirmationModal } from '../../../components/ConfirmationModal/ConfirmationModal';
+import { User, UserError } from '../../../services/interfaces/users';
 import { useAppDispatch } from '../../../Redux/reduxHooks';
-import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
+import {
+  confirmationModalSlice,
+  setConfirmationModalType,
+} from '../../../Redux/slices/confirmationModalSlice';
+import { updateUser } from '../../../services/users';
+import { ActionType } from '../../../Redux/interfaces/confirmationModal';
 
 type Props = {
   user: User;
@@ -40,15 +43,9 @@ export const ProfileEdit = (props: Props) => {
     }
   };
 
-  const handleDelete = async () => {
-    const response = await deleteUser(user.id);
-
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as UserError;
-      alert(`${error.statusCode} ${error.message} ${error.error}`);
-    } else {
-      alert('Профиль удален');
-    }
+  const handleDelete = () => {
+    dispatch(setConfirmationModalType(ActionType.DELETE_USER));
+    dispatch(setPortalVisible(true));
   };
 
   return (
@@ -115,14 +112,9 @@ export const ProfileEdit = (props: Props) => {
         <button className={`${g.button} ${g.drop_shadow}`}>Update</button>
       </form>
 
-      <button
-        onClick={() => dispatch(setPortalVisible(true))}
-        className={`${g.button} ${g.drop_shadow} ${s.delete}`}
-      >
+      <button onClick={handleDelete} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
         Delete my profile
       </button>
-
-      <ConfirmationModal text="Delete your account permanently." onConfirm={handleDelete} />
     </>
   );
 };

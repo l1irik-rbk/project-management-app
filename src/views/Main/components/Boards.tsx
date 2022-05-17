@@ -1,3 +1,4 @@
+import { Spinner } from '../../../components/Spinner/Spinner';
 import { useAppSelector } from '../../../Redux/reduxHooks';
 
 import s from '../Main.module.scss';
@@ -13,6 +14,6 @@ export const Boards = () => {
       ))}
     </div>
   ) : (
-    <div>LOADING...</div>
+    <Spinner />
   );
 };

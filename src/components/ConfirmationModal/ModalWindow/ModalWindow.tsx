@@ -1,8 +1,12 @@
 import s from './ModalWindow.module.scss';
 import g from './../../../App.module.scss';
 import { useAppSelector, useAppDispatch } from '../../../Redux/reduxHooks';
-import { Props } from '../ConfirmationModal';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
+
+export type Props = {
+  text: string;
+  onConfirm: () => void;
+};
 
 const ModalWindow = ({ text, onConfirm }: Props) => {
   const { isPortalVisible } = useAppSelector((state) => state.confirmationModal);
