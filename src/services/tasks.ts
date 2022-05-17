@@ -62,6 +62,6 @@ export const updateTask = async (
       columnId,
     }),
   });
-  // console.log(await response.json());
+
   return await response.json();
 };

@@ -23,7 +23,6 @@ export const Kanban = () => {
   const setBoardData = async () => {
     if (params.id) {
       const board = await getBoard(params.id);
-      console.log(board);
       setBoard(board);
       setIsBoardLoaded(true);
     }

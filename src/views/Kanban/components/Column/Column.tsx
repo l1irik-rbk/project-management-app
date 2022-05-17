@@ -33,7 +33,6 @@ export function Column(props: ColumnProps) {
 
   const getColumnData = async () => {
     const data = await getColumn(props.boardId, column.id);
-    // console.log(data);
     setColumn(data);
   };
 

@@ -32,9 +32,7 @@ export const CreateColumnButton = (props: Props) => {
     const boardId = props.boardId;
     if (boardId) {
       const response = await createColumn(data.title, props.orderForNewColumn, boardId);
-      console.log(response);
       if (response.hasOwnProperty('error')) {
-        console.log(response);
       } else {
         alert('Column created');
         reset({
@@ -49,7 +47,6 @@ export const CreateColumnButton = (props: Props) => {
   const createContent = () => {
     return (
       <>
-        {/* {console.log('>>>>>>', props.orderForNewColumn)} */}
         <label>
           <p>title:</p>
           <input
