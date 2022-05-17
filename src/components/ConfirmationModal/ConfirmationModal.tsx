@@ -1,4 +1,3 @@
-import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { filterByTasks } from '../../helpers/filterByTasks';
 import { getColumns } from '../../helpers/getColumns';
 import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';

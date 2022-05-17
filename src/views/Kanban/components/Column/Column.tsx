@@ -78,23 +78,21 @@ export function Column(props: ColumnProps) {
               boardId={boardId}
             />
 
-            {tasks
-              // .sort((a, b) => a.order - b.order)
-              .map((task, index) => {
-                return (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Task key={task.id} boardId={boardId} columnId={column.id} task={task} />
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+            {tasks.map((task, index) => {
+              return (
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Task key={task.id} boardId={boardId} columnId={column.id} task={task} />
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
 
             {provided.placeholder}
 
