@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Spinner } from '../../components/Spinner/Spinner';
+import { useAppDispatch } from '../../Redux/reduxHooks';
+import { setCurrentBoardId } from '../../Redux/slices/boardSlice';
 
 import { getBoard } from '../../services/boards';
 import { FullBoard } from '../../services/interfaces/boards';
@@ -9,6 +11,7 @@ import { CreateColumnButton } from './components/CreateColumnButton/CreateColumn
 import s from './Kanban.module.scss';
 
 export const Kanban = () => {
+  const dispatch = useAppDispatch();
   const params = useParams();
   const [board, setBoard] = useState<FullBoard | null>(null);
   const orderForNewColumn = board?.columns.length || 0;
@@ -16,6 +19,7 @@ export const Kanban = () => {
 
   useEffect(() => {
     if (board) document.title = `${board.title}`;
+    if (params.id) dispatch(setCurrentBoardId(params.id));
     setBoardData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);

@@ -38,12 +38,12 @@ export const ConfirmationModal = () => {
       case ActionType.DELETE_COLUMN:
         if (currentBoardId && selectedColumnId) {
           const result = await deleteColumn(currentBoardId, selectedColumnId);
-          const columns = board ? getColumns(board) : null;
-          const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
-          if (updatedColumns) dispatch(setNewColumn(updatedColumns));
-          dispatch(setSelectedColumnId(null));
+          // const columns = board ? getColumns(board) : null;
+          // const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+          // if (updatedColumns) dispatch(setNewColumn(updatedColumns));
           if (result.hasOwnProperty('success')) alert('Column deleted');
           else alert('Error');
+          dispatch(setSelectedColumnId(null));
         }
         break;
       case ActionType.DELETE_TASK:

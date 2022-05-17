@@ -17,7 +17,8 @@ export const ColumnTitle = (props: Props) => {
           <div className={s.count}>{props.taskLength}</div>
           <p className={g.font_title}>{props.title}</p>
         </div>
-        <DeleteColumnButton boardId={props.boardId} columnId={props.columnId} />
+
+        <DeleteColumnButton columnId={props.columnId} />
       </div>
     </>
   );
