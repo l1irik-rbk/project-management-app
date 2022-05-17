@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { Boards } from './components/Boards';
-import { NewBoardField } from './components/NewBoardField';
+import { CreateNewBoard } from './components/CreateNewBoard';
 
 export const Main = () => {
   const { newBoard, isBoardsLoaded } = useAppSelector((state) => state.boards);
@@ -13,11 +13,11 @@ export const Main = () => {
     if (!isBoardsLoaded) {
       dispatch(fetchBoards());
     }
-  }, []);
+  }, [dispatch, isBoardsLoaded]);
 
   return (
     <>
-      {newBoard && <NewBoardField />}
+      {newBoard && <CreateNewBoard />}
       <Boards />
     </>
   );
