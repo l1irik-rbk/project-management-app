@@ -32,5 +32,4 @@ export const boardsSlice = createSlice({
   },
 });
 
-export default boardsSlice.reducer;
 export const { setNewBoard, setSelectedBoardId } = boardsSlice.actions;

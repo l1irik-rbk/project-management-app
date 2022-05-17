@@ -21,5 +21,4 @@ export const confirmationModalSlice = createSlice({
   },
 });
 
-export default confirmationModalSlice.reducer;
 export const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;

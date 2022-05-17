@@ -40,6 +40,5 @@ export const boardSlice = createSlice({
   },
 });
 
-export default boardSlice.reducer;
 export const { setNewColumn, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
   boardSlice.actions;
