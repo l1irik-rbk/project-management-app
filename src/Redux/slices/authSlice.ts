@@ -1,5 +1,6 @@
-import { authStateI } from './../interfaces/auth';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { authStateI } from './../interfaces/auth';
 import { getToken } from '../../services/utils';
 
 const initialState: authStateI = {

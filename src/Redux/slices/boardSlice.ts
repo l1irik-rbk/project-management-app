@@ -1,6 +1,7 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { BoardInt } from './../interfaces/board';
 import { FullBoard, Column } from './../../services/interfaces/boards';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchBoard } from '../actionCreators/fetchBoard';
 
 const initialState: BoardInt = {

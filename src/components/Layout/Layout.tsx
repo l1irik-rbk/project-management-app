@@ -14,7 +14,7 @@ import { deleteTask } from '../../services/tasks';
 import { filterByTasks } from '../../helpers/filterByTasks';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import { boardSlice } from '../../Redux/slices/boardSlice';
-import { ActionType } from '../../Redux/interfaces/confirmationModa';
+import { ActionType } from '../../Redux/interfaces/confirmationModal';
 
 export const Layout = () => {
   const location = useLocation();

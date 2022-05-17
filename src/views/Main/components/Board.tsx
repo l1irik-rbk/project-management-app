@@ -7,7 +7,7 @@ import { BoardProp } from './interfaces/BoardProp';
 import { useAppDispatch } from '../../../Redux/reduxHooks';
 import { boardsSlice } from '../../../Redux/slices/boardsSlice';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
-import { ActionType } from '../../../Redux/interfaces/confirmationModa';
+import { ActionType } from '../../../Redux/interfaces/confirmationModal';
 
 export const Board = ({ id, boardTitle }: BoardProp) => {
   const dispatch = useAppDispatch();

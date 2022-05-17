@@ -1,6 +1,7 @@
-import { confirmationModalI } from './../interfaces/confirmationModa';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ActionType } from '../interfaces/confirmationModa';
+
+import { confirmationModalI } from '../interfaces/confirmationModal';
+import { ActionType } from '../interfaces/confirmationModal';
 
 const initialState: confirmationModalI = {
   type: null,
