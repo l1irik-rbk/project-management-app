@@ -1,48 +1,35 @@
-import { useState } from 'react';
-
-import g from '../../../../App.module.scss';
 import s from './DeleteTaskButton.module.scss';
-import { Modal } from '../../../../components/Modal/Modal';
-import { deleteTask } from '../../../../services/tasks';
+import g from '../../../../App.module.scss';
+import { ActionType } from '../../../../Redux/interfaces/confirmationModal';
+import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { setSelectedColumnId, setSelectedTaskId } from '../../../../Redux/slices/boardSlice';
+import { confirmationModalSlice } from '../../../../Redux/slices/confirmationModalSlice';
 
 type Props = {
-  boardId: string | undefined;
   columnId: string | undefined;
   taskId: string | undefined;
 };
 
 export const DeleteTaskButton = (props: Props) => {
-  const { boardId, columnId, taskId } = props;
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const handleOpenModal = () => setIsOpenModal(true);
-  const handleCloseModal = () => setIsOpenModal(false);
+  const dispatch = useAppDispatch();
+  const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
 
   const handleDeleteTask = async () => {
-    if (boardId && columnId && taskId) {
-      const result = await deleteTask(boardId, columnId, taskId);
-      if (result.hasOwnProperty('success')) alert('Task deleted');
-      else alert('Error');
-      handleCloseModal();
-    }
-  };
+    const { columnId, taskId } = props;
 
-  const handleOnConfirm = () => {
-    handleDeleteTask();
+    if (columnId && taskId) {
+      dispatch(setSelectedColumnId(columnId));
+      dispatch(setSelectedTaskId(taskId));
+      dispatch(setPortalVisible(true));
+      dispatch(setConfirmationModalType(ActionType.DELETE_TASK));
+    }
   };
 
   return (
     <>
-      <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+      <button onClick={handleDeleteTask} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
         X
       </button>
-
-      <Modal
-        open={isOpenModal}
-        title={'Are you sure?'}
-        content={'You want to delete this task? This action cannot be undone.'}
-        onConfirm={handleOnConfirm}
-        onClose={handleCloseModal}
-      />
     </>
   );
 };
