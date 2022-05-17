@@ -72,9 +72,9 @@ export const CreateTaskButton = (props: Props) => {
 
           {errors.title && (
             <span className={g.font_error}>
-              {errors.title.type === 'required' && 'Login is required'}
-              {errors.title.type === 'minLength' && 'Login must be at least 3 characters'}
-              {errors.title.type === 'maxLength' && 'Login must be at most 20 characters'}
+              {errors.title.type === 'required' && 'Title is required'}
+              {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
+              {errors.title.type === 'maxLength' && 'Title must be at most 20 characters'}
             </span>
           )}
         </label>
@@ -90,9 +90,11 @@ export const CreateTaskButton = (props: Props) => {
           <br />
           {errors.description && (
             <span className={g.font_error}>
-              {errors.description.type === 'required' && 'Login is required'}
-              {errors.description.type === 'minLength' && 'Login must be at least 3 characters'}
-              {errors.description.type === 'maxLength' && 'Login must be at most 20 characters'}
+              {errors.description.type === 'required' && 'Description is required'}
+              {errors.description.type === 'minLength' &&
+                'Description must be at least 3 characters'}
+              {errors.description.type === 'maxLength' &&
+                'Description must be at most 20 characters'}
             </span>
           )}
         </label>
