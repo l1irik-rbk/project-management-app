@@ -5,6 +5,8 @@ import { createColumn } from '../../../../services/columns';
 import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
 import s from './CreateColumnButton.module.scss';
+import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
+import { useAppDispatch } from '../../../../Redux/reduxHooks';
 
 export type CreateColumnData = {
   title: string;
@@ -16,6 +18,7 @@ type Props = {
 };
 
 export const CreateColumnButton = (props: Props) => {
+  const dispatch = useAppDispatch();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
@@ -33,11 +36,12 @@ export const CreateColumnButton = (props: Props) => {
       const response = await createColumn(data.title, props.orderForNewColumn, boardId);
       if (response.hasOwnProperty('error')) {
       } else {
-        alert('Column created');
+        // alert('Column created');
         reset({
           title: '',
         });
         handleCloseModal();
+        dispatch(fetchBoard(boardId));
       }
     }
   };

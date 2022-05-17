@@ -1,6 +1,7 @@
 import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { filterByTasks } from '../../helpers/filterByTasks';
 import { getColumns } from '../../helpers/getColumns';
+import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/confirmationModal';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
@@ -41,8 +42,10 @@ export const ConfirmationModal = () => {
           // const columns = board ? getColumns(board) : null;
           // const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
           // if (updatedColumns) dispatch(setNewColumn(updatedColumns));
-          if (result.hasOwnProperty('success')) alert('Column deleted');
-          else alert('Error');
+          if (result.hasOwnProperty('success')) {
+            // alert('Column deleted');
+          } else alert('Error');
+          dispatch(fetchBoard(currentBoardId));
           dispatch(setSelectedColumnId(null));
         }
         break;
@@ -50,14 +53,13 @@ export const ConfirmationModal = () => {
         if (currentBoardId && selectedColumnId && selectedTaskId) {
           const result = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
           const columns = board ? getColumns(board) : null;
-          const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId).sort(
-            (a, b) => a.order - b.order
-          );
+          const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId);
           dispatch(setNewColumn(updatedColumns));
           dispatch(setSelectedColumnId(null));
           dispatch(setSelectedTaskId(null));
-          if (result.hasOwnProperty('success')) alert('Task deleted');
-          else alert('Error');
+          if (result.hasOwnProperty('success')) {
+            // alert('Task deleted');
+          } else alert('Error');
         }
         break;
       case ActionType.DELETE_USER:

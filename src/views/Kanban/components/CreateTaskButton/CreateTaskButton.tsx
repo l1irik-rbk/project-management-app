@@ -6,6 +6,8 @@ import { Modal } from '../../../../components/Modal/Modal';
 import { getUserId } from '../../../../services/utils';
 import g from './../../../../App.module.scss';
 import s from './CreateTaskButton.module.scss';
+import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
+import { useAppDispatch } from '../../../../Redux/reduxHooks';
 
 export type CreateTaskData = {
   title: string;
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export const CreateTaskButton = (props: Props) => {
+  const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
   const handleCloseModal = () => setModalIsOpen(false);
@@ -48,7 +51,8 @@ export const CreateTaskButton = (props: Props) => {
           description: '',
         });
         props.onCreateTask();
-        alert('Task created');
+        dispatch(fetchBoard(boardId));
+        // alert('Task created');
       }
     }
   };
