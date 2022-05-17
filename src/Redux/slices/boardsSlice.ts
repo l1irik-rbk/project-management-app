@@ -7,7 +7,7 @@ const initialState: BoardsInt = {
   newBoard: false,
   isBoardsLoaded: false,
   boardsArray: [],
-  selectedBoardId: '',
+  selectedBoardId: null,
 };
 
 export const boardsSlice = createSlice({
