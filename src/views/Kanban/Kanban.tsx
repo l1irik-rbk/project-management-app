@@ -1,55 +1,52 @@
-import { useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
-import { Spinner } from '../../components/Spinner/Spinner';
-import { useAppDispatch } from '../../Redux/reduxHooks';
-import { setCurrentBoardId } from '../../Redux/slices/boardSlice';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { getBoard } from '../../services/boards';
-import { FullBoard } from '../../services/interfaces/boards';
+import s from './Kanban.module.scss';
+import { Spinner } from '../../components/Spinner/Spinner';
+import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
+import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
+import { setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
-import s from './Kanban.module.scss';
 
 export const Kanban = () => {
+  const navigate = useNavigate();
+  const paramId = useParams().id;
+
   const dispatch = useAppDispatch();
-  const params = useParams();
-  const [board, setBoard] = useState<FullBoard | null>(null);
-  const orderForNewColumn = board?.columns.length || 0;
-  const [isBoardLoaded, setIsBoardLoaded] = useState(false);
+  const boards = useAppSelector((state) => state.boards);
+  const board = useAppSelector((state) => state.board.board);
+  const boardId = useAppSelector((state) => state.board.currentBoardId);
+  const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
+
+  const orderForNewColumn = board?.columns.length;
 
   useEffect(() => {
-    if (board) document.title = `${board.title}`;
-    if (params.id) dispatch(setCurrentBoardId(params.id));
-    setBoardData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
+    if (!paramId) return;
 
-  const setBoardData = async () => {
-    if (params.id) {
-      const board = await getBoard(params.id);
-      setBoard(board);
-      setIsBoardLoaded(true);
+    const isTrueBoardId = paramId && boards.boardsArray.map((item) => item.id).includes(paramId);
+    if (!isTrueBoardId) navigate('/');
+
+    if (board) document.title = `${board.title}`;
+    if (paramId !== boardId) {
+      dispatch(setCurrentBoardId(paramId));
+      dispatch(fetchBoard(paramId));
     }
-  };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramId]);
 
   return (
     <>
-      {!params.id && <Navigate to="/" />}
-
-      {isBoardLoaded ? (
+      {isBoardLoaded && board ? (
         <div className={s.content}>
-          {board?.columns
-            ?.sort((a, b) => a.order - b.order)
-            .map(
-              (column) =>
-                params.id && <Column key={column.id} column={column} boardId={params.id} />
-            )}
+          {board?.columns?.map((column) => (
+            <Column key={column.id} columnId={column.id} column={column} />
+          ))}
 
-          <CreateColumnButton
-            boardId={params.id}
-            orderForNewColumn={orderForNewColumn}
-            onCreateColumn={setBoardData}
-          />
+          {boardId && orderForNewColumn && (
+            <CreateColumnButton boardId={boardId} orderForNewColumn={orderForNewColumn} />
+          )}
         </div>
       ) : (
         <Spinner />

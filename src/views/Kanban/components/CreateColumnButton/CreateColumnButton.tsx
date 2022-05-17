@@ -13,7 +13,6 @@ export type CreateColumnData = {
 type Props = {
   boardId: string | undefined;
   orderForNewColumn: number;
-  onCreateColumn: () => void;
 };
 
 export const CreateColumnButton = (props: Props) => {
@@ -38,7 +37,6 @@ export const CreateColumnButton = (props: Props) => {
         reset({
           title: '',
         });
-        props.onCreateColumn();
         handleCloseModal();
       }
     }

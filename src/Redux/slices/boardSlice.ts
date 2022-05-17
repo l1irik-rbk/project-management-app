@@ -16,6 +16,9 @@ export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
+    setBoard: (state, action: PayloadAction<FullBoard>) => {
+      state.board = action.payload;
+    },
     setNewColumn: (state, action: PayloadAction<Column[]>) => {
       if (state.board) state.board.columns = action.payload;
     },
@@ -40,5 +43,5 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { setNewColumn, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
+export const { setBoard, setNewColumn, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
   boardSlice.actions;
