@@ -33,10 +33,9 @@ export const CreateNewBoard = () => {
 
   const handleCreateBoard = async (data: CreateBoardData) => {
     const response = await createBoard(data.title);
-    console.log(response);
+
     if (response.hasOwnProperty('statusCode')) {
       alert('Ошибка создания доски');
-      console.log(response);
     } else {
       reset({
         title: '',

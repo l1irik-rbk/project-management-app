@@ -1,4 +1,3 @@
-import { CreateTaskData } from '../views/Kanban/components/CreateTaskButton/CreateTaskButton';
 import { CreateTask, RemoveTask, Task, UpdateTask } from './interfaces/tasks';
 import { apiUrl, getToken, getUserId, successObject } from './utils';
 
