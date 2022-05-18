@@ -1,5 +1,5 @@
 import { Column } from './interfaces/boards';
-import { FullColumn, RemoveColumn, ColumnError } from './interfaces/columns';
+import { FullColumn, RemoveColumn, ColumnError, UpdateColumn } from './interfaces/columns';
 import { apiUrl, getToken, successObject } from './utils';
 
 const token = getToken();
@@ -39,6 +39,27 @@ export const getColumn = async (boardId: string, columnId: string): Promise<Full
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  });
+
+  return await response.json();
+};
+
+export const updateColumn = async (
+  boardId: string,
+  columnId: string,
+  title: string,
+  order: number
+): Promise<UpdateColumn> => {
+  const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      order,
+    }),
   });
 
   return await response.json();
