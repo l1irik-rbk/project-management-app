@@ -17,12 +17,15 @@ type ColumnProps = {
 
 export function Column(props: ColumnProps) {
   const dispatch = useAppDispatch();
-  const column = useAppSelector(
-    (s) => s.board.board && s.board.board.columns.find((c) => c.id === props.columnId)
-  ) as FullColumn;
+
+  const boardId = useAppSelector((state) => state.board.currentBoardId);
   const board = useAppSelector((s) => s.board.board);
-  const boardId = useAppSelector((state) => state.board.currentBoardId) as string;
+  if (!board || !boardId || !board) return null;
+
+  const column = props.column;
+
   const tasks = column.tasks.slice().sort((a, b) => a.order - b.order);
+
   const orderForNewTask = column.tasks.length;
 
   const onDragEnd = async (result: DropResult) => {
@@ -49,10 +52,8 @@ export function Column(props: ColumnProps) {
     const syncOneTaskOrderToServer = async (task: TaskType) => updateTask(boardId, column.id, task);
 
     const filterTasks = newTasks.filter((task, index) => task.id !== tasks[index].id);
-    const allTasks = filterTasks.map((task) => syncOneTaskOrderToServer(task));
-    const updatedTasks = Promise.all(allTasks);
-
-    return updatedTasks;
+    const promises = filterTasks.map((task) => syncOneTaskOrderToServer(task));
+    return Promise.all(promises);
   };
 
   const syncTasksWithRedux = (tasks: TaskType[]) => {
@@ -64,12 +65,12 @@ export function Column(props: ColumnProps) {
     const newColumns = oldColumns.map((c, i) => (i === index ? updatedColumn : c));
     const newBoard = { ...board, columns: [...newColumns] };
 
-    dispatch(setBoard(newBoard as FullBoard));
+    dispatch(setBoard(newBoard));
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="todo">
+      <Droppable droppableId="tasks">
         {(provided) => (
           <div className={s.column} {...provided.droppableProps} ref={provided.innerRef}>
             <ColumnTitle
