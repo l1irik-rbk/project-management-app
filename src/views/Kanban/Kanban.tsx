@@ -6,11 +6,13 @@ import s from './Kanban.module.scss';
 import { Spinner } from '../../components/Spinner/Spinner';
 import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
+import { boardSlice, setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
 import { FullColumn } from '../../services/interfaces/columns';
 import { updateColumn } from '../../services/columns';
+import { reorder } from '../../helpers/reorder';
+import { keysToSameValueAsKeys } from '../../helpers/keysToSameValueAsKeys';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -21,54 +23,85 @@ export const Kanban = () => {
   const board = useAppSelector((state) => state.board.board);
   const boardId = useAppSelector((state) => state.board.currentBoardId);
   const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
+  const { setNewColumns } = boardSlice.actions;
 
-  const orderForNewColumn = board?.columns.length;
+  const orderForNewColumn = board?.columns.length || 0;
   const columns = board?.columns.slice().sort((a, b) => a.order - b.order);
 
   useEffect(() => {
     if (!paramId) return;
-
     const isTrueBoardId = paramId && boards.boardsArray.map((item) => item.id).includes(paramId);
     if (!isTrueBoardId) navigate('/');
-
     if (board) document.title = `${board.title}`;
     if (paramId !== boardId) {
       dispatch(setCurrentBoardId(paramId));
       dispatch(fetchBoard(paramId));
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramId]);
 
   const handleDragEnd = async (result: DropResult) => {
     // https://codesandbox.io/s/nested-dnd-across-parent-forked-bhvm51?file=/index.js:1415-1426
-    // TODO: 1) баг на таче при перетаскивании колонок, начинается перенос таска и колонки
-    // TODO: 2) баг не всегда получается комфортно взять таск
-
-    const { source, destination } = result;
+    const { source, destination, type } = result;
     if (!destination) return;
     if (!columns) return;
 
-    const items = Array.from(columns);
+    const fromColumn = source.index;
+    const toColumn = destination.index;
 
-    const from = source.index;
-    const to = destination.index;
-    if (from === to) return;
+    if (type === 'column') {
+      if (fromColumn === toColumn) return;
+      const newColumns = Array.from(columns);
+      const [removed] = newColumns.splice(fromColumn, 1);
+      newColumns.splice(toColumn, 0, removed);
+      const newOrders = newColumns.map((item, index) => ({ ...item, order: index }));
+      dispatch(setNewColumns(newOrders));
+      await syncOrderToServer(newOrders);
+    } else if (type === 'task') {
+      const itemSubItemMap = keysToSameValueAsKeys(columns);
 
-    const [removed] = items.splice(from, 1);
-    const formatRemoved = { ...removed, order: to };
-    items.splice(to, 0, formatRemoved);
-    const newOrders = items.map((item, index) => ({ ...item, order: index }));
+      const fromParentId = source.droppableId;
+      const toParentId = destination.droppableId;
 
-    syncWithRedux(newOrders);
-    await syncOrderToServer(newOrders);
-  };
+      const fromTasks = itemSubItemMap[fromParentId];
+      const toTasks = itemSubItemMap[toParentId];
 
-  const syncWithRedux = (columns: FullColumn[]) => {
-    if (!board) return;
+      if (fromParentId === toParentId) {
+        const reorderedTasks = reorder(fromTasks, fromColumn, toColumn);
+        const newOrdersTasks = reorderedTasks.map((item, index) => ({ ...item, order: index }));
 
-    const newBoard = { ...board, columns };
-    dispatch(setBoard(newBoard));
+        let newColumns = Array.from(columns);
+        newColumns = newColumns.map((item) => {
+          const newItem = { ...item };
+          if (item.id === fromParentId) {
+            newItem.tasks = newOrdersTasks;
+          }
+          return newItem;
+        });
+        dispatch(setNewColumns(newColumns));
+      } else {
+        const newToTasks = [...toTasks];
+        const newFromTasks = [...fromTasks];
+
+        const [draggedItem] = newFromTasks.splice(fromColumn, 1);
+        newToTasks.splice(toColumn, 0, draggedItem);
+
+        const newOrdersTasks = newToTasks.map((item, index) => ({ ...item, order: index }));
+
+        let newItems = Array.from(columns);
+        newItems = newItems.map((item) => {
+          const newItem = { ...item };
+          if (newItem.id === fromParentId) {
+            newItem.tasks = newFromTasks;
+          } else if (newItem.id === toParentId) {
+            newItem.tasks = newOrdersTasks;
+          }
+          return newItem;
+        });
+
+        dispatch(setNewColumns(newItems));
+      }
+    }
   };
 
   const syncOrderToServer = async (newColumns: FullColumn[]) => {
@@ -105,7 +138,7 @@ export const Kanban = () => {
 
                 {provided.placeholder}
 
-                {boardId && orderForNewColumn && (
+                {boardId && (
                   <CreateColumnButton boardId={boardId} orderForNewColumn={orderForNewColumn} />
                 )}
               </div>

@@ -19,7 +19,7 @@ export const boardSlice = createSlice({
     setBoard: (state, action: PayloadAction<FullBoard>) => {
       state.board = action.payload;
     },
-    setNewColumn: (state, action: PayloadAction<Column[]>) => {
+    setNewColumns: (state, action: PayloadAction<Column[]>) => {
       if (state.board) state.board.columns = action.payload;
     },
     setSelectedColumnId: (state, action: PayloadAction<string | null>) => {
@@ -43,5 +43,10 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { setBoard, setNewColumn, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
-  boardSlice.actions;
+export const {
+  setBoard,
+  setNewColumns,
+  setSelectedColumnId,
+  setCurrentBoardId,
+  setSelectedTaskId,
+} = boardSlice.actions;
