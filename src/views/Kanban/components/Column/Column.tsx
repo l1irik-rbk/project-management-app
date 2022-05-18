@@ -45,10 +45,11 @@ export function Column(props: ColumnProps) {
     await syncTasksOrderToServer(newOrdersTasks);
   };
 
-  const syncTasksOrderToServer = (tasks: TaskType[]) => {
-    // TODO: если ордер тасок изменился, то нужно обновить их в базе, а сейчас обновляются все
+  const syncTasksOrderToServer = (newTasks: TaskType[]) => {
     const syncOneTaskOrderToServer = async (task: TaskType) => updateTask(boardId, column.id, task);
-    const allTasks = tasks.map((task) => syncOneTaskOrderToServer(task));
+
+    const filterTasks = newTasks.filter((task, index) => task.id !== tasks[index].id);
+    const allTasks = filterTasks.map((task) => syncOneTaskOrderToServer(task));
     const updatedTasks = Promise.all(allTasks);
 
     return updatedTasks;
