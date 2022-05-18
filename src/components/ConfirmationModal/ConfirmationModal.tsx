@@ -1,5 +1,3 @@
-import { filterByTasks } from '../../helpers/filterByTasks';
-import { getColumns } from '../../helpers/getColumns';
 import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/confirmationModal';
@@ -17,12 +15,12 @@ import ModalWindow from './ModalWindow/ModalWindow';
 
 export const ConfirmationModal = () => {
   const dispatch = useAppDispatch();
-  const { setSelectedColumnId, setNewColumn, setSelectedTaskId } = boardSlice.actions;
+  const { setSelectedColumnId, setSelectedTaskId } = boardSlice.actions;
   const { setSelectedBoardId } = boardsSlice.actions;
 
   const { selectedBoardId } = useAppSelector((state) => state.boards);
   const { type } = useAppSelector((state) => state.confirmationModal);
-  const { board, selectedColumnId, currentBoardId, selectedTaskId } = useAppSelector(
+  const { selectedColumnId, currentBoardId, selectedTaskId } = useAppSelector(
     (state) => state.board
   );
 
@@ -51,9 +49,10 @@ export const ConfirmationModal = () => {
       case ActionType.DELETE_TASK:
         if (currentBoardId && selectedColumnId && selectedTaskId) {
           const result = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
-          const columns = board ? getColumns(board) : null;
-          const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId);
-          dispatch(setNewColumn(updatedColumns));
+          // const columns = board ? getColumns(board) : null;
+          // const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId);
+          // dispatch(setNewColumn(updatedColumns));
+          dispatch(fetchBoard(currentBoardId));
           dispatch(setSelectedColumnId(null));
           dispatch(setSelectedTaskId(null));
           if (result.hasOwnProperty('success')) {
