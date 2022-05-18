@@ -18,6 +18,7 @@ export const Kanban = () => {
   const board = useAppSelector((state) => state.board.board);
   const boardId = useAppSelector((state) => state.board.currentBoardId);
   const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
+  const columns = board?.columns.slice().sort((a, b) => a.order - b.order);
 
   const orderForNewColumn = board?.columns.length;
 
@@ -38,9 +39,9 @@ export const Kanban = () => {
 
   return (
     <>
-      {isBoardLoaded && board ? (
+      {isBoardLoaded && columns ? (
         <div className={s.content}>
-          {board?.columns?.map((column) => (
+          {columns.map((column) => (
             <Column key={column.id} columnId={column.id} column={column} />
           ))}
 
