@@ -10,6 +10,8 @@ export const Main = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    document.title = `${'Main'}`;
+
     if (!isBoardsLoaded) {
       dispatch(fetchBoards());
     }
