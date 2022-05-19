@@ -8,13 +8,12 @@ import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { boardSlice, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
-import { Column as ColumnType } from './../../services/interfaces/columns';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
-import { FullColumn } from '../../services/interfaces/columns';
 import { updateColumn } from '../../services/columns';
-import { Task } from '../../services/interfaces/tasks';
-import { FullBoard } from '../../services/interfaces/boards';
 import { updateTask } from '../../services/tasks';
+import type { FullColumn } from '../../services/interfaces/columns';
+import type { Task } from '../../services/interfaces/tasks';
+import type { FullBoard } from '../../services/interfaces/boards';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -47,32 +46,30 @@ export const Kanban = () => {
     if (!destination) return;
     if (!columns) return;
 
-    const fromColumn = source.index;
-    const toColumn = destination.index;
+    const fromIndex = source.index;
+    const toIndex = destination.index;
 
     const fromParentId = source.droppableId;
     const toParentId = destination.droppableId;
 
-    const fromIndex = source.index;
-    const toIndex = destination.index;
-
     if (type === 'column') {
-      if (fromColumn === toColumn) return;
+      if (fromIndex === toIndex) return;
+
       const newColumns = Array.from(columns);
-      const [removed] = newColumns.splice(fromColumn, 1);
-      newColumns.splice(toColumn, 0, removed);
+      const [removed] = newColumns.splice(fromIndex, 1);
+      newColumns.splice(toIndex, 0, removed);
       const newOrders = newColumns.map((item, index) => ({ ...item, order: index }));
       dispatch(setNewColumns(newOrders));
       await syncColumnsOrderWithServer(newOrders);
     }
 
     if (type === 'task') {
-      const fromColumnId = source.droppableId;
-      const toColumnId = destination.droppableId;
+      const fromColumnId = fromParentId;
+      const toColumnId = toParentId;
       const currentColumn = columns.find((column) => column.id === fromColumnId);
+      const tasks = currentColumn?.tasks.slice().sort((a, b) => a.order - b.order);
 
       if (fromParentId === toColumnId) {
-        const tasks = currentColumn?.tasks.slice().sort((a, b) => a.order - b.order);
         if (!tasks || !currentColumn || !currentBoardId) return;
 
         const reorderedTasks = reorderTasks(tasks, fromIndex, toIndex);
@@ -86,25 +83,30 @@ export const Kanban = () => {
 
       if (fromParentId !== toColumnId) {
         const toColumn = columns.find((column) => column.id === toColumnId);
-        console.log(toColumn);
+        if (!currentColumn || !toColumn || !tasks || !currentBoardId) return;
 
-        // const newToTasks = [...toTasks];
-        // const newFromTasks = [...fromTasks];
+        const fromTasks = [...tasks];
+        const toTasks = [...toColumn?.tasks];
 
-        // const [draggedItem] = newFromTasks.splice(fromColumn, 1);
-        // newToTasks.splice(toColumn, 0, draggedItem);
-        // const newOrdersTasks = newToTasks.map((item, index) => ({ ...item, order: index }));
-        // let newItems = Array.from(columns);
-        // newItems = newItems.map((item) => {
-        //   const newItem = { ...item };
-        //   if (newItem.id === fromParentId) {
-        //     newItem.tasks = newFromTasks;
-        //   } else if (newItem.id === toParentId) {
-        //     newItem.tasks = newOrdersTasks;
-        //   }
-        //   return newItem;
+        const [draggedItem] = fromTasks.splice(fromIndex, 1);
+
+        // обновлением не получается переместить таск в другую колонну
+        // await updateTask(currentBoardId, toColumn.id, {
+        //   ...draggedItem,
+        //   order: 666,
         // });
-        // dispatch(setNewColumns(newItems));
+
+        toTasks.splice(toIndex, 0, draggedItem);
+        const newOrderTasksFromColumn = fromTasks.map((item, index) => ({ ...item, order: index }));
+        const newOrderTasksToColumn = toTasks.map((item, index) => ({ ...item, order: index }));
+        const newColumns = [...columns].map((column) => {
+          if (column.id === fromColumnId) return { ...column, tasks: newOrderTasksFromColumn };
+          if (column.id === toColumnId) return { ...column, tasks: newOrderTasksToColumn };
+          return column;
+        });
+
+        // console.log(newOrderTasksFromColumn, newOrderTasksToColumn);
+        dispatch(setNewColumns(newColumns));
       }
     }
   };
