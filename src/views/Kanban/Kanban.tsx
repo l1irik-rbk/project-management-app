@@ -30,15 +30,17 @@ export const Kanban = () => {
 
   useEffect(() => {
     if (!paramId) return;
-    const isTrueBoardId = paramId && boards.boardsArray.map((item) => item.id).includes(paramId);
+
+    const isTrueBoardId = boards.boardsArray.map((item) => item.id).includes(paramId);
     if (!isTrueBoardId) navigate('/');
-    if (board) document.title = `${board.title}`;
+
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
       dispatch(fetchBoard(paramId));
-    }
+    } else document.title = `${board && board.title} on KanbanBoar`;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramId]);
+  }, [paramId, board]);
 
   const handleDragEnd = async (result: DropResult) => {
     // https://codesandbox.io/s/nested-dnd-across-parent-forked-bhvm51?file=/index.js:1415-1426
@@ -77,10 +79,6 @@ export const Kanban = () => {
         syncTasksOrderWithServer(tasks, reorderedTasks, currentBoardId, currentColumn.id);
       }
 
-      // const itemSubItemMap = keysToSameValueAsKeys(columns);
-      // const fromTasks = itemSubItemMap[fromParentId];
-      // const toTasks = itemSubItemMap[toParentId];
-
       if (fromParentId !== toColumnId) {
         const toColumn = columns.find((column) => column.id === toColumnId);
         if (!currentColumn || !toColumn || !tasks || !currentBoardId) return;
@@ -89,12 +87,6 @@ export const Kanban = () => {
         const toTasks = [...toColumn?.tasks];
 
         const [draggedItem] = fromTasks.splice(fromIndex, 1);
-
-        // обновлением не получается переместить таск в другую колонну
-        // await updateTask(currentBoardId, toColumn.id, {
-        //   ...draggedItem,
-        //   order: 666,
-        // });
 
         toTasks.splice(toIndex, 0, draggedItem);
         const newOrderTasksFromColumn = fromTasks.map((item, index) => ({ ...item, order: index }));
@@ -105,8 +97,14 @@ export const Kanban = () => {
           return column;
         });
 
-        // console.log(newOrderTasksFromColumn, newOrderTasksToColumn);
         dispatch(setNewColumns(newColumns));
+
+        // TODO: фиксить или нет, вот в чем вопрос
+        // апдейтом не получается изменить айди колонки на другую
+        // возвращает 404 ошибку
+        // await updateTask(currentBoardId, toColumn.id, {
+        //   ...draggedItem,
+        // });
       }
     }
   };
