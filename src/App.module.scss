@@ -19,6 +19,12 @@ a {
   margin-right: auto;
 }
 
+@media screen and (max-width: 960px) {
+  .wrapper {
+    padding: 0 10px;
+  }
+}
+
 .main {
   width: 100%;
 }
@@ -34,7 +40,7 @@ $color__white: #ffffff;
 $color__black_haze: #f6f8fa;
 $color__iron: #d4d7d9;
 $color__error: #eb3941;
-$color__scroll: #78797A;
+$color__scroll: #78797a;
 
 .font_logo {
   font-style: normal;

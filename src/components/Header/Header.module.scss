@@ -32,3 +32,10 @@
   display: flex;
   gap: 8px;
 }
+
+@media screen and (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+  // TODO: add burger menu
+}
