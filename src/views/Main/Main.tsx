@@ -10,7 +10,7 @@ export const Main = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    document.title = `${'Main'}`;
+    document.title = `${'Boards'} | KanbanBoar`;
 
     if (!isBoardsLoaded) {
       dispatch(fetchBoards());

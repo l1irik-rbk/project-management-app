@@ -37,7 +37,7 @@ export const Kanban = () => {
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
       dispatch(fetchBoard(paramId));
-    } else document.title = `${board && board.title} on KanbanBoar`;
+    } else document.title = `${board && board.title} | KanbanBoar`;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramId, board]);

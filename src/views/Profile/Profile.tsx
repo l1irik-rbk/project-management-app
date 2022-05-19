@@ -11,12 +11,14 @@ export const Profile = () => {
   const [typeForm, setTypeForm] = useState<'edit' | 'show'>('show');
 
   useEffect(() => {
+    document.title = `${typeForm} profile ${user?.login} | KanbanBoar`;
+
     const users = async () => {
       const login = getLogin();
       if (login) setUser(await findUser(login));
     };
     users();
-  }, [typeForm]);
+  }, [typeForm, user]);
 
   return (
     <>

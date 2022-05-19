@@ -7,8 +7,8 @@ import { SignupForm } from './SignupForm/SignupForm';
 
 export const Auth = () => {
   useEffect(() => {
-    document.title = 'Auth';
-  });
+    document.title = 'Auth | KanbanBoar';
+  }, []);
 
   return (
     <div className={s.content}>

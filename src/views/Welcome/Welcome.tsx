@@ -9,7 +9,7 @@ export const Welcome = () => {
   const { isTokenLoaded } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    document.title = 'Welcome';
+    document.title = 'Welcome | KanbanBoar';
   });
 
   if (isTokenLoaded) return <Navigate to="/main" />;
