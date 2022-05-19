@@ -1,5 +1,5 @@
 import { CreateTask, RemoveTask, Task, UpdateTask } from './interfaces/tasks';
-import { apiUrl, getToken, getUserId, successObject } from './utils';
+import { apiUrl, getToken, successObject } from './utils';
 
 const token = getToken();
 
@@ -44,8 +44,7 @@ export const updateTask = async (
   columnId: string,
   task: Task
 ): Promise<UpdateTask> => {
-  const userId = await getUserId();
-  const { title, order, description } = task;
+  const { title, order, description, userId } = task;
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
