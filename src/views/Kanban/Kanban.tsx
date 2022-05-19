@@ -109,17 +109,17 @@ export const Kanban = () => {
     }
   };
 
-  const syncTasksOrderWithServer = (
+  const syncTasksOrderWithServer = async (
     oldTasks: Task[],
     newTasks: Task[],
     boardId: string,
     columnId: string
   ) => {
-    const syncOneTasWithServer = async (task: Task) => updateTask(boardId, columnId, task);
+    const syncOneTasWithServer = async (task: Task) => await updateTask(boardId, columnId, task);
 
     const filterTasks = newTasks.filter((task, index) => task.id !== oldTasks[index].id);
     const promises = filterTasks.map((task) => syncOneTasWithServer(task));
-    return Promise.all(promises);
+    return await Promise.all(promises);
   };
 
   const syncTasksWithRedux = (column: FullColumn, tasks: Task[]) => {
@@ -146,7 +146,7 @@ export const Kanban = () => {
   const syncColumnsOrderWithServer = async (newColumns: FullColumn[]) => {
     if (!currentBoardId || !columns) return;
     const syncColumnOrderToServer = async (column: FullColumn) =>
-      updateColumn(currentBoardId, column.id, column.title, column.order);
+      await updateColumn(currentBoardId, column.id, column.title, column.order);
 
     const makeColumnsOrderIsUnique = newColumns.map((item, index) => ({
       ...item,
@@ -156,7 +156,7 @@ export const Kanban = () => {
     await Promise.all(uniqueOrder);
 
     const newColumnsOrder = newColumns.map((column) => syncColumnOrderToServer(column));
-    return Promise.all(newColumnsOrder);
+    return await Promise.all(newColumnsOrder);
   };
 
   return (

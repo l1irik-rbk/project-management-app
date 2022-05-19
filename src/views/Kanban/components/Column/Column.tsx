@@ -29,6 +29,7 @@ export function Column(props: ColumnProps) {
           <ColumnTitle
             taskLength={tasks.length}
             title={column.title}
+            order={column.order}
             columnId={column.id}
             boardId={boardId}
           />
