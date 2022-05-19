@@ -63,7 +63,7 @@ export const Kanban = () => {
       newColumns.splice(toColumn, 0, removed);
       const newOrders = newColumns.map((item, index) => ({ ...item, order: index }));
       dispatch(setNewColumns(newOrders));
-      // await syncOrderToServer(newOrders);
+      await syncColumnsOrderWithServer(newOrders);
     }
 
     if (type === 'task') {
@@ -143,17 +143,20 @@ export const Kanban = () => {
     return newOrderTasks;
   };
 
-  const syncColumnsOrderWithServer = async (newColumns: FullColumn[], plus: number) => {
+  const syncColumnsOrderWithServer = async (newColumns: FullColumn[]) => {
     if (!currentBoardId || !columns) return;
+    const syncColumnOrderToServer = async (column: FullColumn) =>
+      updateColumn(currentBoardId, column.id, column.title, column.order);
 
-    // console.log(newColumns);
-    // const syncColumnOrderToServer = async (column: FullColumn) =>
-    //   updateColumn(currentBoardId, column.id, column.title, column.order);
+    const makeColumnsOrderIsUnique = newColumns.map((item, index) => ({
+      ...item,
+      order: index + 100,
+    }));
+    const uniqueOrder = makeColumnsOrderIsUnique.map((column) => syncColumnOrderToServer(column));
+    await Promise.all(uniqueOrder);
 
-    // // const filterColumns = newColumns.filter((column, index) => column.id !== columns[index].id);
-    // const promises = newColumns.map((column) => syncColumnOrderToServer(column));
-    // return Promise.all(promises);
-    // TODO: сервер возвращает 500 код если order изменился и 204 если остался прежним. Где проблема?
+    const newColumnsOrder = newColumns.map((column) => syncColumnOrderToServer(column));
+    return Promise.all(newColumnsOrder);
   };
 
   return (
