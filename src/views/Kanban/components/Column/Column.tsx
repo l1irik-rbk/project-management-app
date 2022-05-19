@@ -18,11 +18,10 @@ export function Column(props: ColumnProps) {
   if (!board || !boardId || !board) return null;
 
   const column = props.column;
-
   const tasks = column.tasks.slice().sort((a, b) => a.order - b.order);
-
   const orderForNewTask = column.tasks.length;
 
+  // console.log('column tasks', tasks);
   return (
     <Droppable droppableId={column.id} type="task">
       {(provided) => (
@@ -33,7 +32,7 @@ export function Column(props: ColumnProps) {
             columnId={column.id}
             boardId={boardId}
           />
-          {/* {console.log(column.order)} */}
+
           {tasks.map((task, index) => (
             <Draggable key={task.id} draggableId={task.id} index={index}>
               {(provided) => (
