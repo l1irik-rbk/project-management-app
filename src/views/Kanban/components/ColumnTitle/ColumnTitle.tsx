@@ -1,4 +1,5 @@
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import s from './ColumnTitle.module.scss';
 import g from './../../../../App.module.scss';
@@ -7,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
 import { boardSlice } from '../../../../Redux/slices/boardSlice';
 import type { Column } from '../../../../services/interfaces/boards';
 import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
+import { ColumnData } from '../CreateColumnButton/CreateColumnButton';
 
 type Props = {
   taskLength: number;
@@ -20,38 +22,39 @@ export const ColumnTitle = (props: Props) => {
   const { taskLength, title, columnId, boardId, order } = props;
 
   const [dissabled, setDissabled] = useState(true);
-  const [value, setValue] = useState(title);
 
   const dispatch = useAppDispatch();
   const { board } = useAppSelector((state) => state.board);
   const { setNewColumns } = boardSlice.actions;
 
-  const handleTitle = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ColumnData>();
+
+  const showEdit = () => {
     setDissabled(!dissabled);
   };
 
-  const handleValue = (e: SyntheticEvent) => {
-    const target = e.target as HTMLInputElement;
-    setValue(target.value);
+  const hideEdit = () => {
+    setDissabled(!dissabled);
   };
 
-  const onSubmit = async () => {
-    await updateColumn(boardId, columnId, value, order);
+  const onSubmit = async (data: ColumnData) => {
+    const { title } = data;
+    await updateColumn(boardId, columnId, title, order);
 
     const oldColumns = board?.columns;
     const updatedOldColumns = [...(oldColumns as Column[])];
     const columns = board?.columns;
     const updatedColumn = columns?.filter((column) => column.id === columnId)[0] as Column;
     const newColumn = { ...updatedColumn };
-    newColumn.title = value;
+    newColumn.title = title;
     const oldColumnIndex = columns?.findIndex((column) => column.id === newColumn.id) as number;
     updatedOldColumns.splice(oldColumnIndex, 1, newColumn);
 
     dispatch(setNewColumns(updatedOldColumns));
-    setDissabled(!dissabled);
-  };
-
-  const onCancel = () => {
     setDissabled(!dissabled);
   };
 
@@ -61,32 +64,43 @@ export const ColumnTitle = (props: Props) => {
         <div className={s.title__content}>
           <div className={s.count}>{taskLength}</div>
           {dissabled ? (
-            <p className={`${g.font_title} ${s.column_title}`} onClick={handleTitle}>
+            <p className={`${g.font_title} ${s.column_title}`} onClick={showEdit}>
               {title}
             </p>
           ) : (
             <input
+              {...register('title', { required: true, minLength: 3, maxLength: 15 })}
               className={`${g.font_title} ${s.input__title} ${g.input}`}
-              value={value}
-              disabled={false}
-              onChange={handleValue}
+              defaultValue={title}
             />
           )}
         </div>
+
         {dissabled ? (
           <DeleteColumnButton columnId={columnId} />
         ) : (
           <div className={s.buttons_container}>
-            <button className={`${g.button} ${g.drop_shadow} ${s.title_button}`} onClick={onSubmit}>
+            <button
+              className={`${g.button} ${g.drop_shadow} ${s.title_button}`}
+              onClick={handleSubmit(onSubmit)}
+            >
               ✓
             </button>
 
-            <button className={`${g.button} ${g.drop_shadow} ${s.title_button}`} onClick={onCancel}>
+            <button className={`${g.button} ${g.drop_shadow} ${s.title_button}`} onClick={hideEdit}>
               X
             </button>
           </div>
         )}
       </div>
+
+      {errors.title && (
+        <span className={g.font_error}>
+          {errors.title.type === 'required' && 'Title is required'}
+          {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
+          {errors.title.type === 'maxLength' && 'Title must be at most 15 characters'}
+        </span>
+      )}
     </>
   );
 };
