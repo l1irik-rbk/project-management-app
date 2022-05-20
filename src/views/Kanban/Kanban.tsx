@@ -98,13 +98,6 @@ export const Kanban = () => {
         });
 
         dispatch(setNewColumns(newColumns));
-
-        // TODO: фиксить или нет, вот в чем вопрос
-        // апдейтом не получается изменить айди колонки на другую
-        // возвращает 404 ошибку
-        // await updateTask(currentBoardId, toColumn.id, {
-        //   ...draggedItem,
-        // });
       }
     }
   };

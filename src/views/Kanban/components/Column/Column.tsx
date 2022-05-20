@@ -21,7 +21,6 @@ export function Column(props: ColumnProps) {
   const tasks = column.tasks.slice().sort((a, b) => a.order - b.order);
   const orderForNewTask = column.tasks.length;
 
-  // console.log('column tasks', tasks);
   return (
     <Droppable droppableId={column.id} type="task">
       {(provided) => (
