@@ -1,3 +1,11 @@
+$color__mine_shaft: #323232;
+$color__shark: #25272c;
+$color__white: #ffffff;
+$color__black_haze: #f6f8fa;
+$color__iron: #d4d7d9;
+$color__error: #eb3941;
+$color__scroll: #78797a;
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -7,6 +15,8 @@
 html {
   font-size: 16px;
   font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: $color__shark;
 }
 
 a {
@@ -34,14 +44,6 @@ a {
   overflow-y: hidden;
 }
 
-$color__mine_shaft: #323232;
-$color__shark: #25272c;
-$color__white: #ffffff;
-$color__black_haze: #f6f8fa;
-$color__iron: #d4d7d9;
-$color__error: #eb3941;
-$color__scroll: #78797a;
-
 .font_logo {
   font-style: normal;
   font-weight: 700;
@@ -59,7 +61,7 @@ $color__scroll: #78797a;
 
 .font_error {
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
   color: $color__error;
 }
 
@@ -91,6 +93,10 @@ $color__scroll: #78797a;
   font: inherit;
   border: 1px solid $color__iron;
   border-radius: 8px;
+  width: 100%;
+}
+
+.label {
   width: 100%;
 }
 

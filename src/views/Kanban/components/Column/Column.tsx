@@ -38,6 +38,7 @@ export function Column(props: ColumnProps) {
             <Draggable key={task.id} draggableId={task.id} index={index}>
               {(provided) => (
                 <div
+                  className={s.task}
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
