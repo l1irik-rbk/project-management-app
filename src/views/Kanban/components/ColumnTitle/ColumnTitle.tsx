@@ -1,11 +1,12 @@
-import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
 import { SyntheticEvent, useState } from 'react';
+
 import s from './ColumnTitle.module.scss';
 import g from './../../../../App.module.scss';
 import { updateColumn } from '../../../../services/columns';
 import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
 import { boardSlice } from '../../../../Redux/slices/boardSlice';
-import { Column } from '../../../../services/interfaces/boards';
+import type { Column } from '../../../../services/interfaces/boards';
+import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
 
 type Props = {
   taskLength: number;
@@ -50,7 +51,7 @@ export const ColumnTitle = (props: Props) => {
     setDissabled(!dissabled);
   };
 
-  const onCnacel = () => {
+  const onCancel = () => {
     setDissabled(!dissabled);
   };
 
@@ -80,7 +81,7 @@ export const ColumnTitle = (props: Props) => {
               ✓
             </button>
 
-            <button className={`${g.button} ${g.drop_shadow} ${s.title_button}`} onClick={onCnacel}>
+            <button className={`${g.button} ${g.drop_shadow} ${s.title_button}`} onClick={onCancel}>
               X
             </button>
           </div>
