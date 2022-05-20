@@ -6,12 +6,14 @@ import { authSlice } from '../../Redux/slices/authSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 
 export const Header = () => {
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const board = useAppSelector((state) => state.board.board);
+  const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
   const { newBoard } = useAppSelector((state) => state.boards);
   const { isTokenLoaded } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
   const { setNewBoard } = boardsSlice.actions;
   const { setToken, setTokenLoaded } = authSlice.actions;
-  const location = useLocation();
 
   const logout = () => {
     document.cookie = `token=${''}`;
@@ -27,8 +29,17 @@ export const Header = () => {
     <header className={`${g.wrapper} ${s.header}`}>
       <Link className={s.logo__link} to="/">
         <div className={s.logo}>
-          <p className={s.logo__icon}>🐗</p>
-          <h1 className={g.font_logo}>KanbanBoar</h1>
+          {location.pathname.includes('kanban') && board ? (
+            <>
+              <p className={s.logo__icon}>🐗</p>
+              <h1 className={g.font_logo}>{isBoardLoaded ? board.title : '🐗🐗🐗🐗🐗🐗'}</h1>
+            </>
+          ) : (
+            <>
+              <p className={s.logo__icon}>🐗</p>
+              <h1 className={g.font_logo}>{'KanbanBoar'}</h1>
+            </>
+          )}
         </div>
       </Link>
 
@@ -48,6 +59,7 @@ export const Header = () => {
             )}
           </>
         )}
+
         {!isTokenLoaded ? (
           <Link to="/auth">
             <button className={`${g.button} ${g.drop_shadow}`}>Login / Sign up</button>
