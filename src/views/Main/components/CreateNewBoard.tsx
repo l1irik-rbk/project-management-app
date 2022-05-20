@@ -47,7 +47,7 @@ export const CreateNewBoard = () => {
   const createContent = () => {
     return (
       <>
-        <label>
+        <label className={g.label}>
           <p>title:</p>
           <input
             {...register('title', { required: true, minLength: 3, maxLength: 10 })}
