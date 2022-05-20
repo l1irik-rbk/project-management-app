@@ -52,7 +52,6 @@ export const CreateTaskButton = (props: Props) => {
         });
         props.onCreateTask();
         dispatch(fetchBoard(boardId));
-        // alert('Task created');
       }
     }
   };
@@ -63,38 +62,36 @@ export const CreateTaskButton = (props: Props) => {
         <label className={s.label}>
           <p>title:</p>
           <input
-            {...register('title', { required: true, minLength: 3, maxLength: 20 })}
+            {...register('title', { required: true, minLength: 3, maxLength: 16 })}
             className={g.input}
             type="text"
             placeholder="name task"
           />
-          <br />
 
           {errors.title && (
             <span className={g.font_error}>
               {errors.title.type === 'required' && 'Title is required'}
               {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
-              {errors.title.type === 'maxLength' && 'Title must be at most 20 characters'}
+              {errors.title.type === 'maxLength' && 'Title must be at most 16 characters'}
             </span>
           )}
         </label>
 
         <label className={s.label}>
           <p>description:</p>
-          <input
-            {...register('description', { required: true, minLength: 3, maxLength: 20 })}
-            className={g.input}
-            type="text"
+          <textarea
+            {...register('description', { required: true, minLength: 3, maxLength: 144 })}
+            className={`${g.input} ${s.textarea}`}
             placeholder="description task"
-          />
-          <br />
+          ></textarea>
+
           {errors.description && (
             <span className={g.font_error}>
               {errors.description.type === 'required' && 'Description is required'}
               {errors.description.type === 'minLength' &&
                 'Description must be at least 3 characters'}
               {errors.description.type === 'maxLength' &&
-                'Description must be at most 20 characters'}
+                'Description must be at most 144 characters'}
             </span>
           )}
         </label>
@@ -111,7 +108,7 @@ export const CreateTaskButton = (props: Props) => {
         +
       </button>
       <Modal
-        title="Enter a new column"
+        title="Enter a new task"
         content={createContent()}
         onConfirm={handleSubmit(handleCreateTask)}
         onClose={handleCloseModal}

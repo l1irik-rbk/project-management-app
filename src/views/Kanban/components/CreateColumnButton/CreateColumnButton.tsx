@@ -8,7 +8,7 @@ import s from './CreateColumnButton.module.scss';
 import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
 import { useAppDispatch } from '../../../../Redux/reduxHooks';
 
-export type CreateColumnData = {
+export type ColumnData = {
   title: string;
 };
 
@@ -28,15 +28,14 @@ export const CreateColumnButton = (props: Props) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateColumnData>();
+  } = useForm<ColumnData>();
 
-  const handleCreateColumn = async (data: CreateColumnData) => {
+  const handleCreateColumn = async (data: ColumnData) => {
     const boardId = props.boardId;
     if (boardId) {
       const response = await createColumn(data.title, props.orderForNewColumn, boardId);
-      if (response.hasOwnProperty('error')) {
-      } else {
-        // alert('Column created');
+      if (response.hasOwnProperty('error')) alert('Error');
+      else {
         reset({
           title: '',
         });
@@ -52,17 +51,17 @@ export const CreateColumnButton = (props: Props) => {
         <label>
           <p>title:</p>
           <input
-            {...register('title', { required: true, minLength: 3, maxLength: 20 })}
+            {...register('title', { required: true, minLength: 3, maxLength: 16 })}
             className={g.input}
             type="text"
             placeholder="name column"
           />
-          <br />
+
           {errors.title && (
             <span className={g.font_error}>
               {errors.title.type === 'required' && 'Title is required'}
               {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
-              {errors.title.type === 'maxLength' && 'Title must be at most 20 characters'}
+              {errors.title.type === 'maxLength' && 'Title must be at most 16 characters'}
             </span>
           )}
         </label>
