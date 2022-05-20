@@ -34,9 +34,8 @@ export const CreateNewBoard = () => {
   const handleCreateBoard = async (data: CreateBoardData) => {
     const response = await createBoard(data.title);
 
-    if (response.hasOwnProperty('statusCode')) {
-      alert('Ошибка создания доски');
-    } else {
+    if (response.hasOwnProperty('statusCode')) alert('Error');
+    else {
       reset({
         title: '',
       });
@@ -55,7 +54,7 @@ export const CreateNewBoard = () => {
             type="text"
             placeholder="name new board"
           />
-          <br />
+
           {errors.title && (
             <span className={g.font_error}>
               {errors.title.type === 'required' && 'Title is required'}

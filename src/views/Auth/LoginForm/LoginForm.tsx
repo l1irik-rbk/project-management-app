@@ -29,8 +29,7 @@ export const LoginForm = () => {
     const { login, password } = data;
     const signinResponse = await signin(login, password);
     if (signinResponse.hasOwnProperty('statusCode')) {
-      const error = signinResponse as Error;
-      alert(`${error.statusCode} ${error.message}`);
+      alert('Error');
     } else {
       const token = (signinResponse as Signin).token;
       dispatch(setToken(token));

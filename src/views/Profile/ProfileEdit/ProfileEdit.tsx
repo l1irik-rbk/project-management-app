@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
-import { User, UserError } from '../../../services/interfaces/users';
+import { User } from '../../../services/interfaces/users';
 import { useAppDispatch } from '../../../Redux/reduxHooks';
 import {
   confirmationModalSlice,
@@ -35,12 +35,7 @@ export const ProfileEdit = (props: Props) => {
 
   const onSubmit = async (data: FormData) => {
     const response = await updateUser(data, user.id);
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as UserError;
-      alert(`${error.statusCode} ${error.message} ${error.error}`);
-    } else {
-      alert('Профиль обновлен');
-    }
+    if (response.hasOwnProperty('statusCode')) alert('Error');
   };
 
   const handleDelete = () => {

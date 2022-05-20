@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 
-import { signup } from '../../../services/auth';
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
-import { Error } from './../../../services/interfaces/error';
+import { signup } from '../../../services/auth';
 
 type FormData = {
   name: string;
@@ -21,10 +20,7 @@ export const SignupForm = () => {
   const registerHandler = async (data: FormData) => {
     const { name, login, password } = data;
     const response = await signup(name, login, password);
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as Error;
-      alert(`${error.statusCode} ${error.message}`);
-    }
+    if (response.hasOwnProperty('statusCode')) alert('Error');
   };
 
   return (

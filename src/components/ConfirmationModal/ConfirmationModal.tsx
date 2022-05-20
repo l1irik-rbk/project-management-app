@@ -6,7 +6,6 @@ import { boardSlice } from '../../Redux/slices/boardSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import { deleteBoard } from '../../services/boards';
 import { deleteColumn } from '../../services/columns';
-import { UserError } from '../../services/interfaces/users';
 import { deleteTask } from '../../services/tasks';
 import { deleteUser } from '../../services/users';
 import { findUser, getLogin } from '../../services/utils';
@@ -28,35 +27,29 @@ export const ConfirmationModal = () => {
     switch (type) {
       case ActionType.DELETE_BOARD:
         if (selectedBoardId) {
-          await deleteBoard(selectedBoardId);
-          dispatch(fetchBoards());
-          dispatch(setSelectedBoardId(null));
+          const response = await deleteBoard(selectedBoardId);
+          if (response.hasOwnProperty('success')) {
+            dispatch(fetchBoards());
+            dispatch(setSelectedBoardId(null));
+          } else alert('Error');
         }
         break;
       case ActionType.DELETE_COLUMN:
         if (currentBoardId && selectedColumnId) {
-          const result = await deleteColumn(currentBoardId, selectedColumnId);
-          // const columns = board ? getColumns(board) : null;
-          // const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
-          // if (updatedColumns) dispatch(setNewColumn(updatedColumns));
-          if (result.hasOwnProperty('success')) {
-            // alert('Column deleted');
+          const response = await deleteColumn(currentBoardId, selectedColumnId);
+          if (response.hasOwnProperty('success')) {
+            dispatch(fetchBoard(currentBoardId));
+            dispatch(setSelectedColumnId(null));
           } else alert('Error');
-          dispatch(fetchBoard(currentBoardId));
-          dispatch(setSelectedColumnId(null));
         }
         break;
       case ActionType.DELETE_TASK:
         if (currentBoardId && selectedColumnId && selectedTaskId) {
-          const result = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
-          // const columns = board ? getColumns(board) : null;
-          // const updatedColumns = filterByTasks(columns, selectedTaskId, selectedColumnId);
-          // dispatch(setNewColumn(updatedColumns));
-          dispatch(fetchBoard(currentBoardId));
-          dispatch(setSelectedColumnId(null));
-          dispatch(setSelectedTaskId(null));
-          if (result.hasOwnProperty('success')) {
-            // alert('Task deleted');
+          const response = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
+          if (response.hasOwnProperty('success')) {
+            dispatch(fetchBoard(currentBoardId));
+            dispatch(setSelectedColumnId(null));
+            dispatch(setSelectedTaskId(null));
           } else alert('Error');
         }
         break;
@@ -66,12 +59,9 @@ export const ConfirmationModal = () => {
           const user = await findUser(login);
           if (user) {
             const response = await deleteUser(user.id);
-            if (response.hasOwnProperty('statusCode')) {
-              const error = response as UserError;
-              alert(`${error.statusCode} ${error.message} ${error.error}`);
-            } else {
+            if (response.hasOwnProperty('success')) {
               alert('Профиль удален');
-            }
+            } else alert('Error');
           }
         }
 
