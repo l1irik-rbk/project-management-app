@@ -20,13 +20,6 @@ export const Footer = () => {
             alt="avatar l1irik-rbk"
           />
         </a>
-        <a href="https://github.com/fgriff">
-          <img
-            className={s.avatar}
-            src="https://avatars.githubusercontent.com/u/63111926"
-            alt="avatar fgriff"
-          />
-        </a>
         <a href="https://github.com/u1f5a4">
           <img
             className={s.avatar}
