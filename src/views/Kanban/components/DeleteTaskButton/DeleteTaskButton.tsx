@@ -1,3 +1,5 @@
+import { SyntheticEvent } from 'react';
+
 import s from './DeleteTaskButton.module.scss';
 import g from '../../../../App.module.scss';
 import { ActionType } from '../../../../Redux/interfaces/confirmationModal';
@@ -14,7 +16,8 @@ export const DeleteTaskButton = (props: Props) => {
   const dispatch = useAppDispatch();
   const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
 
-  const handleDeleteTask = async () => {
+  const handleDeleteTask = async (e: SyntheticEvent) => {
+    e.stopPropagation();
     const { columnId, taskId } = props;
 
     if (columnId && taskId) {
