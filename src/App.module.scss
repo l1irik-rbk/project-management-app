@@ -28,9 +28,10 @@ textarea {
 }
 
 .wrapper {
-  max-width: 960px;
+  max-width: 980px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 10px;
 }
 
 @media screen and (max-width: 960px) {
