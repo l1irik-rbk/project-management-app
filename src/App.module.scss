@@ -23,6 +23,10 @@ a {
   text-decoration: none;
 }
 
+textarea {
+  resize: none;
+}
+
 .wrapper {
   max-width: 960px;
   margin-left: auto;
