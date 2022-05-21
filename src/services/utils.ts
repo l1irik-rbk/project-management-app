@@ -10,6 +10,10 @@ export const getLogin = () => {
   return getCookie('login');
 };
 
+export const getLanguage = () => {
+  return getCookie('i18next');
+};
+
 function getCookie(cname: string) {
   // https://www.w3schools.com/js/js_cookies.asp
   const name = cname + '=';

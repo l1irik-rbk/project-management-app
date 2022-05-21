@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import s from './Modal.module.scss';
 import g from './../../App.module.scss';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   open: boolean;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export const Modal = (props: Props) => {
+  const { t } = useTranslation();
+
   const [isOpen, setIsOpen] = useState(props.open);
   useEffect(() => setIsOpen(props.open), [props.open]);
 
@@ -39,11 +42,11 @@ export const Modal = (props: Props) => {
 
           <div className={s.buttons__container}>
             <button className={`${g.button} ${g.drop_shadow}`} onClick={handleAction}>
-              OK
+              {t('creationModal.ok')}
             </button>
 
             <button className={`${g.button} ${g.drop_shadow}`} onClick={handleClose}>
-              Cancel
+              {t('creationModal.cancel')}
             </button>
           </div>
         </div>

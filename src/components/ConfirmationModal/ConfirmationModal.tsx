@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/confirmationModal';
@@ -13,6 +14,7 @@ import { CreatePortal } from './CreatePortal/CreatePortal';
 import ModalWindow from './ModalWindow/ModalWindow';
 
 export const ConfirmationModal = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { setSelectedColumnId, setSelectedTaskId } = boardSlice.actions;
   const { setSelectedBoardId } = boardsSlice.actions;
@@ -74,13 +76,13 @@ export const ConfirmationModal = () => {
   const getConfirmationModalText = (type: ActionType | null) => {
     switch (type) {
       case ActionType.DELETE_BOARD:
-        return 'You will remove the board and all of its contents.';
+        return t('confirmationModal.delete.board');
       case ActionType.DELETE_COLUMN:
-        return 'You want to delete this column? All tasks will be deleted. This action cannot be undone.';
+        return t('confirmationModal.delete.column');
       case ActionType.DELETE_TASK:
-        return 'You want to delete this task? This action cannot be undone.';
+        return t('confirmationModal.delete.task');
       case ActionType.DELETE_USER:
-        return 'You want to delete this user? This action cannot be undone.';
+        return t('confirmationModal.delete.user');
       default:
         return '';
     }

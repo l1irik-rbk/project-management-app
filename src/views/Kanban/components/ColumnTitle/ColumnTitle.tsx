@@ -9,6 +9,7 @@ import { boardSlice } from '../../../../Redux/slices/boardSlice';
 import type { Column } from '../../../../services/interfaces/boards';
 import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
 import { ColumnData } from '../CreateColumnButton/CreateColumnButton';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   taskLength: number;
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export const ColumnTitle = (props: Props) => {
+  const { t } = useTranslation();
+
   const { taskLength, title, columnId, boardId, order } = props;
 
   const [dissabled, setDissabled] = useState(true);
@@ -69,7 +72,7 @@ export const ColumnTitle = (props: Props) => {
             </p>
           ) : (
             <input
-              {...register('title', { required: true, minLength: 3, maxLength: 15 })}
+              {...register('title', { required: true, minLength: 3, maxLength: 16 })}
               className={`${g.font_title} ${s.input__title} ${g.input}`}
               defaultValue={title}
             />
@@ -96,9 +99,9 @@ export const ColumnTitle = (props: Props) => {
 
       {errors.title && (
         <span className={g.font_error}>
-          {errors.title.type === 'required' && 'Title is required'}
-          {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
-          {errors.title.type === 'maxLength' && 'Title must be at most 15 characters'}
+          {errors.title.type === 'required' && t('creationModal.errors.title.required')}
+          {errors.title.type === 'minLength' && t('creationModal.errors.title.minLength')}
+          {errors.title.type === 'maxLength' && t('creationModal.errors.title.maxLength16')}
         </span>
       )}
     </>

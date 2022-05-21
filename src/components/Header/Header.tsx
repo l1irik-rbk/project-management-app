@@ -4,8 +4,12 @@ import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { authSlice } from '../../Redux/slices/authSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
+import i18n from '../../languagesInit';
+import { useTranslation } from 'react-i18next';
+import { getLanguage } from '../../services/utils';
 
 export const Header = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const board = useAppSelector((state) => state.board.board);
@@ -14,6 +18,11 @@ export const Header = () => {
   const { isTokenLoaded } = useAppSelector((state) => state.auth);
   const { setNewBoard } = boardsSlice.actions;
   const { setToken, setTokenLoaded } = authSlice.actions;
+  const currentLang = getLanguage();
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   const logout = () => {
     document.cookie = `token=${''}`;
@@ -48,21 +57,36 @@ export const Header = () => {
           <>
             {location.pathname !== '/main' && (
               <Link to="/main">
-                <button className={`${g.button} ${g.drop_shadow}`}>Boards</button>
+                <button className={`${g.button} ${g.drop_shadow}`}>{t('header.boards')}</button>
               </Link>
             )}
 
             {location.pathname === '/main' && (
               <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
-                Create new board
+                {t('header.create')}
               </button>
             )}
           </>
         )}
 
+        <div className={`${g.toggle} ${g.drop_shadow} ${g.button}`}>
+          <button
+            className={`${g.button} ${g.one} ${currentLang === 'ru' && g.active}`}
+            onClick={() => changeLanguage('ru')}
+          >
+            RU
+          </button>
+          <button
+            className={`${g.button} ${g.two} ${currentLang === 'en' && g.active}`}
+            onClick={() => changeLanguage('en')}
+          >
+            EN
+          </button>
+        </div>
+
         {!isTokenLoaded ? (
           <Link to="/auth">
-            <button className={`${g.button} ${g.drop_shadow}`}>Login / Sign up</button>
+            <button className={`${g.button} ${g.drop_shadow}`}>{t('header.login')}</button>
           </Link>
         ) : (
           <div className={s.profile}>
@@ -70,7 +94,7 @@ export const Header = () => {
               <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
             </Link>
             <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
-              Logout
+              {t('header.logout')}
             </button>
           </div>
         )}

@@ -2,6 +2,7 @@ import s from './ModalWindow.module.scss';
 import g from './../../../App.module.scss';
 import { useAppSelector, useAppDispatch } from '../../../Redux/reduxHooks';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
+import { useTranslation } from 'react-i18next';
 
 export type Props = {
   text: string;
@@ -9,6 +10,7 @@ export type Props = {
 };
 
 const ModalWindow = ({ text, onConfirm }: Props) => {
+  const { t } = useTranslation();
   const { isPortalVisible } = useAppSelector((state) => state.confirmationModal);
 
   const dispatch = useAppDispatch();
@@ -31,14 +33,14 @@ const ModalWindow = ({ text, onConfirm }: Props) => {
     <div className={portalVisibility} onClick={handleClosePortal}>
       <div className={`${s.modal__window}`} onClick={(e) => e.stopPropagation()}>
         <div className={`${s.modal__window_content}`}>
-          <h6 className={`${g.font_title}`}>Are you sure?</h6>
+          <h6 className={`${g.font_title}`}>{t('confirmationModal.title')}</h6>
           <p>{text}</p>
           <div className={s.buttons__container}>
             <button className={`${g.button} ${g.drop_shadow}`} onClick={handlePortalAction}>
-              OK
+              {t('confirmationModal.ok')}
             </button>
             <button className={`${g.button} ${g.drop_shadow}`} onClick={handleClosePortal}>
-              Cancel
+              {t('confirmationModal.cancel')}
             </button>
           </div>
         </div>

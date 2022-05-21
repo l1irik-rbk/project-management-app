@@ -8,6 +8,7 @@ import g from './../../../../App.module.scss';
 import s from './CreateTaskButton.module.scss';
 import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
 import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { useTranslation } from 'react-i18next';
 
 export type CreateTaskData = {
   title: string;
@@ -22,6 +23,8 @@ type Props = {
 };
 
 export const CreateTaskButton = (props: Props) => {
+  const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
@@ -60,38 +63,39 @@ export const CreateTaskButton = (props: Props) => {
     return (
       <>
         <label className={s.label}>
-          <p>title:</p>
+          <p>{t('creationModal.title')}</p>
           <input
             {...register('title', { required: true, minLength: 3, maxLength: 16 })}
             className={g.input}
             type="text"
-            placeholder="name task"
+            placeholder={t('creationModal.creationTask.titlePlaceholder')}
           />
 
           {errors.title && (
             <span className={g.font_error}>
-              {errors.title.type === 'required' && 'Title is required'}
-              {errors.title.type === 'minLength' && 'Title must be at least 3 characters'}
-              {errors.title.type === 'maxLength' && 'Title must be at most 16 characters'}
+              {errors.title.type === 'required' && t('creationModal.errors.title.required')}
+              {errors.title.type === 'minLength' && t('creationModal.errors.title.minLength')}
+              {errors.title.type === 'maxLength' && t('creationModal.errors.title.maxLength16')}
             </span>
           )}
         </label>
 
         <label className={s.label}>
-          <p>description:</p>
+          <p>{t('creationModal.description')}</p>
           <textarea
             {...register('description', { required: true, minLength: 3, maxLength: 144 })}
             className={`${g.input} ${s.textarea}`}
-            placeholder="description task"
+            placeholder={t('creationModal.creationTask.descriptionPlaceholder')}
           ></textarea>
 
           {errors.description && (
             <span className={g.font_error}>
-              {errors.description.type === 'required' && 'Description is required'}
+              {errors.description.type === 'required' &&
+                t('creationModal.errors.description.required')}
               {errors.description.type === 'minLength' &&
-                'Description must be at least 3 characters'}
+                t('creationModal.errors.description.minLength')}
               {errors.description.type === 'maxLength' &&
-                'Description must be at most 144 characters'}
+                t('creationModal.errors.description.maxLength144')}
             </span>
           )}
         </label>
@@ -108,7 +112,7 @@ export const CreateTaskButton = (props: Props) => {
         +
       </button>
       <Modal
-        title="Enter a new task"
+        title={t('creationModal.creationTask.title')}
         content={createContent()}
         onConfirm={handleSubmit(handleCreateTask)}
         onClose={handleCloseModal}
