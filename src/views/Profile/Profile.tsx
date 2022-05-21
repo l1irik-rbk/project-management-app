@@ -11,16 +11,17 @@ export const Profile = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [typeForm, setTypeForm] = useState<'edit' | 'show'>('show');
+  const login = getLogin();
 
   useEffect(() => {
     document.title = `${typeForm} ${t('profile.docTitle')} ${user?.login} | KanbanBoar`;
-
-    const users = async () => {
-      const login = getLogin();
-      if (login) setUser(await findUser(login));
-    };
+    console.log('asd');
     users();
-  }, [typeForm, user]);
+  }, [typeForm]);
+
+  const users = async () => {
+    if (login) setUser(await findUser(login));
+  };
 
   return (
     <>
