@@ -5,9 +5,11 @@ import { createColumn } from '../../../../services/columns';
 import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
 import s from './CreateColumnButton.module.scss';
-import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
-import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
 import { useTranslation } from 'react-i18next';
+import { boardSlice } from '../../../../Redux/slices/boardSlice';
+import { Column } from '../../../../services/interfaces/boards';
+import { getColumns } from '../../../../helpers/getColumns';
 
 export type ColumnData = {
   title: string;
@@ -22,6 +24,8 @@ export const CreateColumnButton = (props: Props) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
+  const { setNewColumns } = boardSlice.actions;
+  const board = useAppSelector((state) => state.board.board);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
@@ -37,13 +41,20 @@ export const CreateColumnButton = (props: Props) => {
     const boardId = props.boardId;
     if (boardId) {
       const response = await createColumn(data.title, props.orderForNewColumn, boardId);
+
       if (response.hasOwnProperty('error')) alert('Error');
       else {
         reset({
           title: '',
         });
         handleCloseModal();
-        dispatch(fetchBoard(boardId));
+
+        const newColumn = response as Column;
+        newColumn.tasks = [];
+        const columns = getColumns(board);
+        columns?.push(newColumn);
+
+        if (columns) dispatch(setNewColumns(columns));
       }
     }
   };

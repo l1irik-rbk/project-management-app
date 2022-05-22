@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
+import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/confirmationModal';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
@@ -7,6 +7,7 @@ import { boardSlice } from '../../Redux/slices/boardSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import { deleteBoard } from '../../services/boards';
 import { deleteColumn } from '../../services/columns';
+import { FullColumn } from '../../services/interfaces/columns';
 import { deleteTask } from '../../services/tasks';
 import { deleteUser } from '../../services/users';
 import { findUser, getLogin } from '../../services/utils';
@@ -16,12 +17,12 @@ import ModalWindow from './ModalWindow/ModalWindow';
 export const ConfirmationModal = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { setSelectedColumnId, setSelectedTaskId } = boardSlice.actions;
+  const { setSelectedColumnId, setSelectedTaskId, setNewColumns } = boardSlice.actions;
   const { setSelectedBoardId } = boardsSlice.actions;
 
   const { selectedBoardId } = useAppSelector((state) => state.boards);
   const { type } = useAppSelector((state) => state.confirmationModal);
-  const { selectedColumnId, currentBoardId, selectedTaskId } = useAppSelector(
+  const { selectedColumnId, currentBoardId, selectedTaskId, board } = useAppSelector(
     (state) => state.board
   );
 
@@ -40,7 +41,10 @@ export const ConfirmationModal = () => {
         if (currentBoardId && selectedColumnId) {
           const response = await deleteColumn(currentBoardId, selectedColumnId);
           if (response.hasOwnProperty('success')) {
-            dispatch(fetchBoard(currentBoardId));
+            const columns = board?.columns as FullColumn[];
+            const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+            console.log(updatedColumns);
+            dispatch(setNewColumns(updatedColumns));
             dispatch(setSelectedColumnId(null));
           } else alert('Error');
         }
@@ -49,7 +53,19 @@ export const ConfirmationModal = () => {
         if (currentBoardId && selectedColumnId && selectedTaskId) {
           const response = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
           if (response.hasOwnProperty('success')) {
-            dispatch(fetchBoard(currentBoardId));
+            const columns = board?.columns as FullColumn[];
+            const currentColumn = columns?.filter(
+              (column) => column.id === selectedColumnId
+            )[0] as FullColumn;
+            const columnsWithoutCurrent = columns?.filter(
+              (column) => column.id !== selectedColumnId
+            );
+            const currentColumnCopy = { ...currentColumn };
+            const tasks = currentColumn.tasks.filter((task) => task.id !== selectedTaskId);
+            currentColumnCopy.tasks = tasks;
+            const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
+
+            dispatch(setNewColumns(updatedColumns));
             dispatch(setSelectedColumnId(null));
             dispatch(setSelectedTaskId(null));
           } else alert('Error');

@@ -6,9 +6,10 @@ import { Modal } from '../../../../components/Modal/Modal';
 import { getUserId } from '../../../../services/utils';
 import g from './../../../../App.module.scss';
 import s from './CreateTaskButton.module.scss';
-import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
-import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
 import { useTranslation } from 'react-i18next';
+import { boardSlice } from '../../../../Redux/slices/boardSlice';
+import { FullColumn } from '../../../../services/interfaces/columns';
 
 export type CreateTaskData = {
   title: string;
@@ -26,6 +27,8 @@ export const CreateTaskButton = (props: Props) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
+  const { setNewColumns } = boardSlice.actions;
+  const board = useAppSelector((state) => state.board.board);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
   const handleCloseModal = () => setModalIsOpen(false);
@@ -54,7 +57,19 @@ export const CreateTaskButton = (props: Props) => {
           description: '',
         });
         props.onCreateTask();
-        dispatch(fetchBoard(boardId));
+
+        const { id, title, order, description, userId } = createResponse;
+        const columns = board?.columns as FullColumn[];
+        const currentColumn = columns?.filter((column) => column.id === columnId)[0] as FullColumn;
+        const columnsWithoutCurrent = columns?.filter((column) => column.id !== columnId);
+        const currentColumnCopy = { ...currentColumn };
+        const newTask = { description, files: [], id, order, title, userId, done: false };
+        const copyOfCurrentTasks = [...currentColumn.tasks];
+        copyOfCurrentTasks.push(newTask);
+        currentColumnCopy.tasks = copyOfCurrentTasks;
+        const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
+
+        dispatch(setNewColumns(updatedColumns));
       }
     }
   };

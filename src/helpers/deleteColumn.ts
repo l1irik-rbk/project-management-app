@@ -1,8 +1,8 @@
 import { FullColumn } from '../services/interfaces/columns';
 
 export const deleteColumnFromBoard = (
-  columns: FullColumn[] | null,
+  columns: FullColumn[],
   selectedColumnId: string
-): FullColumn[] | undefined => {
+): FullColumn[] => {
   return columns?.filter((column) => column.id !== selectedColumnId);
 };
