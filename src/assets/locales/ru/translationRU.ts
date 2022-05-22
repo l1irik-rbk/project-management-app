@@ -95,6 +95,11 @@ const translationRU = {
       descriptionPlaceholder: 'Описание новой задачи',
       title: 'Введите новую задачу',
     },
+    changeTask: {
+      titlePlaceholder: 'Заголовок текущей задачи',
+      descriptionPlaceholder: 'Описание текущей задачи',
+      title: 'Измените текущую задачу',
+    },
   },
 };
 

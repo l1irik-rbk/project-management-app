@@ -95,6 +95,11 @@ const translationEN = {
       descriptionPlaceholder: 'Description of new task',
       title: 'Enter a new task',
     },
+    changeTask: {
+      titlePlaceholder: 'Name of this task',
+      descriptionPlaceholder: 'Description of this task',
+      title: 'Change this task',
+    },
   },
 };
 
