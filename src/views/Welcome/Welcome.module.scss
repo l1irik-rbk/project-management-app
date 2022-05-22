@@ -1,7 +1,18 @@
 .content {
   position: relative;
+  display: flex;
+  margin-top: 160px;
+  align-items: center;
+
+  &_text {
+    max-width: 500px;
+    color: #000;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+  }
 }
 
 .boar {
-  width: 100%;
+  overflow: hidden;
 }

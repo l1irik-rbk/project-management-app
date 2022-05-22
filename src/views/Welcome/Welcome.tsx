@@ -18,8 +18,8 @@ export const Welcome = () => {
 
   return (
     <div className={s.content}>
-      <p>{t('welcom.text')}</p>
-      <img className={s.boar} src={boar} alt="" />
+      <p className={s.content_text}>{t('welcom.text')}</p>
+      <img className={s.boar} src={boar} alt="boar" />
     </div>
   );
 };
