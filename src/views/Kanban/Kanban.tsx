@@ -9,11 +9,11 @@ import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { boardSlice, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
-import { updateColumn } from '../../services/columns';
 import { updateTask } from '../../services/tasks';
 import type { FullColumn } from '../../services/interfaces/columns';
 import type { Task } from '../../services/interfaces/tasks';
 import type { FullBoard } from '../../services/interfaces/boards';
+import { syncColumnsOrderWithServer } from './components/utils';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -22,11 +22,11 @@ export const Kanban = () => {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boards);
   const board = useAppSelector((state) => state.board.board);
+  const columns = board?.columns.slice().sort((a, b) => a.order - b.order);
+  const orderForNewColumn = board?.columns.length || 0;
+
   const { currentBoardId, isBoardLoaded } = useAppSelector((state) => state.board);
   const { setNewColumns } = boardSlice.actions;
-
-  const orderForNewColumn = board?.columns.length || 0;
-  const columns = board?.columns.slice().sort((a, b) => a.order - b.order);
 
   useEffect(() => {
     if (!paramId) return;
@@ -55,14 +55,14 @@ export const Kanban = () => {
     const toParentId = destination.droppableId;
 
     if (type === 'column') {
-      if (fromIndex === toIndex) return;
+      if (fromIndex === toIndex || !currentBoardId) return;
 
       const newColumns = Array.from(columns);
       const [removed] = newColumns.splice(fromIndex, 1);
       newColumns.splice(toIndex, 0, removed);
       const newOrders = newColumns.map((item, index) => ({ ...item, order: index }));
       dispatch(setNewColumns(newOrders));
-      await syncColumnsOrderWithServer(newOrders);
+      await syncColumnsOrderWithServer(newColumns, currentBoardId);
     }
 
     if (type === 'task') {
@@ -134,22 +134,6 @@ export const Kanban = () => {
     oldTasks.splice(to, 0, formatRemoved);
     const newOrderTasks = oldTasks.map((task, index) => ({ ...task, order: index }));
     return newOrderTasks;
-  };
-
-  const syncColumnsOrderWithServer = async (newColumns: FullColumn[]) => {
-    if (!currentBoardId || !columns) return;
-    const syncColumnOrderToServer = async (column: FullColumn) =>
-      await updateColumn(currentBoardId, column.id, column.title, column.order);
-
-    const makeColumnsOrderIsUnique = newColumns.map((item, index) => ({
-      ...item,
-      order: index + 100,
-    }));
-    const uniqueOrder = makeColumnsOrderIsUnique.map((column) => syncColumnOrderToServer(column));
-    await Promise.all(uniqueOrder);
-
-    const newColumnsOrder = newColumns.map((column) => syncColumnOrderToServer(column));
-    return await Promise.all(newColumnsOrder);
   };
 
   return (

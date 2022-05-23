@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+
 import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
 import { fetchBoards } from '../../Redux/actionCreators/fetchBoards';
 import { ActionType } from '../../Redux/interfaces/confirmationModal';
@@ -11,6 +12,7 @@ import { FullColumn } from '../../services/interfaces/columns';
 import { deleteTask } from '../../services/tasks';
 import { deleteUser } from '../../services/users';
 import { findUser, getLogin } from '../../services/utils';
+import { syncColumnsOrderWithServer } from '../../views/Kanban/components/utils';
 import { CreatePortal } from './CreatePortal/CreatePortal';
 import ModalWindow from './ModalWindow/ModalWindow';
 
@@ -42,10 +44,15 @@ export const ConfirmationModal = () => {
           const response = await deleteColumn(currentBoardId, selectedColumnId);
           if (response.hasOwnProperty('success')) {
             const columns = board?.columns as FullColumn[];
-            const updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
-            console.log(updatedColumns);
+            let updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+            updatedColumns.sort((a, b) => a.order - b.order);
+            updatedColumns = updatedColumns.map((column, index) => ({
+              ...column,
+              order: index,
+            }));
             dispatch(setNewColumns(updatedColumns));
             dispatch(setSelectedColumnId(null));
+            await syncColumnsOrderWithServer(updatedColumns, currentBoardId);
           } else alert('Error');
         }
         break;
