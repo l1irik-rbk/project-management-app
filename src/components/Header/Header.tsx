@@ -1,13 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
 import { authSlice } from '../../Redux/slices/authSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
-import { useTranslation } from 'react-i18next';
 import { getLanguage } from '../../services/utils';
-import { useState } from 'react';
 
 export const Header = () => {
   const { t } = useTranslation();
@@ -38,17 +39,14 @@ export const Header = () => {
   };
 
   const changeSticky = () => {
-    if (window.scrollY) {
-      setSticky(true);
-    } else {
-      setSticky(false);
-    }
+    if (window.scrollY) setSticky(true);
+    else setSticky(false);
   };
 
   window.addEventListener('scroll', changeSticky);
 
   return (
-    <header className={`${s.sticky_header} ${sticky && s.sticky_header__active}`}>
+    <header className={`${s.header} ${sticky && s.sticky_active} ${sticky && g.drop_shadow}`}>
       <div className={`${g.wrapper} ${s.header}`}>
         <Link className={s.logo__link} to="/">
           <div className={s.logo}>
@@ -59,7 +57,7 @@ export const Header = () => {
               </>
             ) : (
               <>
-                <p className={s.logo__icon}>🐗</p>
+                <p className={`${s.logo__icon} ${sticky && s.logo__rotate}`}>🐗</p>
                 <h1 className={g.font_logo}>{'KanbanBoar'}</h1>
               </>
             )}
