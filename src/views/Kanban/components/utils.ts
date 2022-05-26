@@ -13,5 +13,5 @@ export const syncColumnsOrderWithServer = async (columns: FullColumn[], boardId:
   await Promise.all(uniqueOrder);
 
   const newColumnsOrder = columns.map((column) => syncColumnOrderToServer(column));
-  console.log(await Promise.all(newColumnsOrder));
+  await Promise.all(newColumnsOrder);
 };

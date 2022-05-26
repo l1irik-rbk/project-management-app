@@ -1,15 +1,15 @@
-import React, { SyntheticEvent } from 'react';
+import { SyntheticEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
-import { BoardProp } from './interfaces/BoardProp';
-import { useAppDispatch } from '../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../Redux/hooks';
 import { boardsSlice } from '../../../Redux/slices/boardsSlice';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
-import { ActionType } from '../../../Redux/interfaces/confirmationModal';
+import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
+import type { Board as BoardType } from '../../../services/interfaces/boards';
 
-export const Board = ({ id, boardTitle }: BoardProp) => {
+export const Board = ({ id, title }: BoardType) => {
   const dispatch = useAppDispatch();
   const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
   const { setSelectedBoardId } = boardsSlice.actions;
@@ -24,7 +24,7 @@ export const Board = ({ id, boardTitle }: BoardProp) => {
   return (
     <Link to={`/kanban/${id}`}>
       <div className={`${s.board} ${g.drop_shadow} ${g.button}`}>
-        <h5 className={`${g.font_title}`}>{boardTitle}</h5>
+        <h5 className={`${g.font_title}`}>{title}</h5>
         <button className={`${g.button} ${g.drop_shadow}`} onClick={handleRemoveBoard}>
           X
         </button>

@@ -1,8 +1,9 @@
+import { useTranslation } from 'react-i18next';
+
 import s from './ModalWindow.module.scss';
 import g from './../../../App.module.scss';
-import { useAppSelector, useAppDispatch } from '../../../Redux/reduxHooks';
+import { useAppSelector, useAppDispatch } from '../../../Redux/hooks';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
-import { useTranslation } from 'react-i18next';
 
 export type Props = {
   text: string;

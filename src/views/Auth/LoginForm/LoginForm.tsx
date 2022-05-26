@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch } from '../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../Redux/hooks';
 import { signin } from '../../../services/auth';
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
 import { Signin } from '../../../services/interfaces/auth';
-import { Error } from './../../../services/interfaces/error';
 import { authSlice } from '../../../Redux/slices/authSlice';
-import { useTranslation } from 'react-i18next';
 
 type FormData = {
   login: string;

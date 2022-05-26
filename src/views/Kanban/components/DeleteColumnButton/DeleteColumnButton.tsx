@@ -1,9 +1,9 @@
 import s from './DeleteColumnButton.module.scss';
 import g from '../../../../App.module.scss';
-import { ActionType } from '../../../../Redux/interfaces/confirmationModal';
-import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../../Redux/hooks';
 import { setSelectedColumnId } from '../../../../Redux/slices/boardSlice';
 import { confirmationModalSlice } from '../../../../Redux/slices/confirmationModalSlice';
+import { ActionType } from '../../../../components/ConfirmationModal/ConfirmationModal';
 
 type Props = {
   columnId: string | undefined;

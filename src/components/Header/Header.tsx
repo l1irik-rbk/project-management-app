@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
-import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
 import { authSlice } from '../../Redux/slices/authSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
@@ -16,9 +16,9 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const board = useAppSelector((state) => state.board.board);
   const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
-  const { newBoard } = useAppSelector((state) => state.boards);
+  const { isOpenModalCreateNewBoard } = useAppSelector((state) => state.boards);
   const { isTokenLoaded } = useAppSelector((state) => state.auth);
-  const { setNewBoard } = boardsSlice.actions;
+  const { setIsOpenModalCreateNewBoard } = boardsSlice.actions;
   const { setToken, setTokenLoaded } = authSlice.actions;
   const currentLang = getLanguage();
 
@@ -35,7 +35,7 @@ export const Header = () => {
   };
 
   const createNewBoard = async () => {
-    dispatch(setNewBoard(!newBoard));
+    dispatch(setIsOpenModalCreateNewBoard(!isOpenModalCreateNewBoard));
   };
 
   const changeSticky = () => {

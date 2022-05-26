@@ -1,9 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { authStateI } from './../interfaces/auth';
-import { getToken } from '../../services/utils';
+import { findUser, getLogin, getToken } from '../../services/utils';
+import { AppThunk } from '../store';
+import { deleteUser } from '../../services/users';
 
-const initialState: authStateI = {
+type auth = {
+  token: string | null;
+  isTokenLoaded: boolean;
+};
+
+const initialState: auth = {
   token: getToken(),
   isTokenLoaded: Boolean(getToken()),
 };
@@ -20,5 +26,19 @@ export const authSlice = createSlice({
     },
   },
 });
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const deleteUserThunk = (): AppThunk => async (dispatch, getState) => {
+  const login = getLogin();
+  if (login) {
+    const user = await findUser(login);
+    if (user) {
+      const response = await deleteUser(user.id);
+      if (response.hasOwnProperty('success')) {
+        alert('Профиль удален');
+      } else alert('Error');
+    }
+  }
+};
 
 export const { setToken, setTokenLoaded } = authSlice.actions;

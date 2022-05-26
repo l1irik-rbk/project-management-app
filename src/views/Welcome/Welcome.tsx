@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import s from './Welcome.module.scss';
 import boar from '../../assets/images/boar.png';
-import { useAppSelector } from '../../Redux/reduxHooks';
+import { useAppSelector } from '../../Redux/hooks';
 import { useTranslation } from 'react-i18next';
 
 export const Welcome = () => {

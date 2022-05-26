@@ -1,16 +1,16 @@
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
 import { User } from '../../../services/interfaces/users';
-import { useAppDispatch } from '../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../Redux/hooks';
 import {
   confirmationModalSlice,
   setConfirmationModalType,
 } from '../../../Redux/slices/confirmationModalSlice';
 import { updateUser } from '../../../services/users';
-import { ActionType } from '../../../Redux/interfaces/confirmationModal';
-import { useTranslation } from 'react-i18next';
+import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
 
 type Props = {
   user: User;

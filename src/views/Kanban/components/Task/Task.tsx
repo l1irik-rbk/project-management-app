@@ -1,16 +1,16 @@
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import s from './Task.module.scss';
 import g from './../../../../App.module.scss';
 import type { FullTask } from '../../../../services/interfaces/tasks';
 import { DeleteTaskButton } from '../DeleteTaskButton/DeleteTaskButton';
 import { Modal } from '../../../../components/Modal/Modal';
-import { useAppDispatch } from '../../../../Redux/reduxHooks';
+import { useAppDispatch } from '../../../../Redux/hooks';
 import { getUserId } from '../../../../services/utils';
 import { updateTask } from '../../../../services/tasks';
-import { fetchBoard } from '../../../../Redux/actionCreators/fetchBoard';
-import { useTranslation } from 'react-i18next';
+import { fetchBoard } from '../../../../Redux/slices/boardSlice';
 
 type Props = {
   task: FullTask;
@@ -29,9 +29,7 @@ export const Task = (props: Props) => {
   const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleCloseModal = () => setModalIsOpen(false);
-  const handleOpenModal = (e: SyntheticEvent) => {
-    setModalIsOpen(true);
-  };
+  const handleOpenModal = () => setModalIsOpen(true);
 
   const {
     register,

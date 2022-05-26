@@ -5,7 +5,7 @@ import { CreateTaskButton } from '../CreateTaskButton/CreateTaskButton';
 import { Task } from '../Task/Task';
 import s from './Column.module.scss';
 import { ColumnTitle } from '../ColumnTitle/ColumnTitle';
-import { useAppSelector } from '../../../../Redux/reduxHooks';
+import { useAppSelector } from '../../../../Redux/hooks';
 
 type ColumnProps = {
   column: FullColumn;

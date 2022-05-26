@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ActionType } from '../../components/ConfirmationModal/ConfirmationModal';
 
-import { confirmationModalI } from '../interfaces/confirmationModal';
-import { ActionType } from '../interfaces/confirmationModal';
+export interface confirmationModalI {
+  type: ActionType | null;
+  isPortalVisible: boolean;
+}
 
 const initialState: confirmationModalI = {
   type: null,

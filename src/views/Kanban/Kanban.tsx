@@ -4,9 +4,8 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 
 import s from './Kanban.module.scss';
 import { Spinner } from '../../components/Spinner/Spinner';
-import { fetchBoard } from '../../Redux/actionCreators/fetchBoard';
-import { useAppDispatch, useAppSelector } from '../../Redux/reduxHooks';
-import { boardSlice, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
+import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
+import { boardSlice, fetchBoard, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
 import { updateTask } from '../../services/tasks';
@@ -20,9 +19,9 @@ export const Kanban = () => {
   const paramId = useParams().id;
 
   const dispatch = useAppDispatch();
-  const boards = useAppSelector((state) => state.boards);
+  const boards = useAppSelector((state) => state.boards.boardsArray);
   const board = useAppSelector((state) => state.board.board);
-  const columns = board?.columns.slice().sort((a, b) => a.order - b.order);
+  const columns = board?.columns.slice();
   const orderForNewColumn = board?.columns.length || 0;
 
   const { currentBoardId, isBoardLoaded } = useAppSelector((state) => state.board);
@@ -31,7 +30,7 @@ export const Kanban = () => {
   useEffect(() => {
     if (!paramId) return;
 
-    const isTrueBoardId = boards.boardsArray.map((item) => item.id).includes(paramId);
+    const isTrueBoardId = boards?.map((item) => item.id).includes(paramId);
     if (!isTrueBoardId) navigate('/');
 
     if (paramId !== currentBoardId) {
@@ -57,19 +56,16 @@ export const Kanban = () => {
     if (type === 'column') {
       if (fromIndex === toIndex || !currentBoardId) return;
 
-      const newColumns = Array.from(columns);
-      const [removed] = newColumns.splice(fromIndex, 1);
-      newColumns.splice(toIndex, 0, removed);
-      const newOrders = newColumns.map((item, index) => ({ ...item, order: index }));
+      const newOrders = reorderColumns(columns, fromIndex, toIndex);
       dispatch(setNewColumns(newOrders));
-      await syncColumnsOrderWithServer(newColumns, currentBoardId);
+      await syncColumnsOrderWithServer(newOrders, currentBoardId);
     }
 
     if (type === 'task') {
       const fromColumnId = fromParentId;
       const toColumnId = toParentId;
       const currentColumn = columns.find((column) => column.id === fromColumnId);
-      const tasks = currentColumn?.tasks.slice().sort((a, b) => a.order - b.order);
+      const tasks = currentColumn?.tasks.slice();
 
       if (fromParentId === toColumnId) {
         if (!tasks || !currentColumn || !currentBoardId) return;
@@ -134,6 +130,16 @@ export const Kanban = () => {
     oldTasks.splice(to, 0, formatRemoved);
     const newOrderTasks = oldTasks.map((task, index) => ({ ...task, order: index }));
     return newOrderTasks;
+  };
+
+  const reorderColumns = (columns: FullColumn[], from: number, to: number) => {
+    const oldColumns = [...columns];
+    const [removed] = oldColumns.splice(from, 1);
+    const formatRemoved = { ...removed, order: to };
+    oldColumns.splice(to, 0, formatRemoved);
+    const newOrderColumns = oldColumns.map((column, index) => ({ ...column, order: index }));
+
+    return newOrderColumns;
   };
 
   return (

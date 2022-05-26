@@ -1,8 +1,21 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { BoardInt } from './../interfaces/board';
 import { FullBoard, Column } from './../../services/interfaces/boards';
-import { fetchBoard } from '../actionCreators/fetchBoard';
+import { getBoard } from '../../services/boards';
+import { deleteColumn } from '../../services/columns';
+import { AppThunk } from '../store';
+import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
+import { syncColumnsOrderWithServer } from '../../views/Kanban/components/utils';
+import { FullColumn } from '../../services/interfaces/columns';
+import { deleteTask } from '../../services/tasks';
+
+export interface BoardInt {
+  selectedColumnId: string | null;
+  currentBoardId: string | null;
+  selectedTaskId: string | null;
+  isBoardLoaded: boolean;
+  board: FullBoard | null;
+}
 
 const initialState: BoardInt = {
   selectedColumnId: null,
@@ -11,6 +24,11 @@ const initialState: BoardInt = {
   isBoardLoaded: false,
   board: null,
 };
+
+export const fetchBoard = createAsyncThunk('board/fetchBoard', async (id: string) => {
+  const board = await getBoard(id);
+  return board;
+});
 
 export const boardSlice = createSlice({
   name: 'board',
@@ -32,16 +50,71 @@ export const boardSlice = createSlice({
       state.selectedTaskId = action.payload;
     },
   },
-  extraReducers: {
-    [fetchBoard.pending.type]: (state) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchBoard.pending, (state) => {
       state.isBoardLoaded = false;
-    },
-    [fetchBoard.fulfilled.type]: (state, action: PayloadAction<FullBoard>) => {
+    });
+
+    builder.addCase(fetchBoard.fulfilled, (state, action) => {
       state.isBoardLoaded = true;
-      state.board = action.payload;
-    },
+
+      const board = action.payload;
+      const sortBoard = {
+        ...board,
+        columns: board.columns
+          .sort((a, b) => a.order - b.order)
+          .map((column) => {
+            const sortTask = column.tasks.sort((a, b) => a.order - b.order);
+            return { ...column, tasks: sortTask };
+          }),
+      };
+
+      state.board = sortBoard;
+    });
   },
 });
+
+export const deleteColumnThunk =
+  (currentBoardId: string, selectedColumnId: string): AppThunk =>
+  async (dispatch, getState) => {
+    const response = await deleteColumn(currentBoardId, selectedColumnId);
+    if (response.hasOwnProperty('success')) {
+      const board = getState().board.board;
+
+      const columns = board?.columns as FullColumn[];
+      let updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
+      updatedColumns.sort((a, b) => a.order - b.order);
+      updatedColumns = updatedColumns.map((column, index) => ({
+        ...column,
+        order: index,
+      }));
+      dispatch(setNewColumns(updatedColumns));
+      dispatch(setSelectedColumnId(null));
+      await syncColumnsOrderWithServer(updatedColumns, currentBoardId);
+    } else alert('Error while deleting column');
+  };
+
+export const deleteTaskThunk =
+  (currentBoardId: string, selectedColumnId: string, selectedTaskId: string): AppThunk =>
+  async (dispatch, getState) => {
+    const response = await deleteTask(currentBoardId, selectedColumnId, selectedTaskId);
+    if (response.hasOwnProperty('success')) {
+      const board = getState().board.board;
+
+      const columns = board?.columns as FullColumn[];
+      const currentColumn = columns?.filter(
+        (column) => column.id === selectedColumnId
+      )[0] as FullColumn;
+      const columnsWithoutCurrent = columns?.filter((column) => column.id !== selectedColumnId);
+      const currentColumnCopy = { ...currentColumn };
+      const tasks = currentColumn.tasks.filter((task) => task.id !== selectedTaskId);
+      currentColumnCopy.tasks = tasks;
+      const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
+      dispatch(setNewColumns(updatedColumns));
+      dispatch(setSelectedColumnId(null));
+      dispatch(setSelectedTaskId(null));
+    } else alert('Error while deleting task');
+  };
 
 export const {
   setBoard,

@@ -6,7 +6,7 @@ import { Modal } from '../../../../components/Modal/Modal';
 import { getUserId } from '../../../../services/utils';
 import g from './../../../../App.module.scss';
 import s from './CreateTaskButton.module.scss';
-import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../../Redux/hooks';
 import { useTranslation } from 'react-i18next';
 import { boardSlice } from '../../../../Redux/slices/boardSlice';
 import { FullColumn } from '../../../../services/interfaces/columns';

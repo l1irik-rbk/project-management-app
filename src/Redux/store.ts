@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
 import { authSlice } from './slices/authSlice';
 import { boardSlice } from './slices/boardSlice';
@@ -12,13 +12,16 @@ const rootReducer = combineReducers({
   confirmationModal: confirmationModalSlice.reducer,
 });
 
-export const setupStore = () => {
-  return configureStore({
-    reducer: rootReducer,
-    devTools: true,
-  });
-};
+export const store = configureStore({
+  reducer: rootReducer,
+  devTools: true,
+});
 
-export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof setupStore>;
-export type AppDispatch = AppStore['dispatch'];
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;

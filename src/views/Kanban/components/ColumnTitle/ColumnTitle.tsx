@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import s from './ColumnTitle.module.scss';
 import g from './../../../../App.module.scss';
 import { updateColumn } from '../../../../services/columns';
-import { useAppDispatch, useAppSelector } from '../../../../Redux/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../../Redux/hooks';
 import { boardSlice } from '../../../../Redux/slices/boardSlice';
 import type { Column } from '../../../../services/interfaces/boards';
 import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
