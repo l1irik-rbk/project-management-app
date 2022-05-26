@@ -85,6 +85,7 @@ const translationEN = {
     creationBoard: {
       placeholder: 'Name of new board',
       title: 'Enter a title of new board',
+      descripton_placeholder: 'Enter a description of new board',
     },
     creationColumn: {
       placeholder: 'Name of new column',

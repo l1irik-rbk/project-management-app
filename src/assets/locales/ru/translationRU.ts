@@ -79,12 +79,14 @@ const translationRU = {
       description: {
         required: 'Укажите описание',
         minLength: 'Описание должно быть не менее 3 символов',
+        maxLength20: 'Заголовок должен содержать не более 20 символов',
         maxLength144: 'Описание должно быть не более 144 символов',
       },
     },
     creationBoard: {
       placeholder: 'Заголовок новой доски',
       title: 'Введите заголовок новой доски',
+      descripton_placeholder: 'Введите описание доски',
     },
     creationColumn: {
       placeholder: 'Заголовок нового столбца',

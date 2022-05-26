@@ -13,7 +13,7 @@ export const getBoards = async (): Promise<GetBoards> => {
   return await response.json();
 };
 
-export const createBoard = async (title: string): Promise<CreateBoard> => {
+export const createBoard = async (title: string, description: string): Promise<CreateBoard> => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'POST',
     headers: {
@@ -22,6 +22,7 @@ export const createBoard = async (title: string): Promise<CreateBoard> => {
     },
     body: JSON.stringify({
       title,
+      description,
     }),
   });
 

@@ -2,30 +2,22 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { Modal } from '../../../components/Modal/Modal';
-import { fetchBoards } from '../../../Redux/actionCreators/fetchBoards';
-import { useAppDispatch, useAppSelector } from '../../../Redux/reduxHooks';
-import { setNewBoard } from '../../../Redux/slices/boardsSlice';
-
-import { createBoard } from '../../../services/boards';
 import g from './../../../App.module.scss';
+import { Modal } from '../../../components/Modal/Modal';
+import { useAppDispatch } from '../../../Redux/hooks';
+import { createBoardThunk } from '../../../Redux/slices/boardsSlice';
 
 export type CreateBoardData = {
   title: string;
+  description: string;
 };
 
 export const CreateNewBoard = () => {
   const { t } = useTranslation();
-
-  const newBoard = useAppSelector((state) => state.boards).newBoard;
   const dispatch = useAppDispatch();
 
   const [isOpenModal, setIsOpenModal] = useState(true);
-  const handleCloseModal = () => {
-    setIsOpenModal(false);
-    dispatch(setNewBoard(!newBoard));
-    dispatch(fetchBoards());
-  };
+  const handleCloseModal = () => setIsOpenModal(false);
 
   const {
     register,
@@ -35,15 +27,12 @@ export const CreateNewBoard = () => {
   } = useForm<CreateBoardData>();
 
   const handleCreateBoard = async (data: CreateBoardData) => {
-    const response = await createBoard(data.title);
-
-    if (response.hasOwnProperty('statusCode')) alert('Error');
-    else {
-      reset({
-        title: '',
-      });
-      handleCloseModal();
-    }
+    dispatch(createBoardThunk({ title: data.title, description: data.description }));
+    handleCloseModal();
+    reset({
+      title: '',
+      description: '',
+    });
   };
 
   const createContent = () => {
@@ -63,6 +52,25 @@ export const CreateNewBoard = () => {
               {errors.title.type === 'required' && t('creationModal.errors.title.required')}
               {errors.title.type === 'minLength' && t('creationModal.errors.title.minLength')}
               {errors.title.type === 'maxLength' && t('creationModal.errors.title.maxLength10')}
+            </span>
+          )}
+        </label>
+
+        <label className={g.label}>
+          <p>{t('creationModal.description')}</p>
+          <input
+            {...register('description', { required: true, minLength: 0, maxLength: 20 })}
+            className={g.input}
+            type="text"
+            placeholder={t('creationModal.creationBoard.descripton_placeholder')}
+          />
+
+          {errors.description && (
+            <span className={g.font_error}>
+              {errors.description.type === 'required' &&
+                t('creationModal.errors.description.required')}
+              {errors.description.type === 'maxLength' &&
+                t('creationModal.errors.description.maxLength20')}
             </span>
           )}
         </label>
