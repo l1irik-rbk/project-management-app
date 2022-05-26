@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createTask } from '../../../../services/tasks';
-import { Modal } from '../../../../components/Modal/Modal';
-import { getUserId } from '../../../../services/utils';
+import { useTranslation } from 'react-i18next';
+
 import g from './../../../../App.module.scss';
 import s from './CreateTaskButton.module.scss';
-import { useAppDispatch, useAppSelector } from '../../../../Redux/hooks';
-import { useTranslation } from 'react-i18next';
-import { boardSlice } from '../../../../Redux/slices/boardSlice';
-import { FullColumn } from '../../../../services/interfaces/columns';
+import { Modal } from '../../../../components/Modal/Modal';
+import { useAppDispatch } from '../../../../Redux/hooks';
+import { createTaskThunk } from '../../../../Redux/slices/boardSlice';
 
 export type CreateTaskData = {
   title: string;
@@ -19,16 +17,12 @@ export type CreateTaskData = {
 type Props = {
   boardId: string | undefined;
   columnId: string | undefined;
-  orderForNewTask: number;
-  onCreateTask: () => void;
 };
 
 export const CreateTaskButton = (props: Props) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
-  const { setColumns } = boardSlice.actions;
-  const board = useAppSelector((state) => state.board.board);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
   const handleCloseModal = () => setModalIsOpen(false);
@@ -41,37 +35,16 @@ export const CreateTaskButton = (props: Props) => {
   } = useForm<CreateTaskData>();
 
   const handleCreateTask = async (data: CreateTaskData) => {
-    const userId = await getUserId();
     const { boardId, columnId } = props;
     const { title, description } = data;
-    const order = props.orderForNewTask;
+    if (!boardId || !columnId) return;
 
-    if (boardId && columnId && userId) {
-      const createResponse = await createTask(title, order, description, boardId, columnId, userId);
-      handleCloseModal();
-
-      if (createResponse.hasOwnProperty('statusCode')) alert('Error');
-      else {
-        reset({
-          title: '',
-          description: '',
-        });
-        props.onCreateTask();
-
-        const { id, title, order, description, userId } = createResponse;
-        const columns = board?.columns as FullColumn[];
-        const currentColumn = columns?.filter((column) => column.id === columnId)[0] as FullColumn;
-        const columnsWithoutCurrent = columns?.filter((column) => column.id !== columnId);
-        const currentColumnCopy = { ...currentColumn };
-        const newTask = { description, files: [], id, order, title, userId, done: false };
-        const copyOfCurrentTasks = [...currentColumn.tasks];
-        copyOfCurrentTasks.push(newTask);
-        currentColumnCopy.tasks = copyOfCurrentTasks;
-        const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
-
-        dispatch(setColumns(updatedColumns));
-      }
-    }
+    dispatch(createTaskThunk(title, description, boardId, columnId));
+    handleCloseModal();
+    reset({
+      title: '',
+      description: '',
+    });
   };
 
   const createContent = () => {

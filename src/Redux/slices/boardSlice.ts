@@ -5,7 +5,8 @@ import { getBoard } from '../../services/boards';
 import { createColumn, deleteColumn } from '../../services/columns';
 import { AppThunk } from '../store';
 import { FullColumn } from '../../services/interfaces/columns';
-import { deleteTask } from '../../services/tasks';
+import { createTask, deleteTask } from '../../services/tasks';
+import { getUserId } from '../../services/utils';
 
 export interface BoardInt {
   selectedColumnId: string | null;
@@ -119,6 +120,47 @@ export const createColumnThunk =
 
       dispatch(setColumns([...columns, newColumn]));
     } else alert('Error while creating column');
+  };
+
+export const createTaskThunk =
+  (title: string, description: string, boardId: string, columnId: string): AppThunk =>
+  async (dispatch, getState) => {
+    // const response = await createColumn(title, currentBoardId);
+    // if (response.hasOwnProperty('id')) {
+    //   const newTask = response as Column;
+    //   const columns = getState()?.board.board?.columns.slice() as FullColumn[];
+    //   const currentColumn = columns?.filter(
+    //     (column) => column.id === selectedColumnId
+    //   )[0] as FullColumn;
+    //   const columnsWithoutCurrent = columns?.filter((column) => column.id !== selectedColumnId);
+    //   const currentColumnCopy = { ...currentColumn };
+    //   currentColumnCopy.tasks = [...currentColumn.tasks, newTask];
+    //   const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
+    //   dispatch(setColumns(updatedColumns));
+    //   dispatch(setSelectedColumnId(selectedColumnId));
+    // } else alert('Error while creating task');
+
+    const userId = await getUserId();
+    if (!userId) return;
+
+    const createResponse = await createTask(title, description, boardId, columnId, userId);
+
+    if (createResponse.hasOwnProperty('statusCode')) alert('Error');
+    else {
+      const { id, title, order, description, userId } = createResponse;
+      const board = getState().board.board;
+      const columns = board?.columns as FullColumn[];
+      const currentColumn = columns?.filter((column) => column.id === columnId)[0] as FullColumn;
+      const columnsWithoutCurrent = columns?.filter((column) => column.id !== columnId);
+      const currentColumnCopy = { ...currentColumn };
+      const newTask = { description, files: [], id, order, title, userId, done: false };
+      const copyOfCurrentTasks = [...currentColumn.tasks];
+      copyOfCurrentTasks.push(newTask);
+      currentColumnCopy.tasks = copyOfCurrentTasks;
+      const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
+
+      dispatch(setColumns(updatedColumns));
+    }
   };
 
 export const { setBoard, setColumns, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =

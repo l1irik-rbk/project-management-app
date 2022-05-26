@@ -19,7 +19,6 @@ export function Column(props: ColumnProps) {
 
   const column = props.column;
   const tasks = column.tasks.slice().sort((a, b) => a.order - b.order);
-  const orderForNewTask = column.tasks.length;
 
   return (
     <Droppable droppableId={column.id} type="task">
@@ -50,12 +49,7 @@ export function Column(props: ColumnProps) {
 
           {provided.placeholder}
 
-          <CreateTaskButton
-            boardId={boardId}
-            columnId={column.id}
-            orderForNewTask={orderForNewTask}
-            onCreateTask={() => {}}
-          />
+          <CreateTaskButton boardId={boardId} columnId={column.id} />
         </div>
       )}
     </Droppable>

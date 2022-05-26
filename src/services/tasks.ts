@@ -5,7 +5,6 @@ const token = getToken();
 
 export const createTask = async (
   title: string,
-  order: number,
   description: string,
   boardId: string,
   columnId: string,
@@ -17,7 +16,7 @@ export const createTask = async (
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, order, description, userId }),
+    body: JSON.stringify({ title, description, userId }),
   });
 
   return await response.json();
