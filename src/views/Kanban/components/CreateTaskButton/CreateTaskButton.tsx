@@ -27,7 +27,7 @@ export const CreateTaskButton = (props: Props) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
-  const { setNewColumns } = boardSlice.actions;
+  const { setColumns } = boardSlice.actions;
   const board = useAppSelector((state) => state.board.board);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleOpenModal = () => setModalIsOpen(true);
@@ -69,7 +69,7 @@ export const CreateTaskButton = (props: Props) => {
         currentColumnCopy.tasks = copyOfCurrentTasks;
         const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
 
-        dispatch(setNewColumns(updatedColumns));
+        dispatch(setColumns(updatedColumns));
       }
     }
   };

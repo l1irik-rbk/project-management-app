@@ -28,7 +28,7 @@ export const ColumnTitle = (props: Props) => {
 
   const dispatch = useAppDispatch();
   const { board } = useAppSelector((state) => state.board);
-  const { setNewColumns } = boardSlice.actions;
+  const { setColumns } = boardSlice.actions;
 
   const {
     register,
@@ -57,7 +57,7 @@ export const ColumnTitle = (props: Props) => {
     const oldColumnIndex = columns?.findIndex((column) => column.id === newColumn.id) as number;
     updatedOldColumns.splice(oldColumnIndex, 1, newColumn);
 
-    dispatch(setNewColumns(updatedOldColumns));
+    dispatch(setColumns(updatedOldColumns));
     setDissabled(!dissabled);
   };
 

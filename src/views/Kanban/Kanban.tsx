@@ -22,10 +22,9 @@ export const Kanban = () => {
   const boards = useAppSelector((state) => state.boards.boardsArray);
   const board = useAppSelector((state) => state.board.board);
   const columns = board?.columns.slice();
-  const orderForNewColumn = board?.columns.length || 0;
 
   const { currentBoardId, isBoardLoaded } = useAppSelector((state) => state.board);
-  const { setNewColumns } = boardSlice.actions;
+  const { setColumns } = boardSlice.actions;
 
   useEffect(() => {
     if (!paramId) return;
@@ -57,7 +56,7 @@ export const Kanban = () => {
       if (fromIndex === toIndex || !currentBoardId) return;
 
       const newOrders = reorderColumns(columns, fromIndex, toIndex);
-      dispatch(setNewColumns(newOrders));
+      dispatch(setColumns(newOrders));
       await syncColumnsOrderWithServer(newOrders, currentBoardId);
     }
 
@@ -93,7 +92,7 @@ export const Kanban = () => {
           return column;
         });
 
-        dispatch(setNewColumns(newColumns));
+        dispatch(setColumns(newColumns));
       }
     }
   };
@@ -165,12 +164,7 @@ export const Kanban = () => {
 
                 {provided.placeholder}
 
-                {currentBoardId && (
-                  <CreateColumnButton
-                    boardId={currentBoardId}
-                    orderForNewColumn={orderForNewColumn}
-                  />
-                )}
+                {currentBoardId && <CreateColumnButton boardId={currentBoardId} />}
               </div>
             )}
           </Droppable>

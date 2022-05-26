@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { createColumn } from '../../../../services/columns';
 import { Modal } from '../../../../components/Modal/Modal';
 import g from './../../../../App.module.scss';
 import s from './CreateColumnButton.module.scss';
-import { useAppDispatch, useAppSelector } from '../../../../Redux/hooks';
-import { useTranslation } from 'react-i18next';
-import { boardSlice } from '../../../../Redux/slices/boardSlice';
-import { Column } from '../../../../services/interfaces/boards';
-import { getColumns } from '../../../../helpers/getColumns';
+import { useAppDispatch } from '../../../../Redux/hooks';
+import { createColumnThunk } from '../../../../Redux/slices/boardSlice';
 
 export type ColumnData = {
   title: string;
@@ -17,15 +14,13 @@ export type ColumnData = {
 
 type Props = {
   boardId: string | undefined;
-  orderForNewColumn: number;
+  // orderForNewColumn: number;
 };
 
 export const CreateColumnButton = (props: Props) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
-  const { setNewColumns } = boardSlice.actions;
-  const board = useAppSelector((state) => state.board.board);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
@@ -38,25 +33,13 @@ export const CreateColumnButton = (props: Props) => {
   } = useForm<ColumnData>();
 
   const handleCreateColumn = async (data: ColumnData) => {
-    const boardId = props.boardId;
-    if (boardId) {
-      const response = await createColumn(data.title, props.orderForNewColumn, boardId);
+    if (!props.boardId) return;
 
-      if (response.hasOwnProperty('error')) alert('Error');
-      else {
-        reset({
-          title: '',
-        });
-        handleCloseModal();
-
-        const newColumn = response as Column;
-        newColumn.tasks = [];
-        const columns = getColumns(board);
-        columns?.push(newColumn);
-
-        if (columns) dispatch(setNewColumns(columns));
-      }
-    }
+    dispatch(createColumnThunk(data.title, props.boardId));
+    handleCloseModal();
+    reset({
+      title: '',
+    });
   };
 
   const createContent = () => {

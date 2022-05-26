@@ -2,10 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FullBoard, Column } from './../../services/interfaces/boards';
 import { getBoard } from '../../services/boards';
-import { deleteColumn } from '../../services/columns';
+import { createColumn, deleteColumn } from '../../services/columns';
 import { AppThunk } from '../store';
-import { deleteColumnFromBoard } from '../../helpers/deleteColumn';
-import { syncColumnsOrderWithServer } from '../../views/Kanban/components/utils';
 import { FullColumn } from '../../services/interfaces/columns';
 import { deleteTask } from '../../services/tasks';
 
@@ -37,7 +35,7 @@ export const boardSlice = createSlice({
     setBoard: (state, action: PayloadAction<FullBoard>) => {
       state.board = action.payload;
     },
-    setNewColumns: (state, action: PayloadAction<Column[]>) => {
+    setColumns: (state, action: PayloadAction<Column[]>) => {
       if (state.board) state.board.columns = action.payload;
     },
     setSelectedColumnId: (state, action: PayloadAction<string | null>) => {
@@ -80,17 +78,11 @@ export const deleteColumnThunk =
     const response = await deleteColumn(currentBoardId, selectedColumnId);
     if (response.hasOwnProperty('success')) {
       const board = getState().board.board;
-
       const columns = board?.columns as FullColumn[];
-      let updatedColumns = deleteColumnFromBoard(columns, selectedColumnId);
-      updatedColumns.sort((a, b) => a.order - b.order);
-      updatedColumns = updatedColumns.map((column, index) => ({
-        ...column,
-        order: index,
-      }));
-      dispatch(setNewColumns(updatedColumns));
+      const updatedColumns = columns?.filter((column) => column.id !== selectedColumnId);
+
+      dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
-      await syncColumnsOrderWithServer(updatedColumns, currentBoardId);
     } else alert('Error while deleting column');
   };
 
@@ -110,16 +102,24 @@ export const deleteTaskThunk =
       const tasks = currentColumn.tasks.filter((task) => task.id !== selectedTaskId);
       currentColumnCopy.tasks = tasks;
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
-      dispatch(setNewColumns(updatedColumns));
+      dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
       dispatch(setSelectedTaskId(null));
     } else alert('Error while deleting task');
   };
 
-export const {
-  setBoard,
-  setNewColumns,
-  setSelectedColumnId,
-  setCurrentBoardId,
-  setSelectedTaskId,
-} = boardSlice.actions;
+export const createColumnThunk =
+  (title: string, currentBoardId: string): AppThunk =>
+  async (dispatch, getState) => {
+    const response = await createColumn(title, currentBoardId);
+    if (response.hasOwnProperty('id')) {
+      const newColumn = response as Column;
+      newColumn.tasks = [];
+      const columns = getState()?.board.board?.columns.slice() as FullColumn[];
+
+      dispatch(setColumns([...columns, newColumn]));
+    } else alert('Error while creating column');
+  };
+
+export const { setBoard, setColumns, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
+  boardSlice.actions;

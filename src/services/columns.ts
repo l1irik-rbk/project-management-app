@@ -6,7 +6,6 @@ const token = getToken();
 
 export const createColumn = async (
   title: string,
-  order: number,
   boardId: string
 ): Promise<Column | ColumnError> => {
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns`, {
@@ -15,7 +14,7 @@ export const createColumn = async (
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, order }),
+    body: JSON.stringify({ title }),
   });
 
   return await response.json();
