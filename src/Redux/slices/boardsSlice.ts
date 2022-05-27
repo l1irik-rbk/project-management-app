@@ -17,33 +17,6 @@ const initialState: Boards = {
   selectedBoardId: null,
 };
 
-export const fetchBoardsThunk = createAsyncThunk('boards/fetchBoards', async () => {
-  const boards = await getBoards();
-
-  if (Array.isArray(boards)) return boards;
-  else alert('Error while fetching boards');
-});
-
-export const deleteBoardThunk = createAsyncThunk(
-  'boards/deleteBoard',
-  async (selectedBoardId: string) => {
-    const response = await deleteBoard(selectedBoardId);
-
-    if (response.hasOwnProperty('success')) return response;
-    else alert('Error while deleting board');
-  }
-);
-
-export const createBoardThunk = createAsyncThunk(
-  'boards/addBoard',
-  async (object: { title: string; description: string }) => {
-    const { title, description } = object;
-    const response = await createBoard(title, description);
-    if (response.hasOwnProperty('id')) return response as Board;
-    else alert('Error while creating board');
-  }
-);
-
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
@@ -81,5 +54,32 @@ export const boardsSlice = createSlice({
     });
   },
 });
+
+export const fetchBoardsThunk = createAsyncThunk('boards/fetchBoards', async () => {
+  const boards = await getBoards();
+
+  if (Array.isArray(boards)) return boards;
+  else alert('Error while fetching boards');
+});
+
+export const deleteBoardThunk = createAsyncThunk(
+  'boards/deleteBoard',
+  async (selectedBoardId: string) => {
+    const response = await deleteBoard(selectedBoardId);
+
+    if (response.hasOwnProperty('success')) return response;
+    else alert('Error while deleting board');
+  }
+);
+
+export const createBoardThunk = createAsyncThunk(
+  'boards/addBoard',
+  async (object: { title: string; description: string }) => {
+    const { title, description } = object;
+    const response = await createBoard(title, description);
+    if (response.hasOwnProperty('id')) return response as Board;
+    else alert('Error while creating board');
+  }
+);
 
 export const { setIsOpenModalCreateNewBoard, setSelectedBoardId } = boardsSlice.actions;

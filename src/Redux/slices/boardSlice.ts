@@ -125,28 +125,13 @@ export const createColumnThunk =
 export const createTaskThunk =
   (title: string, description: string, boardId: string, columnId: string): AppThunk =>
   async (dispatch, getState) => {
-    // const response = await createColumn(title, currentBoardId);
-    // if (response.hasOwnProperty('id')) {
-    //   const newTask = response as Column;
-    //   const columns = getState()?.board.board?.columns.slice() as FullColumn[];
-    //   const currentColumn = columns?.filter(
-    //     (column) => column.id === selectedColumnId
-    //   )[0] as FullColumn;
-    //   const columnsWithoutCurrent = columns?.filter((column) => column.id !== selectedColumnId);
-    //   const currentColumnCopy = { ...currentColumn };
-    //   currentColumnCopy.tasks = [...currentColumn.tasks, newTask];
-    //   const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
-    //   dispatch(setColumns(updatedColumns));
-    //   dispatch(setSelectedColumnId(selectedColumnId));
-    // } else alert('Error while creating task');
-
+    // TODO: add userId in redux
     const userId = await getUserId();
     if (!userId) return;
 
     const createResponse = await createTask(title, description, boardId, columnId, userId);
 
-    if (createResponse.hasOwnProperty('statusCode')) alert('Error');
-    else {
+    if (createResponse.hasOwnProperty('id')) {
       const { id, title, order, description, userId } = createResponse;
       const board = getState().board.board;
       const columns = board?.columns as FullColumn[];
@@ -160,7 +145,7 @@ export const createTaskThunk =
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
 
       dispatch(setColumns(updatedColumns));
-    }
+    } else alert('Error while creating task');
   };
 
 export const { setBoard, setColumns, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =

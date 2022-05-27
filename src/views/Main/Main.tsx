@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '../../components/Spinner/Spinner';
 
+import { Spinner } from '../../components/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
 import { fetchBoardsThunk } from '../../Redux/slices/boardsSlice';
-// import { fetchBoards } from '../../Redux/slices/boardsSlice';
 import { Boards } from './components/Boards';
 import { CreateNewBoard } from './components/CreateNewBoard';
 
