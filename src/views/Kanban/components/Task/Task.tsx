@@ -84,7 +84,7 @@ export const Task = (props: Props) => {
           )}
         </label>
 
-        <label className={s.label}>
+        <label className={g.label}>
           <p>{t('creationModal.description')}</p>
           <textarea
             {...register('description', { required: true, minLength: 3, maxLength: 144 })}
@@ -119,13 +119,15 @@ export const Task = (props: Props) => {
         <DeleteTaskButton columnId={props.columnId} taskId={props.task.id} />
       </div>
 
-      <Modal
-        title={t('creationModal.changeTask.title')}
-        content={createContent()}
-        onConfirm={handleSubmit(handleEditTask)}
-        onClose={handleCloseModal}
-        open={modalIsOpen}
-      />
+      {modalIsOpen && (
+        <Modal
+          title={t('creationModal.changeTask.title')}
+          content={createContent()}
+          onConfirm={handleSubmit(handleEditTask)}
+          onClose={handleCloseModal}
+          open={modalIsOpen}
+        />
+      )}
     </>
   );
 };
