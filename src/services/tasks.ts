@@ -62,3 +62,32 @@ export const updateTask = async (
 
   return await response.json();
 };
+
+export const updateColumnTask = async (
+  boardId: string,
+  fromColumnId: string,
+  toColumnId: string,
+  task: Task
+): Promise<UpdateTask> => {
+  const { title, order, description, userId } = task;
+  const response = await fetch(
+    `${apiUrl}/boards/${boardId}/columns/${fromColumnId}/tasks/${task.id}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        order: Number(order),
+        description,
+        userId,
+        boardId,
+        columnId: toColumnId,
+      }),
+    }
+  );
+
+  return await response.json();
+};

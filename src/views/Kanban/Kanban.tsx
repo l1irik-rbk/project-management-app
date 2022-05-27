@@ -8,11 +8,16 @@ import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
 import { boardSlice, fetchBoard, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
-import { updateTask } from '../../services/tasks';
-import type { FullColumn } from '../../services/interfaces/columns';
-import type { Task } from '../../services/interfaces/tasks';
 import type { FullBoard } from '../../services/interfaces/boards';
-import { syncColumnsOrderWithServer } from './components/utils';
+import {
+  reorderColumns,
+  reorderTasks,
+  syncColumnOrderToServer,
+  syncTaskOrderWithServer,
+  syncTasksWithRedux,
+  syncTasksWithReduxBetweenColumns,
+} from './utils';
+import { updateColumnTask, updateTask } from '../../services/tasks';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -43,8 +48,7 @@ export const Kanban = () => {
   const handleDragEnd = async (result: DropResult) => {
     // https://codesandbox.io/s/nested-dnd-across-parent-forked-bhvm51?file=/index.js:1415-1426
     const { source, destination, type } = result;
-    if (!destination) return;
-    if (!columns) return;
+    if (!destination || !columns || !board) return;
 
     const fromIndex = source.index;
     const toIndex = destination.index;
@@ -57,7 +61,9 @@ export const Kanban = () => {
 
       const newOrders = reorderColumns(columns, fromIndex, toIndex);
       dispatch(setColumns(newOrders));
-      await syncColumnsOrderWithServer(newOrders, currentBoardId);
+
+      const draggedColumn = columns[fromIndex];
+      await syncColumnOrderToServer(currentBoardId, draggedColumn, toIndex + 1);
     }
 
     if (type === 'task') {
@@ -69,42 +75,13 @@ export const Kanban = () => {
       if (fromParentId === toColumnId) {
         if (!tasks || !currentColumn || !currentBoardId) return;
 
-        const reorderTasks = (tasks: Task[], from: number, to: number) => {
-          const oldTasks = [...tasks];
-          const [removed] = oldTasks.splice(from, 1);
-          const formatRemoved = { ...removed, order: to };
-          oldTasks.splice(to, 0, formatRemoved);
-          const newOrderTasks = oldTasks.map((task, index) => ({ ...task, order: index + 1 }));
-          return newOrderTasks;
-        };
-
-        const syncTasksWithRedux = (column: FullColumn, tasks: Task[]) => {
-          if (!board) return;
-
-          const updatedColumn = { ...column, tasks };
-          const index = ({ ...board } as FullBoard).columns.findIndex((c) => c.id === column.id);
-          const oldColumns = [...board.columns];
-          const newColumns = oldColumns.map((c, i) => (i === index ? updatedColumn : c));
-          const newBoard = { ...board, columns: [...newColumns] };
-          dispatch(setBoard(newBoard as FullBoard));
-        };
-
-        const syncTaskOrderWithServer = async (
-          task: Task,
-          boardId: string,
-          columnId: string,
-          toIndex: number
-        ) => {
-          const newOrderTask = await updateTask(boardId, columnId, { ...task, order: toIndex + 1 });
-          return newOrderTask;
-        };
-
         const reorderedTasks = reorderTasks(tasks, fromIndex, toIndex);
         reorderedTasks.map((task) => console.log(task.title, task.order));
-        syncTasksWithRedux(currentColumn, reorderedTasks);
+        const newBoard = syncTasksWithRedux(board, currentColumn, reorderedTasks);
+        dispatch(setBoard(newBoard as FullBoard));
 
-        const taskTransmitted = tasks[fromIndex];
-        await syncTaskOrderWithServer(taskTransmitted, currentBoardId, currentColumn.id, toIndex);
+        const draggedTask = tasks[fromIndex];
+        await syncTaskOrderWithServer(draggedTask, currentBoardId, currentColumn.id, toIndex + 1);
       }
 
       if (fromParentId !== toColumnId) {
@@ -114,30 +91,28 @@ export const Kanban = () => {
         const fromTasks = [...tasks];
         const toTasks = [...toColumn?.tasks];
 
-        const [draggedItem] = fromTasks.splice(fromIndex, 1);
+        const [draggedTask] = fromTasks.splice(fromIndex, 1);
+        toTasks.splice(toIndex, 0, draggedTask);
 
-        toTasks.splice(toIndex, 0, draggedItem);
-        const newOrderTasksFromColumn = fromTasks.map((item, index) => ({ ...item, order: index }));
-        const newOrderTasksToColumn = toTasks.map((item, index) => ({ ...item, order: index }));
-        const newColumns = [...columns].map((column) => {
-          if (column.id === fromColumnId) return { ...column, tasks: newOrderTasksFromColumn };
-          if (column.id === toColumnId) return { ...column, tasks: newOrderTasksToColumn };
-          return column;
-        });
-
+        const newColumns = syncTasksWithReduxBetweenColumns(
+          columns,
+          fromTasks,
+          toTasks,
+          fromColumnId,
+          toColumnId
+        );
+        console.log(columns, newColumns);
         dispatch(setColumns(newColumns));
+
+        // syncWithServer
+        console.log(draggedTask);
+        console.log(currentColumn, toColumn);
+        await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
+          ...draggedTask,
+          order: toIndex + 1,
+        });
       }
     }
-  };
-
-  const reorderColumns = (columns: FullColumn[], from: number, to: number) => {
-    const oldColumns = [...columns];
-    const [removed] = oldColumns.splice(from, 1);
-    const formatRemoved = { ...removed, order: to };
-    oldColumns.splice(to, 0, formatRemoved);
-    const newOrderColumns = oldColumns.map((column, index) => ({ ...column, order: index }));
-
-    return newOrderColumns;
   };
 
   return (
