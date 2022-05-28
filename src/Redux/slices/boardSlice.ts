@@ -41,7 +41,15 @@ export const boardSlice = createSlice({
       state.board = action.payload;
     },
     setColumns: (state, action: PayloadAction<Column[]>) => {
-      if (state.board) state.board.columns = action.payload;
+      const columns = action.payload;
+      const sortedColumns = columns
+        .sort((a, b) => a.order - b.order)
+        .map((column) => {
+          const sortTask = column.tasks.slice().sort((a, b) => a.order - b.order);
+          return { ...column, tasks: sortTask };
+        });
+
+      if (state.board) state.board.columns = sortedColumns;
     },
     setSelectedColumnId: (state, action: PayloadAction<string | null>) => {
       state.selectedColumnId = action.payload;
@@ -142,6 +150,7 @@ export const createTaskThunk =
       const { id, title, order, description, userId } = createResponse;
       const board = getState().board.board;
       const columns = board?.columns as FullColumn[];
+      console.log('columns', columns);
       const currentColumn = columns?.filter((column) => column.id === columnId)[0] as FullColumn;
       const columnsWithoutCurrent = columns?.filter((column) => column.id !== columnId);
       const currentColumnCopy = { ...currentColumn };
@@ -150,7 +159,7 @@ export const createTaskThunk =
       copyOfCurrentTasks.push(newTask);
       currentColumnCopy.tasks = copyOfCurrentTasks;
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
-
+      console.log('updatedColumns', updatedColumns);
       dispatch(setColumns(updatedColumns));
       showSuccessToaster('toasterNotifications.board.success.createTask');
     } else showErrorToaster('toasterNotifications.board.errors.createTask');

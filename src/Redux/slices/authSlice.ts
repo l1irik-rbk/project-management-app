@@ -31,8 +31,7 @@ export const authSlice = createSlice({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const deleteUserThunk = (): AppThunk => async (dispatch, getState) => {
+export const deleteUserThunk = (): AppThunk => async (dispatch) => {
   const login = getLogin();
   if (login) {
     const user = await findUser(login);
