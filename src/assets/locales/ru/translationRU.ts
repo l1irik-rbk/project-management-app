@@ -52,6 +52,9 @@ const translationRU = {
   kanban: {
     addColumn: 'Добавить столбец',
   },
+  errorMessage: {
+    text: `Доска с таким id не найдена. Пожалуйста, нажмите на кнопку с досками и попробуйте выбрать доску заново!`,
+  },
   confirmationModal: {
     title: 'ВЫ уверены?',
     ok: 'OK',

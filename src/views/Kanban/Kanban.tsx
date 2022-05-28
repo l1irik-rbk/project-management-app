@@ -18,13 +18,14 @@ import {
   syncTasksWithReduxBetweenColumns,
 } from './utils';
 import { updateColumnTask } from '../../services/tasks';
+import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 
 export const Kanban = () => {
   const navigate = useNavigate();
   const paramId = useParams().id;
 
   const dispatch = useAppDispatch();
-  const boards = useAppSelector((state) => state.boards.boardsArray);
+  const { boardError } = useAppSelector((state) => state.board);
   const board = useAppSelector((state) => state.board.board);
   const columns = board?.columns.slice();
 
@@ -32,10 +33,10 @@ export const Kanban = () => {
   const { setColumns } = boardSlice.actions;
 
   useEffect(() => {
-    if (!paramId) return;
-
-    const isTrueBoardId = boards?.map((item) => item.id).includes(paramId);
-    if (!isTrueBoardId) navigate('/');
+    if (!paramId) {
+      navigate('/', { replace: true });
+      return;
+    }
 
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
@@ -101,12 +102,10 @@ export const Kanban = () => {
           fromColumnId,
           toColumnId
         );
-        console.log(columns, newColumns);
+
         dispatch(setColumns(newColumns));
 
         // syncWithServer
-        console.log(draggedTask);
-        console.log(currentColumn, toColumn);
         await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
           ...draggedTask,
           order: toIndex + 1,
@@ -117,32 +116,36 @@ export const Kanban = () => {
 
   return (
     <>
-      {isBoardLoaded && columns ? (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="board" type="column" direction="horizontal">
-            {(provided) => (
-              <div className={s.content} {...provided.droppableProps} ref={provided.innerRef}>
-                {columns.map((column, index) => (
-                  <Draggable key={column.id} draggableId={column.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Column key={column.id} columnId={column.id} column={column} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+      {isBoardLoaded ? (
+        boardError ? (
+          <ErrorMessage />
+        ) : (
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="board" type="column" direction="horizontal">
+              {(provided) => (
+                <div className={s.content} {...provided.droppableProps} ref={provided.innerRef}>
+                  {columns?.map((column, index) => (
+                    <Draggable key={column.id} draggableId={column.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Column key={column.id} columnId={column.id} column={column} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
 
-                {provided.placeholder}
+                  {provided.placeholder}
 
-                {currentBoardId && <CreateColumnButton boardId={currentBoardId} />}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+                  {currentBoardId && <CreateColumnButton boardId={currentBoardId} />}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )
       ) : (
         <Spinner />
       )}

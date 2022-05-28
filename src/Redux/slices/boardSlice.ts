@@ -17,6 +17,7 @@ export interface BoardInt {
   currentBoardId: string | null;
   selectedTaskId: string | null;
   isBoardLoaded: boolean;
+  boardError: boolean;
   board: FullBoard | null;
 }
 
@@ -25,12 +26,21 @@ const initialState: BoardInt = {
   selectedTaskId: null,
   currentBoardId: null,
   isBoardLoaded: false,
+  boardError: false,
   board: null,
 };
 
-export const fetchBoard = createAsyncThunk('board/fetchBoard', async (id: string) => {
-  const board = await getBoard(id);
-  return board;
+export const fetchBoard = createAsyncThunk('board/fetchBoard', async (id: string, thunAPI) => {
+  try {
+    const board = await getBoard(id);
+
+    if (board.hasOwnProperty('statusCode')) {
+      throw new Error();
+    }
+    return board;
+  } catch (error) {
+    return thunAPI.rejectWithValue('Board not found');
+  }
 });
 
 export const boardSlice = createSlice({
@@ -64,6 +74,7 @@ export const boardSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBoard.pending, (state) => {
       state.isBoardLoaded = false;
+      state.boardError = false;
     });
 
     builder.addCase(fetchBoard.fulfilled, (state, action) => {
@@ -81,6 +92,10 @@ export const boardSlice = createSlice({
       };
 
       state.board = sortBoard;
+    });
+    builder.addCase(fetchBoard.rejected, (state) => {
+      state.isBoardLoaded = true;
+      state.boardError = true;
     });
   },
 });
@@ -150,7 +165,6 @@ export const createTaskThunk =
       const { id, title, order, description, userId } = createResponse;
       const board = getState().board.board;
       const columns = board?.columns as FullColumn[];
-      console.log('columns', columns);
       const currentColumn = columns?.filter((column) => column.id === columnId)[0] as FullColumn;
       const columnsWithoutCurrent = columns?.filter((column) => column.id !== columnId);
       const currentColumnCopy = { ...currentColumn };
@@ -159,7 +173,7 @@ export const createTaskThunk =
       copyOfCurrentTasks.push(newTask);
       currentColumnCopy.tasks = copyOfCurrentTasks;
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
-      console.log('updatedColumns', updatedColumns);
+
       dispatch(setColumns(updatedColumns));
       showSuccessToaster('toasterNotifications.board.success.createTask');
     } else showErrorToaster('toasterNotifications.board.errors.createTask');

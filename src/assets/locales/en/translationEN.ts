@@ -52,6 +52,10 @@ const translationEN = {
   kanban: {
     addColumn: 'Add Column',
   },
+  errorMessage: {
+    text: `Board with this id wasn't found. Please, click on the boards button and try to select a board
+    again!`,
+  },
   confirmationModal: {
     title: 'Are you sure?',
     ok: 'OK',
