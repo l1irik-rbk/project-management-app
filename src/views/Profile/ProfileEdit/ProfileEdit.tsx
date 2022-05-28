@@ -15,6 +15,7 @@ import {
   showErrorToaster,
   showSuccessToaster,
 } from '../../../components/ToasterMessage/ToasterMessage';
+import { setToken, setTokenLoaded } from '../../../Redux/slices/authSlice';
 
 type Props = {
   user: User;

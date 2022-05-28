@@ -40,6 +40,9 @@ export const deleteUserThunk = (): AppThunk => async (dispatch, getState) => {
       const response = await deleteUser(user.id);
 
       if (response.hasOwnProperty('success')) {
+        document.cookie = `token=${''}`;
+        dispatch(setToken(null));
+        dispatch(setTokenLoaded(false));
         showSuccessToaster('toasterNotifications.user.success.deleteUser');
       } else showErrorToaster('toasterNotifications.user.errors.deleteUser');
     }

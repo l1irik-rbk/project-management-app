@@ -145,7 +145,7 @@ const translationEN = {
     auth: {
       errors: {
         signup: `Error! Profile wasn't created!`,
-        signin: `Error! Profile wasn't found in our base!`,
+        signin: `Error! Something went wrong!`,
       },
       success: {
         signup: 'Profile was created successfully!',

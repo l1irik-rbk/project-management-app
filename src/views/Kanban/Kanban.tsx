@@ -17,7 +17,7 @@ import {
   syncTasksWithRedux,
   syncTasksWithReduxBetweenColumns,
 } from './utils';
-import { updateColumnTask, updateTask } from '../../services/tasks';
+import { updateColumnTask } from '../../services/tasks';
 
 export const Kanban = () => {
   const navigate = useNavigate();
