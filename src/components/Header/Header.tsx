@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
@@ -48,69 +49,74 @@ export const Header = () => {
   return (
     <header className={`${s.header} ${sticky && s.sticky_active} ${sticky && g.drop_shadow}`}>
       <div className={`${g.wrapper} ${s.header}`}>
-        <Link className={s.logo__link} to="/">
-          <div className={s.logo}>
-            {location.pathname.includes('kanban') && board ? (
+        <ScrollMenu scrollContainerClassName={s.header} separatorClassName={s.separator_menu}>
+          <Link className={s.logo__link} to="/">
+            <div className={s.logo}>
+              {location.pathname.includes('kanban') && board ? (
+                <>
+                  <p className={s.logo__icon}>🐗</p>
+                  <h1 className={g.font_logo}>{isBoardLoaded ? board.title : '🐗🐗🐗🐗🐗🐗'}</h1>
+                </>
+              ) : (
+                <>
+                  <p className={`${s.logo__icon} ${sticky && s.logo__rotate}`}>🐗</p>
+                  <h1 className={g.font_logo}>{'KanbanBoar'}</h1>
+                </>
+              )}
+            </div>
+          </Link>
+
+          <nav className={s.nav}>
+            {isTokenLoaded && (
               <>
-                <p className={s.logo__icon}>🐗</p>
-                <h1 className={g.font_logo}>{isBoardLoaded ? board.title : '🐗🐗🐗🐗🐗🐗'}</h1>
-              </>
-            ) : (
-              <>
-                <p className={`${s.logo__icon} ${sticky && s.logo__rotate}`}>🐗</p>
-                <h1 className={g.font_logo}>{'KanbanBoar'}</h1>
+                {location.pathname !== '/main' && (
+                  <Link to="/main">
+                    <button className={`${g.button} ${g.drop_shadow}`}>{t('header.boards')}</button>
+                  </Link>
+                )}
+
+                {location.pathname === '/main' && (
+                  <button
+                    className={`${g.button} ${g.drop_shadow} ${s.create_button}`}
+                    onClick={createNewBoard}
+                  >
+                    {t('header.create')}
+                  </button>
+                )}
               </>
             )}
-          </div>
-        </Link>
 
-        <nav className={s.nav}>
-          {isTokenLoaded && (
-            <>
-              {location.pathname !== '/main' && (
-                <Link to="/main">
-                  <button className={`${g.button} ${g.drop_shadow}`}>{t('header.boards')}</button>
-                </Link>
-              )}
-
-              {location.pathname === '/main' && (
-                <button className={`${g.button} ${g.drop_shadow}`} onClick={createNewBoard}>
-                  {t('header.create')}
-                </button>
-              )}
-            </>
-          )}
-
-          <div className={`${g.toggle} ${g.drop_shadow} ${g.button}`}>
-            <button
-              className={`${g.button} ${g.one} ${currentLang === 'ru' && g.active}`}
-              onClick={() => changeLanguage('ru')}
-            >
-              RU
-            </button>
-            <button
-              className={`${g.button} ${g.two} ${currentLang === 'en' && g.active}`}
-              onClick={() => changeLanguage('en')}
-            >
-              EN
-            </button>
-          </div>
-
-          {!isTokenLoaded ? (
-            <Link to="/auth">
-              <button className={`${g.button} ${g.drop_shadow}`}>{t('header.login')}</button>
-            </Link>
-          ) : (
-            <div className={s.profile}>
-              <Link to="/profile">
-                <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
-              </Link>
-              <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
-                {t('header.logout')}
+            <div className={`${g.toggle} ${g.drop_shadow} ${g.button}`}>
+              <button
+                className={`${g.button} ${g.one} ${currentLang === 'ru' && g.active}`}
+                onClick={() => changeLanguage('ru')}
+              >
+                RU
+              </button>
+              <button
+                className={`${g.button} ${g.two} ${currentLang === 'en' && g.active}`}
+                onClick={() => changeLanguage('en')}
+              >
+                EN
               </button>
             </div>
-          )}
-        </nav>
+
+            {!isTokenLoaded ? (
+              <Link to="/auth">
+                <button className={`${g.button} ${g.drop_shadow}`}>{t('header.login')}</button>
+              </Link>
+            ) : (
+              <div className={s.profile}>
+                <Link to="/profile">
+                  <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
+                </Link>
+                <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
+                  {t('header.logout')}
+                </button>
+              </div>
+            )}
+          </nav>
+        </ScrollMenu>
       </div>
     </header>
   );

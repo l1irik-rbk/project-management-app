@@ -33,6 +33,7 @@
 .nav {
   display: flex;
   gap: 24px;
+  padding-right: 5px;
 }
 
 .avatar {
@@ -46,6 +47,14 @@
   gap: 8px;
 }
 
+.create_button {
+  width: 225px;
+}
+
+.separator_menu {
+  width: 154px;
+}
+
 @keyframes rotation {
   from {
     transform: rotate(0deg);
@@ -56,8 +65,11 @@
 }
 
 @media screen and (max-width: 960px) {
-  .nav {
-    display: none;
+  .header {
+    width: 100vw;
   }
-  // TODO: add burger menu
+
+  .separator_menu {
+    min-width: 24px;
+  }
 }
