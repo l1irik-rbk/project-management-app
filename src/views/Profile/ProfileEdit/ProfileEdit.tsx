@@ -1,12 +1,16 @@
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { User, UserError } from '../../../services/interfaces/users';
 import s from './../Profile.module.scss';
 import g from './../../../App.module.scss';
-import { deleteUser, updateUser } from '../../../services/users';
-import { ConfirmationModal } from '../../../components/ConfirmationModal/ConfirmationModal';
-import { useAppDispatch } from '../../../Redux/reduxHooks';
-import { setPortalVisible } from '../../../Redux/toolkitSlice';
+import { User } from '../../../services/interfaces/users';
+import { useAppDispatch } from '../../../Redux/hooks';
+import {
+  confirmationModalSlice,
+  setConfirmationModalType,
+} from '../../../Redux/slices/confirmationModalSlice';
+import { updateUser } from '../../../services/users';
+import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
 
 type Props = {
   user: User;
@@ -20,8 +24,9 @@ export type FormData = {
 };
 
 export const ProfileEdit = (props: Props) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
-
+  const { setPortalVisible } = confirmationModalSlice.actions;
   const {
     register,
     handleSubmit,
@@ -32,23 +37,12 @@ export const ProfileEdit = (props: Props) => {
 
   const onSubmit = async (data: FormData) => {
     const response = await updateUser(data, user.id);
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as UserError;
-      alert(`${error.statusCode} ${error.message} ${error.error}`);
-    } else {
-      alert('Профиль обновлен');
-    }
+    if (response.hasOwnProperty('statusCode')) alert('Error');
   };
 
-  const handleDelete = async () => {
-    const response = await deleteUser(user.id);
-
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as UserError;
-      alert(`${error.statusCode} ${error.message} ${error.error}`);
-    } else {
-      alert('Профиль удален');
-    }
+  const handleDelete = () => {
+    dispatch(setConfirmationModalType(ActionType.DELETE_USER));
+    dispatch(setPortalVisible(true));
   };
 
   return (
@@ -56,7 +50,7 @@ export const ProfileEdit = (props: Props) => {
       <form onSubmit={handleSubmit(onSubmit)} className={s.content}>
         <div>
           <label className={s.row}>
-            <p>Name:</p>
+            <p>{t('profile.name')}:</p>
             <input
               className={`${g.input} ${s.input}`}
               type="text"
@@ -75,7 +69,7 @@ export const ProfileEdit = (props: Props) => {
 
         <div>
           <label className={s.row}>
-            <p>Login:</p>
+            <p>{t('profile.login')}:</p>
             <input
               className={`${g.input} ${s.input}`}
               type="text"
@@ -95,11 +89,11 @@ export const ProfileEdit = (props: Props) => {
 
         <div>
           <label className={s.row}>
-            <p>Password:</p>
+            <p>{t('profile.password')}:</p>
             <input
               className={`${g.input} ${s.input}`}
               type="text"
-              placeholder="your new password"
+              placeholder={t('profile.newPassword')}
               {...register('password', { required: true, minLength: 8 })}
             />
           </label>
@@ -112,17 +106,12 @@ export const ProfileEdit = (props: Props) => {
           )}
         </div>
 
-        <button className={`${g.button} ${g.drop_shadow}`}>Update</button>
+        <button className={`${g.button} ${g.drop_shadow}`}>{t('profile.update')}</button>
       </form>
 
-      <button
-        onClick={() => dispatch(setPortalVisible(true))}
-        className={`${g.button} ${g.drop_shadow} ${s.delete}`}
-      >
-        Delete my profile
+      <button onClick={handleDelete} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+        {t('profile.delete')}
       </button>
-
-      <ConfirmationModal text="Delete your account permanently." onConfirm={handleDelete} />
     </>
   );
 };

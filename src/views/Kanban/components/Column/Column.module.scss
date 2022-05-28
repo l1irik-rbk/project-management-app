@@ -1,14 +1,21 @@
 .column {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  // overflow: auto;
+  max-height: calc(98vh - 84px - 40px);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  gap: 8px;
-  width: 290px;
+  min-width: 290px;
 
   background: #f6f8fa;
   border: 1px solid #d6dadb;
   border-radius: 8px;
+  margin-right: 8px;
+}
+
+.task {
+  width: 100%;
 }

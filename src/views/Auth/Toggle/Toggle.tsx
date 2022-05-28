@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import s from './Toggle.module.scss';
 import g from './../../../App.module.scss';
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 };
 
 export const Toggle = (props: Props) => {
+  const { t } = useTranslation();
   const [state, setState] = useState('one');
 
   const handleClickOne = () => {
@@ -20,18 +21,18 @@ export const Toggle = (props: Props) => {
 
   return (
     <>
-      <div className={`${s.toggle} ${g.drop_shadow} ${g.button}`}>
+      <div className={`${g.toggle} ${g.drop_shadow} ${g.button}`}>
         <button
           onClick={handleClickOne}
-          className={`${g.button} ${s.one} ${state === 'one' && s.active}`}
+          className={`${g.button} ${g.one} ${state === 'one' && g.active}`}
         >
-          Login
+          {t('auth.login')}
         </button>
         <button
           onClick={handleClickTwo}
-          className={`${g.button} ${s.two}  ${state === 'two' && s.active}`}
+          className={`${g.button} ${g.two}  ${state === 'two' && g.active}`}
         >
-          Sign Up
+          {t('auth.signUp')}
         </button>
       </div>
 

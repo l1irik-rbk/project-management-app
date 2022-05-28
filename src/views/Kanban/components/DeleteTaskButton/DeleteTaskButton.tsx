@@ -1,47 +1,38 @@
-import { useState } from 'react';
+import { SyntheticEvent } from 'react';
 
-import g from '../../../../App.module.scss';
-import { Modal } from '../../../../components/Modal/Modal';
-import { deleteTask } from '../../../../services/tasks';
 import s from './DeleteTaskButton.module.scss';
+import g from '../../../../App.module.scss';
+import { useAppDispatch } from '../../../../Redux/hooks';
+import { setSelectedColumnId, setSelectedTaskId } from '../../../../Redux/slices/boardSlice';
+import { confirmationModalSlice } from '../../../../Redux/slices/confirmationModalSlice';
+import { ActionType } from '../../../../components/ConfirmationModal/ConfirmationModal';
 
 type Props = {
-  boardId: string | undefined;
   columnId: string | undefined;
   taskId: string | undefined;
 };
 
 export const DeleteTaskButton = (props: Props) => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const handleOpenModal = () => setIsOpenModal(true);
-  const handleCloseModal = () => setIsOpenModal(false);
+  const dispatch = useAppDispatch();
+  const { setPortalVisible, setConfirmationModalType } = confirmationModalSlice.actions;
 
-  const handleDeleteTask = async () => {
-    const { boardId, columnId, taskId } = props;
-    if (boardId && columnId && taskId) {
-      const result = await deleteTask(boardId, columnId, taskId);
-      if (result.hasOwnProperty('success')) alert('Task deleted');
-      else alert('Error');
+  const handleDeleteTask = async (e: SyntheticEvent) => {
+    e.stopPropagation();
+    const { columnId, taskId } = props;
+
+    if (columnId && taskId) {
+      dispatch(setSelectedColumnId(columnId));
+      dispatch(setSelectedTaskId(taskId));
+      dispatch(setPortalVisible(true));
+      dispatch(setConfirmationModalType(ActionType.DELETE_TASK));
     }
-  };
-
-  const handleOnConfirm = () => {
-    handleDeleteTask();
   };
 
   return (
     <>
-      <button onClick={handleOpenModal} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
+      <button onClick={handleDeleteTask} className={`${g.button} ${g.drop_shadow} ${s.delete}`}>
         X
       </button>
-
-      <Modal
-        open={isOpenModal}
-        title={'Are you sure?'}
-        content={'You want to delete this task? This action cannot be undone.'}
-        onConfirm={handleOnConfirm}
-        onClose={handleCloseModal}
-      />
     </>
   );
 };

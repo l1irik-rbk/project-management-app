@@ -1,18 +1,17 @@
-import { useAppSelector } from '../../../Redux/reduxHooks';
+import { useAppSelector } from '../../../Redux/hooks';
+
 import s from '../Main.module.scss';
 import { Board } from './Board';
 
 export const Boards = () => {
-  const { boards } = useAppSelector((state) => state.appReducer);
-  const { isBoardsLoaded, boardsArray } = boards;
+  const { boardsArray } = useAppSelector((state) => state.boards);
+  if (!boardsArray) return null;
 
-  return isBoardsLoaded ? (
+  return (
     <div className={`${s.boards}`}>
       {boardsArray.map((board) => (
-        <Board key={board.id} id={board.id} boardTitle={board.title} />
+        <Board key={board.id} id={board.id} title={board.title} />
       ))}
     </div>
-  ) : (
-    <div>LOADING...</div>
   );
 };

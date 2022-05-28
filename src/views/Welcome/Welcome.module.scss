@@ -1,17 +1,18 @@
 .content {
   position: relative;
-  //   overflow-x: hidden;
-  //   overflow: hidden;
+  display: flex;
+  margin-top: 160px;
+  align-items: center;
+
+  &_text {
+    max-width: 500px;
+    color: #000;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+  }
 }
 
 .boar {
-  width: 100%;
-  //   position: absolute;
-  //   top: calc(30vh);
-  //   right: -450px;
-  //   width: 750px;
-  //   height: 350px;
-  //   background: url('../../assets/images/boar.png') no-repeat center center;
-  //   background-size: cover;
-  //     z-index: -1;
+  overflow: hidden;
 }

@@ -1,7 +1,10 @@
 .task {
+  max-width: 273px;
+
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  justify-content: space-between;
   padding: 12px;
   gap: 12px;
 
@@ -10,8 +13,24 @@
   border-radius: 8px;
   border: 1px solid #d4d7d9;
   width: 100%;
+  margin-bottom: 8px;
+
+  cursor: pointer;
+}
+
+.content {
+  overflow: hidden;
 }
 
 .title {
-  width: 218px;
+  font-weight: 500;
+}
+
+.description {
+  font-weight: 200;
+  inline-size: 100%;
+}
+
+.textarea {
+  height: 100px;
 }

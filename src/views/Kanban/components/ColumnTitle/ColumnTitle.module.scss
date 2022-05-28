@@ -27,3 +27,29 @@
   background: #d4d7d9;
   border-radius: 36px;
 }
+
+.input__title {
+  display: block;
+  max-width: 120px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+.title_button {
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.buttons_container{
+  display: flex;
+  gap: 10px;
+}
+
+.column_title {
+  cursor: pointer;
+}

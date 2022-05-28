@@ -4,6 +4,14 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  transition: 0.6s;
+
+  position: sticky;
+  top: 0;
+}
+
+.sticky_active {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 59.37%, #f6f8fa 100%);
 }
 
 .logo {
@@ -14,6 +22,11 @@
 
   &__icon {
     font-size: 64px;
+    transition: 0.6s;
+  }
+
+  &__rotate {
+    animation: rotation 2s;
   }
 }
 
@@ -31,4 +44,20 @@
 .profile {
   display: flex;
   gap: 8px;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+  // TODO: add burger menu
 }

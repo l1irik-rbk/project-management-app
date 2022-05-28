@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
 
-import { signup } from '../../../services/auth';
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
-import { Error } from './../../../services/interfaces/error';
+import { signup } from '../../../services/auth';
+import { useTranslation } from 'react-i18next';
 
 type FormData = {
   name: string;
@@ -12,6 +12,7 @@ type FormData = {
 };
 
 export const SignupForm = () => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -21,10 +22,7 @@ export const SignupForm = () => {
   const registerHandler = async (data: FormData) => {
     const { name, login, password } = data;
     const response = await signup(name, login, password);
-    if (response.hasOwnProperty('statusCode')) {
-      const error = response as Error;
-      alert(`${error.statusCode} ${error.message}`);
-    }
+    if (response.hasOwnProperty('statusCode')) alert('Error');
   };
 
   return (
@@ -35,13 +33,13 @@ export const SignupForm = () => {
             className={s.input}
             {...register('name', { required: true, minLength: 3 })}
             type="text"
-            placeholder="Name"
+            placeholder={t('auth.name')}
           />
 
           {errors.name && (
             <span className={g.font_error}>
-              {errors.name.type === 'required' && 'Name is required'}
-              {errors.name.type === 'minLength' && 'Name must be at least 3 characters'}
+              {errors.name.type === 'required' && t('errors.errorsName.required')}
+              {errors.name.type === 'minLength' && t('errors.errorsName.minLength')}
             </span>
           )}
         </label>
@@ -51,14 +49,14 @@ export const SignupForm = () => {
             className={s.input}
             {...register('login', { required: true, minLength: 3, pattern: /^[a-zA-Z0-9]+$/ })}
             type="text"
-            placeholder="Login"
+            placeholder={t('auth.login')}
           />
 
           {errors.login && (
             <span className={g.font_error}>
-              {errors.login.type === 'required' && 'Login is required'}
-              {errors.login.type === 'minLength' && 'Login must be at least 3 characters'}
-              {errors.login.type === 'pattern' && 'Login must contain only letters and numbers'}
+              {errors.login.type === 'required' && t('errors.errorsLogin.required')}
+              {errors.login.type === 'minLength' && t('errors.errorsLogin.minLength')}
+              {errors.login.type === 'pattern' && t('errors.errorsLogin.pattern')}
             </span>
           )}
         </label>
@@ -68,19 +66,19 @@ export const SignupForm = () => {
             className={s.input}
             {...register('password', { required: true, minLength: 8 })}
             type="password"
-            placeholder="Password"
+            placeholder={t('auth.password')}
             autoComplete="on"
           />
 
           {errors.password && (
             <span className={g.font_error}>
-              {errors.password.type === 'required' && 'Password is required'}
-              {errors.password.type === 'minLength' && 'Password must be at least 8 characters'}
+              {errors.password.type === 'required' && t('errors.errorsPassword.required')}
+              {errors.password.type === 'minLength' && t('errors.errorsPassword.minLength')}
             </span>
           )}
         </label>
 
-        <button className={`${g.button} ${s.button}`}>Register</button>
+        <button className={`${g.button} ${s.button}`}>{t('auth.register')}</button>
       </form>
     </>
   );
