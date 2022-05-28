@@ -8,6 +8,10 @@ import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
 import { Signin } from '../../../services/interfaces/auth';
 import { authSlice } from '../../../Redux/slices/authSlice';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../../components/ToasterMessage/ToasterMessage';
 
 type FormData = {
   login: string;
@@ -29,13 +33,15 @@ export const LoginForm = () => {
   const loginHandler = async (data: FormData) => {
     const { login, password } = data;
     const signinResponse = await signin(login, password);
+
     if (signinResponse.hasOwnProperty('statusCode')) {
-      alert('Error');
+      showErrorToaster('toasterNotifications.auth.errors.signin');
     } else {
       const token = (signinResponse as Signin).token;
       dispatch(setToken(token));
       dispatch(setTokenLoaded(true));
       navigate('/main');
+      showSuccessToaster('toasterNotifications.auth.success.signin');
     }
   };
 

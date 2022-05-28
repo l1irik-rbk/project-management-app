@@ -4,6 +4,10 @@ import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
 import { signup } from '../../../services/auth';
 import { useTranslation } from 'react-i18next';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../../components/ToasterMessage/ToasterMessage';
 
 type FormData = {
   name: string;
@@ -22,7 +26,10 @@ export const SignupForm = () => {
   const registerHandler = async (data: FormData) => {
     const { name, login, password } = data;
     const response = await signup(name, login, password);
-    if (response.hasOwnProperty('statusCode')) alert('Error');
+
+    if (response.hasOwnProperty('error')) {
+      showErrorToaster('toasterNotifications.auth.errors.signup');
+    } else showSuccessToaster('toasterNotifications.auth.success.signup');
   };
 
   return (

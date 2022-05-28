@@ -3,6 +3,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { findUser, getLogin, getToken } from '../../services/utils';
 import { AppThunk } from '../store';
 import { deleteUser } from '../../services/users';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../components/ToasterMessage/ToasterMessage';
 
 type auth = {
   token: string | null;
@@ -34,9 +38,10 @@ export const deleteUserThunk = (): AppThunk => async (dispatch, getState) => {
     const user = await findUser(login);
     if (user) {
       const response = await deleteUser(user.id);
+
       if (response.hasOwnProperty('success')) {
-        alert('Профиль удален');
-      } else alert('Error');
+        showSuccessToaster('toasterNotifications.user.success.deleteUser');
+      } else showErrorToaster('toasterNotifications.user.errors.deleteUser');
     }
   }
 };

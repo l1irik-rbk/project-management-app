@@ -103,6 +103,57 @@ const translationRU = {
       title: 'Измените текущую задачу',
     },
   },
+  toasterNotifications: {
+    boards: {
+      errors: {
+        fetchBoards: 'Ошибка при получении досок!',
+        deleteBoard: 'Ошибка при удалении доски!',
+        addBoard: 'Ошибка при создании доски!',
+      },
+      success: {
+        deleteBoard: 'Доска успешно удалена!',
+        addBoard: 'Доска успешно создана!',
+      },
+    },
+    board: {
+      errors: {
+        deleteColumn: 'Ошибка при удалении столбца!',
+        createColumn: 'Ошибка при создании столбца!',
+        updateColumn: 'Ошибка при обновлении столбца!',
+        deleteTask: 'Ошибка при удалении задачи!',
+        createTask: 'Ошибка при создании задачи!',
+        updateTask: 'Ошибка при обновлении задачи!',
+      },
+      success: {
+        deleteColumn: 'Столбец успешно удален!',
+        createColumn: 'Столбец успешно создан!',
+        updateColumn: 'Столбец успешно обновлен!',
+        deleteTask: 'Задача успешно удалена!',
+        createTask: 'Задача успешно создана!',
+        updateTask: 'Задача успешно обновлена!',
+      },
+    },
+    user: {
+      errors: {
+        deleteUser: 'Ошибка при удалении профиля!',
+        updateUser: 'Ошибка при обновлении профиля!',
+      },
+      success: {
+        deleteUser: 'Ваш профиль успешно удален!',
+        updateUser: 'Ваш профиль успешно обновлен!',
+      },
+    },
+    auth: {
+      errors: {
+        signup: `Ошибка! Профиль не создан!`,
+        signin: `Ошибка! Анкета не найдена в нашей базе!`,
+      },
+      success: {
+        signup: 'Профиль успешно создан!',
+        signin: `Вы успешно вошли в систему!`,
+      },
+    },
+  },
 };
 
 export default translationRU;

@@ -102,6 +102,57 @@ const translationEN = {
       title: 'Change this task',
     },
   },
+  toasterNotifications: {
+    boards: {
+      errors: {
+        fetchBoards: 'Error while fetching boards!',
+        deleteBoard: 'Error while deleting board!',
+        addBoard: 'Error while creating board!',
+      },
+      success: {
+        deleteBoard: 'Board was successfully deleted!',
+        addBoard: 'Board was successfully created!',
+      },
+    },
+    board: {
+      errors: {
+        deleteColumn: 'Error while deleting column!',
+        createColumn: 'Error while creating column!',
+        updateColumn: 'Error while updating column!',
+        deleteTask: 'Error while deleting task!',
+        createTask: 'Error while creating task!',
+        updateTask: 'Error while updating task!',
+      },
+      success: {
+        deleteColumn: 'Column was successfully deleted!',
+        createColumn: 'Column was successfully created!',
+        updateColumn: 'Column was successfully updated!',
+        deleteTask: 'Task was successfully deleted!',
+        createTask: 'Task was successfully created!',
+        updateTask: 'Task was successfully updated!',
+      },
+    },
+    user: {
+      errors: {
+        deleteUser: 'Error while deleting profile!',
+        updateUser: 'Error while updating profile!',
+      },
+      success: {
+        deleteUser: 'Your profile was successfully deleted!',
+        updateUser: 'Your profile was successfully updated!',
+      },
+    },
+    auth: {
+      errors: {
+        signup: `Error! Profile wasn't created!`,
+        signin: `Error! Profile wasn't found in our base!`,
+      },
+      success: {
+        signup: 'Profile was created successfully!',
+        signin: `You were successfully logged in!`,
+      },
+    },
+  },
 };
 
 export default translationEN;

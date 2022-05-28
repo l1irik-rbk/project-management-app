@@ -10,6 +10,10 @@ import type { Column } from '../../../../services/interfaces/boards';
 import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
 import { ColumnData } from '../CreateColumnButton/CreateColumnButton';
 import { useTranslation } from 'react-i18next';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../../../components/ToasterMessage/ToasterMessage';
 
 type Props = {
   taskLength: number;
@@ -46,7 +50,13 @@ export const ColumnTitle = (props: Props) => {
 
   const onSubmit = async (data: ColumnData) => {
     const { title } = data;
-    await updateColumn(boardId, columnId, title, order);
+    const response = await updateColumn(boardId, columnId, title, order);
+
+    if (response.hasOwnProperty('error')) {
+      showErrorToaster('toasterNotifications.board.errors.updateColumn');
+      setDissabled(!dissabled);
+      return;
+    }
 
     const oldColumns = board?.columns;
     const updatedOldColumns = [...(oldColumns as Column[])];
@@ -59,6 +69,7 @@ export const ColumnTitle = (props: Props) => {
 
     dispatch(setColumns(updatedOldColumns));
     setDissabled(!dissabled);
+    showSuccessToaster('toasterNotifications.board.success.updateColumn');
   };
 
   return (

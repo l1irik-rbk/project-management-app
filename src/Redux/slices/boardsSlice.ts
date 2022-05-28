@@ -1,4 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../components/ToasterMessage/ToasterMessage';
 
 import { createBoard, deleteBoard, getBoards } from '../../services/boards';
 import { Board } from '../../services/interfaces/boards';
@@ -59,7 +63,7 @@ export const fetchBoardsThunk = createAsyncThunk('boards/fetchBoards', async () 
   const boards = await getBoards();
 
   if (Array.isArray(boards)) return boards;
-  else alert('Error while fetching boards');
+  else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
 });
 
 export const deleteBoardThunk = createAsyncThunk(
@@ -67,8 +71,12 @@ export const deleteBoardThunk = createAsyncThunk(
   async (selectedBoardId: string) => {
     const response = await deleteBoard(selectedBoardId);
 
-    if (response.hasOwnProperty('success')) return response;
-    else alert('Error while deleting board');
+    if (response.hasOwnProperty('success')) {
+      showSuccessToaster('toasterNotifications.boards.success.deleteBoard');
+      return response;
+    } else {
+      showErrorToaster('toasterNotifications.boards.errors.deleteBoard');
+    }
   }
 );
 
@@ -77,8 +85,10 @@ export const createBoardThunk = createAsyncThunk(
   async (object: { title: string; description: string }) => {
     const { title, description } = object;
     const response = await createBoard(title, description);
-    if (response.hasOwnProperty('id')) return response as Board;
-    else alert('Error while creating board');
+    if (response.hasOwnProperty('id')) {
+      showSuccessToaster('toasterNotifications.boards.success.addBoard');
+      return response as Board;
+    } else showErrorToaster('toasterNotifications.boards.errors.addBoard');
   }
 );
 

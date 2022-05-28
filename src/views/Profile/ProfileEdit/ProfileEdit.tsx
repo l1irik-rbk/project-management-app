@@ -11,6 +11,10 @@ import {
 } from '../../../Redux/slices/confirmationModalSlice';
 import { updateUser } from '../../../services/users';
 import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
+import {
+  showErrorToaster,
+  showSuccessToaster,
+} from '../../../components/ToasterMessage/ToasterMessage';
 
 type Props = {
   user: User;
@@ -37,7 +41,10 @@ export const ProfileEdit = (props: Props) => {
 
   const onSubmit = async (data: FormData) => {
     const response = await updateUser(data, user.id);
-    if (response.hasOwnProperty('statusCode')) alert('Error');
+
+    if (response.hasOwnProperty('error')) {
+      showErrorToaster('toasterNotifications.user.errors.updateUser');
+    } else showSuccessToaster('toasterNotifications.user.success.updateUser');
   };
 
   const handleDelete = () => {
@@ -92,7 +99,7 @@ export const ProfileEdit = (props: Props) => {
             <p>{t('profile.password')}:</p>
             <input
               className={`${g.input} ${s.input}`}
-              type="text"
+              type="password"
               placeholder={t('profile.newPassword')}
               {...register('password', { required: true, minLength: 8 })}
             />

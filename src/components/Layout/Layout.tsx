@@ -2,8 +2,10 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { Footer } from '../Footer/Footer';
 import { Header } from '../Header/Header';
-import s from '../../App.module.scss';
+import { ToastContainer } from 'react-toastify';
 import { ConfirmationModal } from '../ConfirmationModal/ConfirmationModal';
+
+import s from '../../App.module.scss';
 
 export const Layout = () => {
   const location = useLocation();
@@ -16,6 +18,7 @@ export const Layout = () => {
       <main className={`${s.main} ${isKanban ? s.kanban : s.wrapper}`}>
         <Outlet />
         <ConfirmationModal />
+        <ToastContainer />
       </main>
 
       <Footer />
