@@ -77,7 +77,6 @@ export const Kanban = () => {
         if (!tasks || !currentColumn || !currentBoardId) return;
 
         const reorderedTasks = reorderTasks(tasks, fromIndex, toIndex);
-        reorderedTasks.map((task) => console.log(task.title, task.order));
         const newBoard = syncTasksWithRedux(board, currentColumn, reorderedTasks);
         dispatch(setBoard(newBoard as FullBoard));
 
