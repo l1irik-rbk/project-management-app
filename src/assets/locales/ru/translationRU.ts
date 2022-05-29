@@ -82,7 +82,7 @@ const translationRU = {
       description: {
         required: 'Укажите описание',
         minLength: 'Описание должно быть не менее 3 символов',
-        maxLength20: 'Заголовок должен содержать не более 20 символов',
+        maxLength20: 'Описание должно содержать не более 20 символов',
         maxLength144: 'Описание должно быть не более 144 символов',
       },
     },
@@ -105,16 +105,23 @@ const translationRU = {
       descriptionPlaceholder: 'Описание текущей задачи',
       title: 'Измените текущую задачу',
     },
+    changeBoard: {
+      titlePlaceholder: 'Заголовок текущей доски',
+      descriptionPlaceholder: 'Описание текущей доски',
+      title: 'Измените текущую доску',
+    },
   },
   toasterNotifications: {
     boards: {
       errors: {
         fetchBoards: 'Ошибка при получении досок!',
         deleteBoard: 'Ошибка при удалении доски!',
+        updateBoard: 'Ошибка при обновлении доски!',
         addBoard: 'Ошибка при создании доски!',
       },
       success: {
         deleteBoard: 'Доска успешно удалена!',
+        updateBoard: 'Доска успешно обновлена!',
         addBoard: 'Доска успешно создана!',
       },
     },

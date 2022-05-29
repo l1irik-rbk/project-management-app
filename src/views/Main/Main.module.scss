@@ -29,3 +29,15 @@
   display: flex;
   gap: 8px;
 }
+
+@media (max-width: 650px) {
+  .description {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .edit_button {
+    display: none;
+  }
+}

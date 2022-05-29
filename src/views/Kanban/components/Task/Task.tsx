@@ -27,6 +27,8 @@ export type TaskData = {
   description: string;
 };
 
+export type BoardData = TaskData;
+
 export const Task = (props: Props) => {
   const { t } = useTranslation();
 
@@ -53,7 +55,7 @@ export const Task = (props: Props) => {
         title,
         description,
       });
-      console.log(updateResponse);
+
       handleCloseModal();
 
       if (updateResponse.hasOwnProperty('error'))

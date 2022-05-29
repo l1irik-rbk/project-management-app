@@ -59,7 +59,7 @@ export const CreateNewBoard = () => {
         <label className={g.label}>
           <p>{t('creationModal.description')}</p>
           <input
-            {...register('description', { required: true, minLength: 0, maxLength: 20 })}
+            {...register('description', { required: true, minLength: 3, maxLength: 20 })}
             className={g.input}
             type="text"
             placeholder={t('creationModal.creationBoard.descripton_placeholder')}
@@ -69,6 +69,8 @@ export const CreateNewBoard = () => {
             <span className={g.font_error}>
               {errors.description.type === 'required' &&
                 t('creationModal.errors.description.required')}
+              {errors.description.type === 'minLength' &&
+                t('creationModal.errors.description.minLength')}
               {errors.description.type === 'maxLength' &&
                 t('creationModal.errors.description.maxLength20')}
             </span>

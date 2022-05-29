@@ -26,7 +26,7 @@ export const SignupForm = () => {
   const registerHandler = async (data: FormData) => {
     const { name, login, password } = data;
     const response = await signup(name, login, password);
-    console.log(response);
+
     if (response.hasOwnProperty('statusCode')) {
       showErrorToaster('toasterNotifications.auth.errors.signup');
     } else showSuccessToaster('toasterNotifications.auth.success.signup');

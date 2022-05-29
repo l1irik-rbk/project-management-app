@@ -7,6 +7,7 @@ export type GetBoards = Board[] | BoardError;
 export interface Board {
   id: string;
   title: string;
+  description: string;
 }
 
 // BoardsController_create

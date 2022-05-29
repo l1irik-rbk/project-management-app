@@ -83,6 +83,7 @@ const translationEN = {
       description: {
         required: 'Description is required',
         minLength: 'Description must be at least 3 characters',
+        maxLength20: 'Description must be at most 20 characters',
         maxLength144: 'Description must be at most 144 characters',
       },
     },
@@ -105,16 +106,23 @@ const translationEN = {
       descriptionPlaceholder: 'Description of this task',
       title: 'Change this task',
     },
+    changeBoard: {
+      titlePlaceholder: 'Name of this board',
+      descriptionPlaceholder: 'Description of this board',
+      title: 'Change this board',
+    },
   },
   toasterNotifications: {
     boards: {
       errors: {
         fetchBoards: 'Error while fetching boards!',
         deleteBoard: 'Error while deleting board!',
+        updateBoard: 'Error while updating board!',
         addBoard: 'Error while creating board!',
       },
       success: {
         deleteBoard: 'Board was successfully deleted!',
+        updateBoard: 'Board was successfully updated!',
         addBoard: 'Board was successfully created!',
       },
     },
