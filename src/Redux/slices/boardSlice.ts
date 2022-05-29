@@ -70,6 +70,9 @@ export const boardSlice = createSlice({
     setSelectedTaskId: (state, action: PayloadAction<string | null>) => {
       state.selectedTaskId = action.payload;
     },
+    setBoardTitle: (state, action: PayloadAction<string>) => {
+      if (state.board) state.board.title = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoard.pending, (state) => {
@@ -179,5 +182,11 @@ export const createTaskThunk =
     } else showErrorToaster('toasterNotifications.board.errors.createTask');
   };
 
-export const { setBoard, setColumns, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
-  boardSlice.actions;
+export const {
+  setBoard,
+  setColumns,
+  setSelectedColumnId,
+  setCurrentBoardId,
+  setSelectedTaskId,
+  setBoardTitle,
+} = boardSlice.actions;

@@ -17,6 +17,7 @@ import {
   showErrorToaster,
   showSuccessToaster,
 } from '../../../components/ToasterMessage/ToasterMessage';
+import { setBoardTitle } from '../../../Redux/slices/boardSlice';
 
 export const Board = ({ id, title, description }: BoardType) => {
   const dispatch = useAppDispatch();
@@ -62,6 +63,7 @@ export const Board = ({ id, title, description }: BoardType) => {
         description: '',
       });
       dispatch(fetchBoardsThunk());
+      dispatch(setBoardTitle(title));
       showSuccessToaster('toasterNotifications.board.success.updateTask');
     }
   };
@@ -72,7 +74,7 @@ export const Board = ({ id, title, description }: BoardType) => {
         <label className={g.label}>
           <p>{t('creationModal.title')}</p>
           <input
-            {...register('title', { required: true, minLength: 3, maxLength: 16 })}
+            {...register('title', { required: true, minLength: 3, maxLength: 10 })}
             className={g.input}
             type="text"
             defaultValue={title}
@@ -83,7 +85,7 @@ export const Board = ({ id, title, description }: BoardType) => {
             <span className={g.font_error}>
               {errors.title.type === 'required' && t('creationModal.errors.title.required')}
               {errors.title.type === 'minLength' && t('creationModal.errors.title.minLength')}
-              {errors.title.type === 'maxLength' && t('creationModal.errors.title.maxLength16')}
+              {errors.title.type === 'maxLength' && t('creationModal.errors.title.maxLength10')}
             </span>
           )}
         </label>
@@ -91,7 +93,7 @@ export const Board = ({ id, title, description }: BoardType) => {
         <label className={g.label}>
           <p>{t('creationModal.description')}</p>
           <textarea
-            {...register('description', { required: true, minLength: 3, maxLength: 144 })}
+            {...register('description', { required: true, minLength: 3, maxLength: 20 })}
             className={`${g.input} ${s.textarea}`}
             defaultValue={description}
             placeholder={t('creationModal.changeBoard.descriptionPlaceholder')}
@@ -104,7 +106,7 @@ export const Board = ({ id, title, description }: BoardType) => {
               {errors.description.type === 'minLength' &&
                 t('creationModal.errors.description.minLength')}
               {errors.description.type === 'maxLength' &&
-                t('creationModal.errors.description.maxLength144')}
+                t('creationModal.errors.description.maxLength20')}
             </span>
           )}
         </label>
