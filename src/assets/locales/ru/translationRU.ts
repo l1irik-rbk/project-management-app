@@ -163,6 +163,7 @@ const translationRU = {
         signin: `Вы успешно вошли в систему!`,
       },
     },
+    unauthorizated: `Вы не авторизованы!`,
   },
 };
 

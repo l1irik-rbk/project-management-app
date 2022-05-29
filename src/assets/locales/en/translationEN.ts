@@ -164,6 +164,7 @@ const translationEN = {
         signin: `You were successfully logged in!`,
       },
     },
+    unauthorizated: `You aren't authorized!`,
   },
 };
 

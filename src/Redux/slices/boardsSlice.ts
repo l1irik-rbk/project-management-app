@@ -5,7 +5,8 @@ import {
 } from '../../components/ToasterMessage/ToasterMessage';
 
 import { createBoard, deleteBoard, getBoards } from '../../services/boards';
-import { Board } from '../../services/interfaces/boards';
+import { Board, Errors } from '../../services/interfaces/boards';
+import { setToken, setTokenLoaded } from './authSlice';
 
 export interface Boards {
   isOpenModalCreateNewBoard: boolean;
@@ -43,6 +44,9 @@ export const boardsSlice = createSlice({
       state.isBoardsLoaded = true;
       if (action.payload) state.boardsArray = action.payload;
     });
+    builder.addCase(fetchBoardsThunk.rejected, () => {
+      showErrorToaster('toasterNotifications.unauthorizated');
+    });
 
     builder.addCase(deleteBoardThunk.fulfilled, (state) => {
       if (state.boardsArray)
@@ -59,12 +63,29 @@ export const boardsSlice = createSlice({
   },
 });
 
-export const fetchBoardsThunk = createAsyncThunk('boards/fetchBoards', async () => {
-  const boards = await getBoards();
+export const fetchBoardsThunk = createAsyncThunk(
+  'boards/fetchBoards',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const boards = await getBoards();
 
-  if (Array.isArray(boards)) return boards;
-  else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
-});
+      if (boards.hasOwnProperty('statusCode') && (boards as Errors).statusCode === 401) {
+        document.cookie = `token=${''}`;
+        dispatch(setToken(null));
+        dispatch(setTokenLoaded(false));
+        throw new Error('Unauthorizated');
+      }
+
+      if (Array.isArray(boards)) return boards;
+      else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
+    } catch (error) {
+      return rejectWithValue('Unauthorizated');
+    }
+
+    // if (Array.isArray(boards)) return boards;
+    // else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
+  }
+);
 
 export const deleteBoardThunk = createAsyncThunk(
   'boards/deleteBoard',

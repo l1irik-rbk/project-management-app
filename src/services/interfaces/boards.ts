@@ -10,6 +10,12 @@ export interface Board {
   description: string;
 }
 
+export interface Errors {
+  error: string;
+  message: string;
+  statusCode: number;
+}
+
 // BoardsController_create
 export type CreateBoard = Board | BoardError;
 
