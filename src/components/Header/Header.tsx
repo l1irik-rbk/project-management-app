@@ -103,7 +103,9 @@ export const Header = () => {
 
             {!isTokenLoaded ? (
               <Link to="/auth">
-                <button className={`${g.button} ${g.drop_shadow}`}>{t('header.login')}</button>
+                <button className={`${g.button} ${g.drop_shadow} ${s.login_button}`}>
+                  {t('header.login')}
+                </button>
               </Link>
             ) : (
               <div className={s.profile}>
