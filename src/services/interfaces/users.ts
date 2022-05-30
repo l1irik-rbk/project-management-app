@@ -1,9 +1,7 @@
 import { successObject } from '../utils';
-import { ResponseError } from './error';
+import { ResponseErrorWithFieldError } from './error';
 
-export type UserError = ResponseError & {
-  error: string;
-};
+export type UserError = ResponseErrorWithFieldError;
 
 // UsersController_getAll
 export type GetUsers = User[] | UserError;

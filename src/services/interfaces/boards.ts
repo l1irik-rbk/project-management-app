@@ -1,19 +1,13 @@
 import { successObject } from '../utils';
-import { ResponseError as BoardError } from './error';
+import { ResponseError as BoardError, ResponseErrorWithFieldError } from './error';
 
 // BoardsController_getAll
-export type GetBoards = Board[] | BoardError;
+export type GetBoards = Board[] | ResponseErrorWithFieldError;
 
 export interface Board {
   id: string;
   title: string;
   description: string;
-}
-
-export interface Errors {
-  error: string;
-  message: string;
-  statusCode: number;
 }
 
 // BoardsController_create

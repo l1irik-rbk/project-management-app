@@ -1,7 +1,7 @@
-import { CreateBoard, Errors, FullBoard, GetBoards, RemoveBoard } from './interfaces/boards';
+import { CreateBoard, FullBoard, GetBoards, RemoveBoard } from './interfaces/boards';
 import { apiUrl, getToken, successObject } from './utils';
 
-export const getBoards = async (): Promise<GetBoards | Errors> => {
+export const getBoards = async (): Promise<GetBoards> => {
   const response = await fetch(`${apiUrl}/boards`, {
     method: 'GET',
     headers: {
