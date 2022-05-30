@@ -13,10 +13,7 @@ import { BoardData } from '../../Kanban/components/Task/Task';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../../../components/Modal/Modal';
 import { updateBoard } from '../../../services/boards';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../../components/ToasterMessage/ToasterMessage';
 import { setBoardTitle } from '../../../Redux/slices/boardSlice';
 
 export const Board = ({ id, title, description }: BoardType) => {
@@ -55,7 +52,7 @@ export const Board = ({ id, title, description }: BoardType) => {
     const response = await updateBoard(id, title, description);
 
     if (response.hasOwnProperty('error')) {
-      showErrorToaster('toasterNotifications.board.errors.updateTask');
+      showError('toasterNotifications.board.errors.updateTask');
       handleCloseModal();
     } else {
       reset({
@@ -64,7 +61,7 @@ export const Board = ({ id, title, description }: BoardType) => {
       });
       dispatch(fetchBoardsThunk());
       dispatch(setBoardTitle(title));
-      showSuccessToaster('toasterNotifications.board.success.updateTask');
+      showSuccess('toasterNotifications.board.success.updateTask');
     }
   };
 

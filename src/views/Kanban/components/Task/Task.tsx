@@ -11,10 +11,7 @@ import { useAppDispatch } from '../../../../Redux/hooks';
 import { getUserId } from '../../../../services/utils';
 import { updateTask } from '../../../../services/tasks';
 import { fetchBoard } from '../../../../Redux/slices/boardSlice';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../../../components/ToasterMessage/ToasterMessage';
 
 type Props = {
   task: FullTask;
@@ -59,14 +56,14 @@ export const Task = (props: Props) => {
       handleCloseModal();
 
       if (updateResponse.hasOwnProperty('error'))
-        showErrorToaster('toasterNotifications.board.errors.updateTask');
+        showError('toasterNotifications.board.errors.updateTask');
       else {
         reset({
           title: '',
           description: '',
         });
         dispatch(fetchBoard(boardId));
-        showSuccessToaster('toasterNotifications.board.success.updateTask');
+        showSuccess('toasterNotifications.board.success.updateTask');
       }
     }
   };

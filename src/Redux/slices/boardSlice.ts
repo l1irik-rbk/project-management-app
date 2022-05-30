@@ -7,10 +7,7 @@ import { AppThunk } from '../store';
 import { FullColumn } from '../../services/interfaces/columns';
 import { createTask, deleteTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
 export interface BoardInt {
   selectedColumnId: string | null;
@@ -114,8 +111,8 @@ export const deleteColumnThunk =
 
       dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
-      showSuccessToaster('toasterNotifications.board.success.deleteColumn');
-    } else showErrorToaster('toasterNotifications.board.errors.deleteColumn');
+      showSuccess('toasterNotifications.board.success.deleteColumn');
+    } else showError('toasterNotifications.board.errors.deleteColumn');
   };
 
 export const deleteTaskThunk =
@@ -137,8 +134,8 @@ export const deleteTaskThunk =
       dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
       dispatch(setSelectedTaskId(null));
-      showSuccessToaster('toasterNotifications.board.success.deleteTask');
-    } else showErrorToaster('toasterNotifications.board.errors.deleteTask');
+      showSuccess('toasterNotifications.board.success.deleteTask');
+    } else showError('toasterNotifications.board.errors.deleteTask');
   };
 
 export const createColumnThunk =
@@ -151,8 +148,8 @@ export const createColumnThunk =
       const columns = getState()?.board.board?.columns.slice() as FullColumn[];
 
       dispatch(setColumns([...columns, newColumn]));
-      showSuccessToaster('toasterNotifications.board.success.createColumn');
-    } else showErrorToaster('toasterNotifications.board.errors.createColumn');
+      showSuccess('toasterNotifications.board.success.createColumn');
+    } else showError('toasterNotifications.board.errors.createColumn');
   };
 
 export const createTaskThunk =
@@ -178,8 +175,8 @@ export const createTaskThunk =
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
 
       dispatch(setColumns(updatedColumns));
-      showSuccessToaster('toasterNotifications.board.success.createTask');
-    } else showErrorToaster('toasterNotifications.board.errors.createTask');
+      showSuccess('toasterNotifications.board.success.createTask');
+    } else showError('toasterNotifications.board.errors.createTask');
   };
 
 export const {

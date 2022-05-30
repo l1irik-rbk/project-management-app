@@ -11,10 +11,7 @@ import {
 } from '../../../Redux/slices/confirmationModalSlice';
 import { updateUser } from '../../../services/users';
 import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../../components/ToasterMessage/ToasterMessage';
 
 type Props = {
   user: User;
@@ -43,8 +40,8 @@ export const ProfileEdit = (props: Props) => {
     const response = await updateUser(data, user.id);
 
     if (response.hasOwnProperty('error')) {
-      showErrorToaster('toasterNotifications.user.errors.updateUser');
-    } else showSuccessToaster('toasterNotifications.user.success.updateUser');
+      showError('toasterNotifications.user.errors.updateUser');
+    } else showSuccess('toasterNotifications.user.success.updateUser');
   };
 
   const handleDelete = () => {

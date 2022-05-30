@@ -5,14 +5,14 @@ type MessageType = {
   translationPath: string;
 };
 
-export const ToasterMessage = ({ translationPath }: MessageType) => {
+const ToasterTranslate = ({ translationPath }: MessageType) => {
   const { t } = useTranslation();
 
   return <div>{t(translationPath)}</div>;
 };
 
-export const showSuccessToaster = (translationPath: string) => {
-  toast.success(<ToasterMessage translationPath={translationPath} />, {
+export const showSuccess = (translationPath: string) => {
+  toast.success(<ToasterTranslate translationPath={translationPath} />, {
     position: 'bottom-left',
     autoClose: 3000,
     hideProgressBar: false,
@@ -23,8 +23,12 @@ export const showSuccessToaster = (translationPath: string) => {
   });
 };
 
-export const showErrorToaster = (translationPath: string) => {
-  toast.error(<ToasterMessage translationPath={translationPath} />, {
+const Toaster = (props: { message: string }) => {
+  return <div>{props.message}</div>;
+};
+
+export const showError = (message: string) => {
+  toast.error(<Toaster message={message} />, {
     position: 'bottom-left',
     autoClose: 3000,
     hideProgressBar: false,

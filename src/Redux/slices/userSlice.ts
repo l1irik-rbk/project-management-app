@@ -5,9 +5,8 @@ import { AppThunk } from '../store';
 import { deleteUser } from '../../services/users';
 import { signin } from '../../services/auth';
 import { Signin } from '../../services/interfaces/auth';
-import { showError } from '../../components/Toaster/Toaster';
 import { ResponseError } from '../../services/interfaces/error';
-import { showSuccess } from '../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
 type user = {
   token: string | null;

@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../components/ToasterMessage/ToasterMessage';
+import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
 import { createBoard, deleteBoard, getBoards } from '../../services/boards';
 import { Board, Errors } from '../../services/interfaces/boards';
@@ -45,7 +42,7 @@ export const boardsSlice = createSlice({
       if (action.payload) state.boardsArray = action.payload;
     });
     builder.addCase(fetchBoardsThunk.rejected, () => {
-      showErrorToaster('toasterNotifications.unauthorizated');
+      showError('toasterNotifications.unauthorizated');
     });
 
     builder.addCase(deleteBoardThunk.fulfilled, (state) => {
@@ -77,13 +74,13 @@ export const fetchBoardsThunk = createAsyncThunk(
       }
 
       if (Array.isArray(boards)) return boards;
-      else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
+      else showError('toasterNotifications.boards.errors.fetchBoards');
     } catch (error) {
       return rejectWithValue('Unauthorizated');
     }
 
     // if (Array.isArray(boards)) return boards;
-    // else showErrorToaster('toasterNotifications.boards.errors.fetchBoards');
+    // else showError('toasterNotifications.boards.errors.fetchBoards');
   }
 );
 
@@ -93,10 +90,10 @@ export const deleteBoardThunk = createAsyncThunk(
     const response = await deleteBoard(selectedBoardId);
 
     if (response.hasOwnProperty('success')) {
-      showSuccessToaster('toasterNotifications.boards.success.deleteBoard');
+      showSuccess('toasterNotifications.boards.success.deleteBoard');
       return response;
     } else {
-      showErrorToaster('toasterNotifications.boards.errors.deleteBoard');
+      showError('toasterNotifications.boards.errors.deleteBoard');
     }
   }
 );
@@ -107,9 +104,9 @@ export const createBoardThunk = createAsyncThunk(
     const { title, description } = object;
     const response = await createBoard(title, description);
     if (response.hasOwnProperty('id')) {
-      showSuccessToaster('toasterNotifications.boards.success.addBoard');
+      showSuccess('toasterNotifications.boards.success.addBoard');
       return response as Board;
-    } else showErrorToaster('toasterNotifications.boards.errors.addBoard');
+    } else showError('toasterNotifications.boards.errors.addBoard');
   }
 );
 
