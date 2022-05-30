@@ -17,9 +17,11 @@ export const Welcome = () => {
   if (isTokenLoaded) return <Navigate to="/main" />;
 
   return (
-    <div className={s.content}>
-      <p className={s.content_text}>{t('welcom.text')}</p>
+    <>
+      <div className={s.content}>
+        <p className={s.content_text}>{t('welcom.text')}</p>
+      </div>
       <img className={s.boar} src={boar} alt="boar" />
-    </div>
+    </>
   );
 };

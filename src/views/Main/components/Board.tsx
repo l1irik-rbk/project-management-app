@@ -118,8 +118,10 @@ export const Board = ({ id, title, description }: BoardType) => {
     <>
       <Link to={`/kanban/${id}`}>
         <div className={`${s.board} ${g.drop_shadow} ${g.button}`}>
-          <h5 className={`${g.font_title}`}>{title}</h5>
-          <p className={s.description}>{description}</p>
+          <div>
+            <h5 className={`${g.font_title}`}>{title}</h5>
+            <p className={s.description}>{description}</p>
+          </div>
           <div className={s.buttons}>
             <button className={`${g.button} ${g.drop_shadow} ${s.edit_button}`} onClick={openModal}>
               &#9998;
