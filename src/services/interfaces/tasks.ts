@@ -26,5 +26,5 @@ export type FullTask = Task;
 export type RemoveTask = typeof successObject | TaskError;
 
 // TasksController_update
-type UpdateError = TaskError & { error: string };
+export type UpdateError = TaskError & { error: string };
 export type UpdateTask = Task | UpdateError;
