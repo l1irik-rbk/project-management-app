@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { findUser, getLogin } from '../../services/utils';
 import { User } from '../../services/interfaces/users';
 import { ProfileShow } from './ProfileShow/ProfileShow';
 import { ProfileEdit } from './ProfileEdit/ProfileEdit';
 import { Spinner } from '../../components/Spinner/Spinner';
-import { useTranslation } from 'react-i18next';
 
 export const Profile = () => {
   const { t } = useTranslation();
@@ -16,12 +16,12 @@ export const Profile = () => {
   useEffect(() => {
     document.title = `${typeForm} ${t('profile.docTitle')} ${login} | KanbanBoar`;
 
+    const users = async () => {
+      if (login) setUser(await findUser(login));
+    };
     users();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeForm]);
-
-  const users = async () => {
-    if (login) setUser(await findUser(login));
-  };
 
   return (
     <>
