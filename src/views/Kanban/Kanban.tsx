@@ -32,6 +32,7 @@ export const Kanban = () => {
   const paramId = useParams().id;
 
   const dispatch = useAppDispatch();
+  const boards = useAppSelector((state) => state.boards.boardsArray);
   const board = useAppSelector((state) => state.board.board);
   const columns = board?.columns.slice();
 
@@ -39,8 +40,10 @@ export const Kanban = () => {
   const { setColumns } = boardSlice.actions;
 
   useEffect(() => {
-    if (!paramId) navigate('/menu');
     if (!paramId) return;
+
+    const isTrueBoardId = boards?.map((item) => item.id).includes(paramId);
+    if (!isTrueBoardId) navigate('/');
 
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
