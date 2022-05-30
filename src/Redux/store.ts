@@ -20,18 +20,18 @@ export const store = configureStore({
 
 const unsubscribe = store.subscribe(() => {
   const token = getToken();
-  console.log('token', token);
+  // console.log('token', token);
   if (!token) {
-    console.log('logoutExpiredUserThunk');
+    // console.log('logoutExpiredUserThunk');
     setTimeout(() => store.dispatch(logoutExpiredUserThunk()), 10);
     unsubscribe();
 
     setTimeout(() => {
       store.subscribe(() => {
         const token = getToken();
-        console.log('token', token);
+        // console.log('token', token);
         if (!token) {
-          console.log('logoutExpiredUserThunk');
+          // console.log('logoutExpiredUserThunk');
           setTimeout(() => store.dispatch(logoutExpiredUserThunk()), 10);
           unsubscribe();
         }
