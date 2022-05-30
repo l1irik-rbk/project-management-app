@@ -2,13 +2,14 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FullBoard, Column } from './../../services/interfaces/boards';
 import { getBoard } from '../../services/boards';
-import { createColumn, deleteColumn } from '../../services/columns';
+import { createColumn, deleteColumn, updateColumn } from '../../services/columns';
 import { AppThunk } from '../store';
 import { FullColumn } from '../../services/interfaces/columns';
 import { createTask, deleteTask, updateTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 import { FullTask } from '../../services/interfaces/tasks';
+import { ResponseError } from '../../services/interfaces/error';
 
 export interface BoardInt {
   selectedColumnId: string | null;
@@ -200,6 +201,24 @@ export const editTaskThunk =
       showSuccess('toasterNotifications.board.success.updateTask');
     } else showError('toasterNotifications.board.errors.updateTask');
     // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
+  };
+
+export const editColumnTitleThunk =
+  (boardId: string, columnId: string, title: string, order: number, board: FullBoard): AppThunk =>
+  async (dispatch) => {
+    const response = await updateColumn(boardId, columnId, title, order);
+    if (!response.hasOwnProperty('error')) {
+      const oldColumns = board?.columns;
+      const updatedOldColumns = [...(oldColumns as Column[])];
+      const columns = board?.columns;
+      const updatedColumn = columns?.filter((column) => column.id === columnId)[0] as Column;
+      const newColumn = { ...updatedColumn };
+      newColumn.title = title;
+      const oldColumnIndex = columns?.findIndex((column) => column.id === newColumn.id) as number;
+      updatedOldColumns.splice(oldColumnIndex, 1, newColumn);
+      dispatch(setColumns(updatedOldColumns));
+      showSuccess('toasterNotifications.board.success.updateColumn');
+    } else showError((response as ResponseError).message);
   };
 
 export const {

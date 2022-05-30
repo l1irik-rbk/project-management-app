@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import s from './ColumnTitle.module.scss';
 import g from './../../../../App.module.scss';
-import { updateColumn } from '../../../../services/columns';
 import { useAppDispatch, useAppSelector } from '../../../../Redux/hooks';
-import { boardSlice } from '../../../../Redux/slices/boardSlice';
-import type { Column } from '../../../../services/interfaces/boards';
+import { editColumnTitleThunk } from '../../../../Redux/slices/boardSlice';
 import { DeleteColumnButton } from '../DeleteColumnButton/DeleteColumnButton';
 import { ColumnData } from '../CreateColumnButton/CreateColumnButton';
-import { useTranslation } from 'react-i18next';
-import { showError, showSuccess } from '../../../../components/ToasterMessage/ToasterMessage';
 
 type Props = {
   taskLength: number;
@@ -22,14 +19,11 @@ type Props = {
 
 export const ColumnTitle = (props: Props) => {
   const { t } = useTranslation();
-
-  const { taskLength, title, columnId, boardId, order } = props;
-
   const [dissabled, setDissabled] = useState(true);
-
   const dispatch = useAppDispatch();
   const { board } = useAppSelector((state) => state.board);
-  const { setColumns } = boardSlice.actions;
+
+  const { taskLength, title, columnId, boardId, order } = props;
 
   const {
     register,
@@ -46,27 +40,11 @@ export const ColumnTitle = (props: Props) => {
   };
 
   const onSubmit = async (data: ColumnData) => {
+    if (!board) return;
     const { title } = data;
-    const response = await updateColumn(boardId, columnId, title, order);
-
-    if (response.hasOwnProperty('error')) {
-      showError('toasterNotifications.board.errors.updateColumn');
-      setDissabled(!dissabled);
-      return;
-    }
-
-    const oldColumns = board?.columns;
-    const updatedOldColumns = [...(oldColumns as Column[])];
-    const columns = board?.columns;
-    const updatedColumn = columns?.filter((column) => column.id === columnId)[0] as Column;
-    const newColumn = { ...updatedColumn };
-    newColumn.title = title;
-    const oldColumnIndex = columns?.findIndex((column) => column.id === newColumn.id) as number;
-    updatedOldColumns.splice(oldColumnIndex, 1, newColumn);
-
-    dispatch(setColumns(updatedOldColumns));
     setDissabled(!dissabled);
-    showSuccess('toasterNotifications.board.success.updateColumn');
+
+    dispatch(editColumnTitleThunk(boardId, columnId, title, order, board));
   };
 
   return (
