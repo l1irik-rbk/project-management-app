@@ -40,8 +40,10 @@ export const boardsSlice = createSlice({
     });
 
     builder.addCase(fetchBoardsThunk.fulfilled, (state, action) => {
-      state.isBoardsLoaded = true;
-      if (action.payload) state.boardsArray = action.payload;
+      if (action.payload) {
+        state.isBoardsLoaded = true;
+        state.boardsArray = action.payload;
+      }
     });
 
     builder.addCase(deleteBoardThunk.fulfilled, (state) => {
@@ -87,12 +89,7 @@ export const createBoardThunk = createAsyncThunk(
     if (response.hasOwnProperty('id')) {
       showSuccess('toasterNotifications.boards.success.addBoard');
       return response as Board;
-    } else
-      showError(
-        `${(response as ResponseErrorWithFieldError).message} ${
-          (response as ResponseErrorWithFieldError).error
-        }`
-      );
+    } else showError((response as ResponseErrorWithFieldError).message);
   }
 );
 
