@@ -37,6 +37,7 @@ export const ProfileEdit = (props: Props) => {
 
   const onSubmit = async (data: FormData) => {
     dispatch(editUserThunk(data, user.id));
+    document.cookie = `login=${data.login}`;
   };
 
   const handleDelete = () => {
