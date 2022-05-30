@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { findUser, getLogin, getToken } from '../../services/utils';
 import { AppThunk } from '../store';
-import { deleteUser } from '../../services/users';
-import { signin } from '../../services/auth';
+import { deleteUser, updateUser } from '../../services/users';
+import { signin, signup } from '../../services/auth';
 import { Signin } from '../../services/interfaces/auth';
 import { ResponseError } from '../../services/interfaces/error';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
@@ -77,6 +77,28 @@ export const loginUserThunk =
       dispatch(redirectThunk('main'));
       showSuccess('toasterNotifications.auth.success.signin');
     } else showError((signinResponse as ResponseError).message);
+  };
+
+export const signupUserThunk =
+  (name: string, login: string, password: string): AppThunk =>
+  async (dispatch) => {
+    const response = await signup(name, login, password);
+
+    if (!response.hasOwnProperty('statusCode')) {
+      dispatch(loginUserThunk(login, password));
+      showSuccess('toasterNotifications.auth.success.signup');
+    } else showError((response as ResponseError).message);
+  };
+
+export const editUserThunk =
+  (userObject: { name: string; login: string; password: string }, userId: string): AppThunk =>
+  async (dispatch) => {
+    const response = await updateUser(userObject, userId);
+
+    if (!response.hasOwnProperty('error')) {
+      showSuccess('toasterNotifications.user.success.updateUser');
+      dispatch(redirectThunk('main'));
+    } else showError((response as ResponseError).message);
   };
 
 export const { setToken, setTokenLoaded } = userSlice.actions;
