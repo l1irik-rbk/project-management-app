@@ -1,12 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { authSlice } from '../../Redux/slices/authSlice';
+import { logoutUserThunk } from '../../Redux/slices/userSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
 import { getLanguage } from '../../services/utils';
@@ -17,11 +17,16 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const board = useAppSelector((state) => state.board.board);
   const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
-  const { isOpenModalCreateNewBoard } = useAppSelector((state) => state.boards);
-  const { isTokenLoaded } = useAppSelector((state) => state.auth);
+  const { isTokenLoaded } = useAppSelector((state) => state.user);
   const { setIsOpenModalCreateNewBoard } = boardsSlice.actions;
-  const { setToken, setTokenLoaded } = authSlice.actions;
   const currentLang = getLanguage();
+  const navigate = useNavigate();
+  const redirectRedux = useAppSelector((state) => state.user.redirect);
+
+  useEffect(() => {
+    if (redirectRedux) navigate(redirectRedux);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [redirectRedux]);
 
   const [sticky, setSticky] = useState(false);
 
@@ -29,14 +34,12 @@ export const Header = () => {
     i18n.changeLanguage(lang);
   };
 
-  const logout = () => {
-    document.cookie = `token=${''}`;
-    dispatch(setToken(null));
-    dispatch(setTokenLoaded(false));
+  const handlelogout = () => {
+    dispatch(logoutUserThunk());
   };
 
   const createNewBoard = async () => {
-    dispatch(setIsOpenModalCreateNewBoard(!isOpenModalCreateNewBoard));
+    dispatch(setIsOpenModalCreateNewBoard(true));
   };
 
   const changeSticky = () => {
@@ -103,14 +106,16 @@ export const Header = () => {
 
             {!isTokenLoaded ? (
               <Link to="/auth">
-                <button className={`${g.button} ${g.drop_shadow}`}>{t('header.login')}</button>
+                <button className={`${g.button} ${g.drop_shadow} ${s.login_button}`}>
+                  {t('header.login')}
+                </button>
               </Link>
             ) : (
               <div className={s.profile}>
                 <Link to="/profile">
                   <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
                 </Link>
-                <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
+                <button className={`${g.button} ${g.drop_shadow}`} onClick={handlelogout}>
                   {t('header.logout')}
                 </button>
               </div>

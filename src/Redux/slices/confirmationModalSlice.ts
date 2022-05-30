@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { ActionType } from '../../components/ConfirmationModal/ConfirmationModal';
 
 export interface confirmationModalI {

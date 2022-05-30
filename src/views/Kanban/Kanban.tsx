@@ -5,7 +5,12 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import s from './Kanban.module.scss';
 import { Spinner } from '../../components/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { boardSlice, fetchBoard, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
+import {
+  boardSlice,
+  fetchBoardThunk,
+  setBoard,
+  setCurrentBoardId,
+} from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
 import type { FullBoard } from '../../services/interfaces/boards';
@@ -17,7 +22,10 @@ import {
   syncTasksWithRedux,
   syncTasksWithReduxBetweenColumns,
 } from './utils';
-import { updateColumnTask, updateTask } from '../../services/tasks';
+import { updateColumnTask } from '../../services/tasks';
+import { showError } from '../../components/ToasterMessage/ToasterMessage';
+import { ColumnError } from '../../services/interfaces/columns';
+import { UpdateError } from '../../services/interfaces/tasks';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -39,7 +47,7 @@ export const Kanban = () => {
 
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
-      dispatch(fetchBoard(paramId));
+      dispatch(fetchBoardThunk(paramId));
     } else document.title = `${board && board.title} | KanbanBoar`;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +71,14 @@ export const Kanban = () => {
       dispatch(setColumns(newOrders));
 
       const draggedColumn = columns[fromIndex];
-      await syncColumnOrderToServer(currentBoardId, draggedColumn, toIndex + 1);
+
+      // syncWithServer
+      const columnResponse = await syncColumnOrderToServer(
+        currentBoardId,
+        draggedColumn,
+        toIndex + 1
+      );
+      if (!columnResponse.hasOwnProperty('id')) showError((columnResponse as ColumnError).message);
     }
 
     if (type === 'task') {
@@ -76,12 +91,19 @@ export const Kanban = () => {
         if (!tasks || !currentColumn || !currentBoardId) return;
 
         const reorderedTasks = reorderTasks(tasks, fromIndex, toIndex);
-        reorderedTasks.map((task) => console.log(task.title, task.order));
         const newBoard = syncTasksWithRedux(board, currentColumn, reorderedTasks);
         dispatch(setBoard(newBoard as FullBoard));
 
         const draggedTask = tasks[fromIndex];
-        await syncTaskOrderWithServer(draggedTask, currentBoardId, currentColumn.id, toIndex + 1);
+
+        // syncWithServer
+        const response = await syncTaskOrderWithServer(
+          draggedTask,
+          currentBoardId,
+          currentColumn.id,
+          toIndex + 1
+        );
+        if (!response.hasOwnProperty('id')) showError((response as UpdateError).message);
       }
 
       if (fromParentId !== toColumnId) {
@@ -101,28 +123,27 @@ export const Kanban = () => {
           fromColumnId,
           toColumnId
         );
-        console.log(columns, newColumns);
+
         dispatch(setColumns(newColumns));
 
         // syncWithServer
-        console.log(draggedTask);
-        console.log(currentColumn, toColumn);
-        await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
+        const response = await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
           ...draggedTask,
           order: toIndex + 1,
         });
+        if (!response.hasOwnProperty('id')) showError((response as UpdateError).message);
       }
     }
   };
 
   return (
     <>
-      {isBoardLoaded && columns ? (
+      {isBoardLoaded ? (
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="board" type="column" direction="horizontal">
             {(provided) => (
               <div className={s.content} {...provided.droppableProps} ref={provided.innerRef}>
-                {columns.map((column, index) => (
+                {columns?.map((column, index) => (
                   <Draggable key={column.id} draggableId={column.id} index={index}>
                     {(provided) => (
                       <div

@@ -2,8 +2,6 @@ import { Column } from './interfaces/boards';
 import { FullColumn, RemoveColumn, ColumnError, UpdateColumn } from './interfaces/columns';
 import { apiUrl, getToken, successObject } from './utils';
 
-const token = getToken();
-
 export const createColumn = async (
   title: string,
   boardId: string
@@ -11,7 +9,7 @@ export const createColumn = async (
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ title }),
@@ -24,7 +22,7 @@ export const deleteColumn = async (boardId: string, columnId: string): Promise<R
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
@@ -36,7 +34,7 @@ export const getColumn = async (boardId: string, columnId: string): Promise<Full
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}`, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
@@ -52,7 +50,7 @@ export const updateColumn = async (
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}`, {
     method: 'PUT',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

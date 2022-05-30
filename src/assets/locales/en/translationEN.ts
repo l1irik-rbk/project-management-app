@@ -52,6 +52,10 @@ const translationEN = {
   kanban: {
     addColumn: 'Add Column',
   },
+  errorMessage: {
+    text: `Board with this id wasn't found. Please, click on the boards button and try to select a board
+    again!`,
+  },
   confirmationModal: {
     title: 'Are you sure?',
     ok: 'OK',
@@ -79,6 +83,7 @@ const translationEN = {
       description: {
         required: 'Description is required',
         minLength: 'Description must be at least 3 characters',
+        maxLength20: 'Description must be at most 20 characters',
         maxLength144: 'Description must be at most 144 characters',
       },
     },
@@ -101,6 +106,65 @@ const translationEN = {
       descriptionPlaceholder: 'Description of this task',
       title: 'Change this task',
     },
+    changeBoard: {
+      titlePlaceholder: 'Name of this board',
+      descriptionPlaceholder: 'Description of this board',
+      title: 'Change this board',
+    },
+  },
+  toasterNotifications: {
+    boards: {
+      errors: {
+        fetchBoards: 'Error while fetching boards!',
+        deleteBoard: 'Error while deleting board!',
+        updateBoard: 'Error while updating board!',
+        addBoard: 'Error while creating board!',
+      },
+      success: {
+        deleteBoard: 'Board was successfully deleted!',
+        updateBoard: 'Board was successfully updated!',
+        addBoard: 'Board was successfully created!',
+      },
+    },
+    board: {
+      errors: {
+        deleteColumn: 'Error while deleting column!',
+        createColumn: 'Error while creating column!',
+        updateColumn: 'Error while updating column!',
+        deleteTask: 'Error while deleting task!',
+        createTask: 'Error while creating task!',
+        updateTask: 'Error while updating task!',
+      },
+      success: {
+        deleteColumn: 'Column was successfully deleted!',
+        createColumn: 'Column was successfully created!',
+        updateColumn: 'Column was successfully updated!',
+        deleteTask: 'Task was successfully deleted!',
+        createTask: 'Task was successfully created!',
+        updateTask: 'Task was successfully updated!',
+      },
+    },
+    user: {
+      errors: {
+        deleteUser: 'Error while deleting profile!',
+        updateUser: 'Error while updating profile!',
+      },
+      success: {
+        deleteUser: 'Your profile was successfully deleted!',
+        updateUser: 'Your profile was successfully updated!',
+      },
+    },
+    auth: {
+      errors: {
+        signup: `Error! Profile wasn't created!`,
+        signin: `Error! Something went wrong!`,
+      },
+      success: {
+        signup: 'Profile was created successfully!',
+        signin: `You were successfully logged in!`,
+      },
+    },
+    unauthorizated: `You aren't authorized!`,
   },
 };
 

@@ -1,8 +1,6 @@
 import { CreateTask, RemoveTask, Task, UpdateTask } from './interfaces/tasks';
 import { apiUrl, getToken, successObject } from './utils';
 
-const token = getToken();
-
 export const createTask = async (
   title: string,
   description: string,
@@ -13,7 +11,7 @@ export const createTask = async (
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}/tasks`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ title, description, userId }),
@@ -30,7 +28,7 @@ export const deleteTask = async (
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
@@ -47,7 +45,7 @@ export const updateTask = async (
   const response = await fetch(`${apiUrl}/boards/${boardId}/columns/${columnId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -75,7 +73,7 @@ export const updateColumnTask = async (
     {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

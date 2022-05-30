@@ -9,8 +9,8 @@ import {
   confirmationModalSlice,
   setConfirmationModalType,
 } from '../../../Redux/slices/confirmationModalSlice';
-import { updateUser } from '../../../services/users';
 import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
+import { editUserThunk } from '../../../Redux/slices/userSlice';
 
 type Props = {
   user: User;
@@ -36,8 +36,8 @@ export const ProfileEdit = (props: Props) => {
   const { user } = props;
 
   const onSubmit = async (data: FormData) => {
-    const response = await updateUser(data, user.id);
-    if (response.hasOwnProperty('statusCode')) alert('Error');
+    dispatch(editUserThunk(data, user.id));
+    document.cookie = `login=${data.login}`;
   };
 
   const handleDelete = () => {
@@ -92,7 +92,7 @@ export const ProfileEdit = (props: Props) => {
             <p>{t('profile.password')}:</p>
             <input
               className={`${g.input} ${s.input}`}
-              type="text"
+              type="password"
               placeholder={t('profile.newPassword')}
               {...register('password', { required: true, minLength: 8 })}
             />

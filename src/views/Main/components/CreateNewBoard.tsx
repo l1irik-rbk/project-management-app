@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import g from './../../../App.module.scss';
 import { Modal } from '../../../components/Modal/Modal';
 import { useAppDispatch } from '../../../Redux/hooks';
-import { createBoardThunk } from '../../../Redux/slices/boardsSlice';
+import { createBoardThunk, setIsOpenModalCreateNewBoard } from '../../../Redux/slices/boardsSlice';
 
 export type CreateBoardData = {
   title: string;
@@ -17,7 +17,10 @@ export const CreateNewBoard = () => {
   const dispatch = useAppDispatch();
 
   const [isOpenModal, setIsOpenModal] = useState(true);
-  const handleCloseModal = () => setIsOpenModal(false);
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+    dispatch(setIsOpenModalCreateNewBoard(false));
+  };
 
   const {
     register,
@@ -59,7 +62,7 @@ export const CreateNewBoard = () => {
         <label className={g.label}>
           <p>{t('creationModal.description')}</p>
           <input
-            {...register('description', { required: true, minLength: 0, maxLength: 20 })}
+            {...register('description', { required: true, minLength: 3, maxLength: 20 })}
             className={g.input}
             type="text"
             placeholder={t('creationModal.creationBoard.descripton_placeholder')}
@@ -69,6 +72,8 @@ export const CreateNewBoard = () => {
             <span className={g.font_error}>
               {errors.description.type === 'required' &&
                 t('creationModal.errors.description.required')}
+              {errors.description.type === 'minLength' &&
+                t('creationModal.errors.description.minLength')}
               {errors.description.type === 'maxLength' &&
                 t('creationModal.errors.description.maxLength20')}
             </span>

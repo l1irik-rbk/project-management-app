@@ -1,9 +1,7 @@
 import { successObject } from '../utils';
-import { Error } from './error';
+import { ResponseErrorWithFieldError } from './error';
 
-export type ColumnError = Error & {
-  error: string;
-};
+export type ColumnError = ResponseErrorWithFieldError;
 
 // ColumnsController_getAll
 export type GetColumns = Column[] | ColumnError;

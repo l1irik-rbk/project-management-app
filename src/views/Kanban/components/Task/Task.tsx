@@ -8,9 +8,7 @@ import type { FullTask } from '../../../../services/interfaces/tasks';
 import { DeleteTaskButton } from '../DeleteTaskButton/DeleteTaskButton';
 import { Modal } from '../../../../components/Modal/Modal';
 import { useAppDispatch } from '../../../../Redux/hooks';
-import { getUserId } from '../../../../services/utils';
-import { updateTask } from '../../../../services/tasks';
-import { fetchBoard } from '../../../../Redux/slices/boardSlice';
+import { editTaskThunk } from '../../../../Redux/slices/boardSlice';
 
 type Props = {
   task: FullTask;
@@ -22,6 +20,8 @@ export type TaskData = {
   title: string;
   description: string;
 };
+
+export type BoardData = TaskData;
 
 export const Task = (props: Props) => {
   const { t } = useTranslation();
@@ -39,27 +39,17 @@ export const Task = (props: Props) => {
   } = useForm<TaskData>();
 
   const handleEditTask = async (data: TaskData) => {
-    const userId = await getUserId();
     const { boardId, columnId } = props;
     const { title, description } = data;
+    if (!boardId || !columnId) return;
 
-    if (boardId && columnId && userId) {
-      const updateResponse = await updateTask(boardId, columnId, {
-        ...props.task,
-        title,
-        description,
-      });
-      handleCloseModal();
+    dispatch(editTaskThunk(boardId, columnId, props.task, title, description));
 
-      if (updateResponse.hasOwnProperty('statusCode')) alert('Error');
-      else {
-        reset({
-          title: '',
-          description: '',
-        });
-        dispatch(fetchBoard(boardId));
-      }
-    }
+    handleCloseModal();
+    reset({
+      title: '',
+      description: '',
+    });
   };
 
   const createContent = () => {

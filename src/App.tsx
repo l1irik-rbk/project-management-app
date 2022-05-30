@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components/Layout/Layout';
 import { useAppSelector } from './Redux/hooks';
-
 import { Auth } from './views/Auth/Auth';
 import { Kanban } from './views/Kanban/Kanban';
 import { Main } from './views/Main/Main';
@@ -11,7 +10,7 @@ import { Profile } from './views/Profile/Profile';
 import { Welcome } from './views/Welcome/Welcome';
 
 const App = () => {
-  const { isTokenLoaded } = useAppSelector((state) => state.auth);
+  const { isTokenLoaded } = useAppSelector((state) => state.user);
 
   return (
     <Routes>

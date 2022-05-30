@@ -10,7 +10,7 @@ export const Boards = () => {
   return (
     <div className={`${s.boards}`}>
       {boardsArray.map((board) => (
-        <Board key={board.id} id={board.id} title={board.title} />
+        <Board key={board.id} id={board.id} title={board.title} description={board.description} />
       ))}
     </div>
   );

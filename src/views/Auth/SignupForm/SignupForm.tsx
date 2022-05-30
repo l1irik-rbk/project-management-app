@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
-import { signup } from '../../../services/auth';
-import { useTranslation } from 'react-i18next';
+import { signupUserThunk } from '../../../Redux/slices/userSlice';
+import { useAppDispatch } from '../../../Redux/hooks';
 
 type FormData = {
   name: string;
@@ -12,6 +13,7 @@ type FormData = {
 };
 
 export const SignupForm = () => {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const {
     register,
@@ -21,8 +23,7 @@ export const SignupForm = () => {
 
   const registerHandler = async (data: FormData) => {
     const { name, login, password } = data;
-    const response = await signup(name, login, password);
-    if (response.hasOwnProperty('statusCode')) alert('Error');
+    dispatch(signupUserThunk(name, login, password));
   };
 
   return (

@@ -1,4 +1,3 @@
-import { setBoard } from '../../Redux/slices/boardSlice';
 import { updateColumn } from '../../services/columns';
 import { FullBoard } from '../../services/interfaces/boards';
 import { FullColumn } from '../../services/interfaces/columns';

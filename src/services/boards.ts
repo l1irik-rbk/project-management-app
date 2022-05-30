@@ -52,3 +52,23 @@ export const getBoard = async (id: string): Promise<FullBoard> => {
 
   return await response.json();
 };
+
+export const updateBoard = async (
+  id: string,
+  title: string,
+  description: string
+): Promise<FullBoard> => {
+  const response = await fetch(`${apiUrl}/boards/${id}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      description,
+    }),
+  });
+
+  return await response.json();
+};

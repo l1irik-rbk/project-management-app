@@ -1,12 +1,12 @@
 import { Signup, Signin } from './interfaces/auth';
-import { Error } from './interfaces/error';
+import { ResponseError } from './interfaces/error';
 import { apiUrl } from './utils';
 
 export const signup = async (
   name: string,
   login: string,
   password: string
-): Promise<Signup | Error> => {
+): Promise<Signup | ResponseError> => {
   const response = await fetch(`${apiUrl}/signup`, {
     method: 'POST',
     headers: {
@@ -21,7 +21,7 @@ export const signup = async (
   return await response.json();
 };
 
-export const signin = async (login: string, password: string): Promise<Signin | Error> => {
+export const signin = async (login: string, password: string): Promise<Signin | ResponseError> => {
   const response = await fetch(`${apiUrl}/signin`, {
     method: 'POST',
     headers: {
@@ -36,11 +36,11 @@ export const signin = async (login: string, password: string): Promise<Signin | 
   const result = await response.json();
 
   if (result.hasOwnProperty('token')) {
-    document.cookie = `token=${result.token}; expires=${new Date(
-      Date.now() + 1000 * 60 * 60 * 24 * 7
+    document.cookie = `tokenMaster=${result.token}; expires=${new Date(
+      Date.now() + 1000 * 60 * 10
     ).toUTCString()}`;
     document.cookie = `login=${login}; expires=${new Date(
-      Date.now() + 1000 * 60 * 60 * 24 * 7
+      Date.now() + 1000 * 60 * 10
     ).toUTCString()}`;
   }
   return result;

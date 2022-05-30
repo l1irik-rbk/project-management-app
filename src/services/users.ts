@@ -35,6 +35,6 @@ export const deleteUser = async (id: string): Promise<RemoveUser> => {
     },
   });
 
-  if (response.status === 204) successObject;
+  if (response.status === 204) return successObject;
   return await response.json();
 };

@@ -1,18 +1,22 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FullBoard, Column } from './../../services/interfaces/boards';
 import { getBoard } from '../../services/boards';
-import { createColumn, deleteColumn } from '../../services/columns';
+import { createColumn, deleteColumn, updateColumn } from '../../services/columns';
 import { AppThunk } from '../store';
 import { FullColumn } from '../../services/interfaces/columns';
-import { createTask, deleteTask } from '../../services/tasks';
+import { createTask, deleteTask, updateTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
+import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
+import { FullTask, UpdateError } from '../../services/interfaces/tasks';
+import { ResponseError, ResponseErrorWithFieldError } from '../../services/interfaces/error';
 
 export interface BoardInt {
   selectedColumnId: string | null;
   currentBoardId: string | null;
   selectedTaskId: string | null;
   isBoardLoaded: boolean;
+  boardError: boolean;
   board: FullBoard | null;
 }
 
@@ -21,13 +25,9 @@ const initialState: BoardInt = {
   selectedTaskId: null,
   currentBoardId: null,
   isBoardLoaded: false,
+  boardError: false,
   board: null,
 };
-
-export const fetchBoard = createAsyncThunk('board/fetchBoard', async (id: string) => {
-  const board = await getBoard(id);
-  return board;
-});
 
 export const boardSlice = createSlice({
   name: 'board',
@@ -37,7 +37,15 @@ export const boardSlice = createSlice({
       state.board = action.payload;
     },
     setColumns: (state, action: PayloadAction<Column[]>) => {
-      if (state.board) state.board.columns = action.payload;
+      const columns = action.payload;
+      const sortedColumns = columns
+        .sort((a, b) => a.order - b.order)
+        .map((column) => {
+          const sortTask = column.tasks.slice().sort((a, b) => a.order - b.order);
+          return { ...column, tasks: sortTask };
+        });
+
+      if (state.board) state.board.columns = sortedColumns;
     },
     setSelectedColumnId: (state, action: PayloadAction<string | null>) => {
       state.selectedColumnId = action.payload;
@@ -48,16 +56,24 @@ export const boardSlice = createSlice({
     setSelectedTaskId: (state, action: PayloadAction<string | null>) => {
       state.selectedTaskId = action.payload;
     },
+    setBoardTitle: (state, action: PayloadAction<string>) => {
+      if (state.board) state.board.title = action.payload;
+    },
+    setBoardLoaded: (state, action: PayloadAction<boolean>) => {
+      state.isBoardLoaded = action.payload;
+    },
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchBoard.pending, (state) => {
-      state.isBoardLoaded = false;
-    });
+});
 
-    builder.addCase(fetchBoard.fulfilled, (state, action) => {
-      state.isBoardLoaded = true;
+export const fetchBoardThunk =
+  (boardId: string): AppThunk =>
+  async (dispatch) => {
+    dispatch(setBoardLoaded(false));
 
-      const board = action.payload;
+    const response = await getBoard(boardId);
+    if (response.hasOwnProperty('id')) {
+      dispatch(setBoardLoaded(true));
+      const board = response as FullBoard;
       const sortBoard = {
         ...board,
         columns: board.columns
@@ -67,11 +83,12 @@ export const boardSlice = createSlice({
             return { ...column, tasks: sortTask };
           }),
       };
-
-      state.board = sortBoard;
-    });
-  },
-});
+      dispatch(setBoard(sortBoard));
+    } else {
+      const error = response as unknown as ResponseErrorWithFieldError;
+      showError(error.message);
+    }
+  };
 
 export const deleteColumnThunk =
   (currentBoardId: string, selectedColumnId: string): AppThunk =>
@@ -84,7 +101,8 @@ export const deleteColumnThunk =
 
       dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
-    } else alert('Error while deleting column');
+      showSuccess('toasterNotifications.board.success.deleteColumn');
+    } else showError((response as ResponseError).message);
   };
 
 export const deleteTaskThunk =
@@ -106,7 +124,8 @@ export const deleteTaskThunk =
       dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
       dispatch(setSelectedTaskId(null));
-    } else alert('Error while deleting task');
+      showSuccess('toasterNotifications.board.success.deleteTask');
+    } else showError((response as ResponseError).message);
   };
 
 export const createColumnThunk =
@@ -119,7 +138,8 @@ export const createColumnThunk =
       const columns = getState()?.board.board?.columns.slice() as FullColumn[];
 
       dispatch(setColumns([...columns, newColumn]));
-    } else alert('Error while creating column');
+      showSuccess('toasterNotifications.board.success.createColumn');
+    } else showError((response as ResponseError).message);
   };
 
 export const createTaskThunk =
@@ -145,8 +165,57 @@ export const createTaskThunk =
       const updatedColumns = [...columnsWithoutCurrent, currentColumnCopy];
 
       dispatch(setColumns(updatedColumns));
-    } else alert('Error while creating task');
+      showSuccess('toasterNotifications.board.success.createTask');
+    } else showError('toasterNotifications.board.errors.createTask');
+    // TODO: проблема с типизация возвращаемой от async
   };
 
-export const { setBoard, setColumns, setSelectedColumnId, setCurrentBoardId, setSelectedTaskId } =
-  boardSlice.actions;
+export const editTaskThunk =
+  (
+    boardId: string,
+    columnId: string,
+    task: FullTask,
+    title: string,
+    description: string
+  ): AppThunk =>
+  async (dispatch) => {
+    const updateResponse = await updateTask(boardId, columnId, {
+      ...task,
+      title,
+      description,
+    });
+
+    if (!updateResponse.hasOwnProperty('error')) {
+      dispatch(fetchBoardThunk(boardId));
+      showSuccess('toasterNotifications.board.success.updateTask');
+    } else showError((updateResponse as UpdateError).message);
+    // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
+  };
+
+export const editColumnTitleThunk =
+  (boardId: string, columnId: string, title: string, order: number, board: FullBoard): AppThunk =>
+  async (dispatch) => {
+    const response = await updateColumn(boardId, columnId, title, order);
+    if (!response.hasOwnProperty('error')) {
+      const oldColumns = board?.columns;
+      const updatedOldColumns = [...(oldColumns as Column[])];
+      const columns = board?.columns;
+      const updatedColumn = columns?.filter((column) => column.id === columnId)[0] as Column;
+      const newColumn = { ...updatedColumn };
+      newColumn.title = title;
+      const oldColumnIndex = columns?.findIndex((column) => column.id === newColumn.id) as number;
+      updatedOldColumns.splice(oldColumnIndex, 1, newColumn);
+      dispatch(setColumns(updatedOldColumns));
+      showSuccess('toasterNotifications.board.success.updateColumn');
+    } else showError((response as ResponseError).message);
+  };
+
+export const {
+  setBoard,
+  setColumns,
+  setSelectedColumnId,
+  setCurrentBoardId,
+  setSelectedTaskId,
+  setBoardTitle,
+  setBoardLoaded,
+} = boardSlice.actions;
