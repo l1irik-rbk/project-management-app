@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import s from './Welcome.module.scss';
 import boar from '../../assets/images/boar.png';
 import { useAppSelector } from '../../Redux/hooks';
-import { useTranslation } from 'react-i18next';
 
 export const Welcome = () => {
   const { isTokenLoaded } = useAppSelector((state) => state.user);
