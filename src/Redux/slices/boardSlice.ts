@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FullBoard, Column } from './../../services/interfaces/boards';
 import { getBoard } from '../../services/boards';
@@ -9,7 +9,7 @@ import { createTask, deleteTask, updateTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 import { FullTask, UpdateError } from '../../services/interfaces/tasks';
-import { ResponseError } from '../../services/interfaces/error';
+import { ResponseError, ResponseErrorWithFieldError } from '../../services/interfaces/error';
 
 export interface BoardInt {
   selectedColumnId: string | null;
@@ -28,19 +28,6 @@ const initialState: BoardInt = {
   boardError: false,
   board: null,
 };
-
-export const fetchBoard = createAsyncThunk('board/fetchBoard', async (id: string, thunAPI) => {
-  try {
-    const board = await getBoard(id);
-
-    if (board.hasOwnProperty('statusCode')) {
-      throw new Error();
-    }
-    return board;
-  } catch (error) {
-    return thunAPI.rejectWithValue('Board not found');
-  }
-});
 
 export const boardSlice = createSlice({
   name: 'board',
@@ -72,17 +59,21 @@ export const boardSlice = createSlice({
     setBoardTitle: (state, action: PayloadAction<string>) => {
       if (state.board) state.board.title = action.payload;
     },
+    setBoardLoaded: (state, action: PayloadAction<boolean>) => {
+      state.isBoardLoaded = action.payload;
+    },
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchBoard.pending, (state) => {
-      state.isBoardLoaded = false;
-      state.boardError = false;
-    });
+});
 
-    builder.addCase(fetchBoard.fulfilled, (state, action) => {
-      state.isBoardLoaded = true;
+export const fetchBoardThunk =
+  (boardId: string): AppThunk =>
+  async (dispatch) => {
+    dispatch(setBoardLoaded(false));
 
-      const board = action.payload;
+    const response = await getBoard(boardId);
+    if (response.hasOwnProperty('id')) {
+      dispatch(setBoardLoaded(true));
+      const board = response as FullBoard;
       const sortBoard = {
         ...board,
         columns: board.columns
@@ -92,15 +83,12 @@ export const boardSlice = createSlice({
             return { ...column, tasks: sortTask };
           }),
       };
-
-      state.board = sortBoard;
-    });
-    builder.addCase(fetchBoard.rejected, (state) => {
-      state.isBoardLoaded = true;
-      state.boardError = true;
-    });
-  },
-});
+      dispatch(setBoard(sortBoard));
+    } else {
+      const error = response as unknown as ResponseErrorWithFieldError;
+      showError(error.message);
+    }
+  };
 
 export const deleteColumnThunk =
   (currentBoardId: string, selectedColumnId: string): AppThunk =>
@@ -198,7 +186,7 @@ export const editTaskThunk =
     });
 
     if (!updateResponse.hasOwnProperty('error')) {
-      dispatch(fetchBoard(boardId));
+      dispatch(fetchBoardThunk(boardId));
       showSuccess('toasterNotifications.board.success.updateTask');
     } else showError((updateResponse as UpdateError).message);
     // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
@@ -229,4 +217,5 @@ export const {
   setCurrentBoardId,
   setSelectedTaskId,
   setBoardTitle,
+  setBoardLoaded,
 } = boardSlice.actions;

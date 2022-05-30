@@ -5,7 +5,12 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import s from './Kanban.module.scss';
 import { Spinner } from '../../components/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { boardSlice, fetchBoard, setBoard, setCurrentBoardId } from '../../Redux/slices/boardSlice';
+import {
+  boardSlice,
+  fetchBoardThunk,
+  setBoard,
+  setCurrentBoardId,
+} from '../../Redux/slices/boardSlice';
 import { Column } from './components/Column/Column';
 import { CreateColumnButton } from './components/CreateColumnButton/CreateColumnButton';
 import type { FullBoard } from '../../services/interfaces/boards';
@@ -18,7 +23,6 @@ import {
   syncTasksWithReduxBetweenColumns,
 } from './utils';
 import { updateColumnTask } from '../../services/tasks';
-import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { showError } from '../../components/ToasterMessage/ToasterMessage';
 import { ColumnError } from '../../services/interfaces/columns';
 import { UpdateError } from '../../services/interfaces/tasks';
@@ -28,7 +32,6 @@ export const Kanban = () => {
   const paramId = useParams().id;
 
   const dispatch = useAppDispatch();
-  const { boardError } = useAppSelector((state) => state.board);
   const board = useAppSelector((state) => state.board.board);
   const columns = board?.columns.slice();
 
@@ -36,14 +39,12 @@ export const Kanban = () => {
   const { setColumns } = boardSlice.actions;
 
   useEffect(() => {
-    if (!paramId) {
-      navigate('/', { replace: true });
-      return;
-    }
+    if (!paramId) navigate('/menu');
+    if (!paramId) return;
 
     if (paramId !== currentBoardId) {
       dispatch(setCurrentBoardId(paramId));
-      dispatch(fetchBoard(paramId));
+      dispatch(fetchBoardThunk(paramId));
     } else document.title = `${board && board.title} | KanbanBoar`;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,35 +136,31 @@ export const Kanban = () => {
   return (
     <>
       {isBoardLoaded ? (
-        boardError ? (
-          <ErrorMessage />
-        ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="board" type="column" direction="horizontal">
-              {(provided) => (
-                <div className={s.content} {...provided.droppableProps} ref={provided.innerRef}>
-                  {columns?.map((column, index) => (
-                    <Draggable key={column.id} draggableId={column.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <Column key={column.id} columnId={column.id} column={column} />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="board" type="column" direction="horizontal">
+            {(provided) => (
+              <div className={s.content} {...provided.droppableProps} ref={provided.innerRef}>
+                {columns?.map((column, index) => (
+                  <Draggable key={column.id} draggableId={column.id} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Column key={column.id} columnId={column.id} column={column} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
 
-                  {provided.placeholder}
+                {provided.placeholder}
 
-                  {currentBoardId && <CreateColumnButton boardId={currentBoardId} />}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )
+                {currentBoardId && <CreateColumnButton boardId={currentBoardId} />}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       ) : (
         <Spinner />
       )}
