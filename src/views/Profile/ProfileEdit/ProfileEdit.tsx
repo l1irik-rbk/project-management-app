@@ -9,9 +9,8 @@ import {
   confirmationModalSlice,
   setConfirmationModalType,
 } from '../../../Redux/slices/confirmationModalSlice';
-import { updateUser } from '../../../services/users';
 import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
-import { showError, showSuccess } from '../../../components/ToasterMessage/ToasterMessage';
+import { editUserThunk } from '../../../Redux/slices/userSlice';
 
 type Props = {
   user: User;
@@ -37,11 +36,7 @@ export const ProfileEdit = (props: Props) => {
   const { user } = props;
 
   const onSubmit = async (data: FormData) => {
-    const response = await updateUser(data, user.id);
-
-    if (response.hasOwnProperty('error')) {
-      showError('toasterNotifications.user.errors.updateUser');
-    } else showSuccess('toasterNotifications.user.success.updateUser');
+    dispatch(editUserThunk(data, user.id));
   };
 
   const handleDelete = () => {
