@@ -53,7 +53,7 @@ export const deleteUserThunk = (): AppThunk => async (dispatch) => {
       const response = await deleteUser(user.id);
 
       if (response.hasOwnProperty('success')) {
-        document.cookie = `token=${''}`;
+        document.cookie = `tokenMaster=${''}`;
         dispatch(setToken(null));
         dispatch(setTokenLoaded(false));
 
@@ -102,7 +102,7 @@ export const editUserThunk =
   };
 
 export const logoutUserThunk = (): AppThunk => async (dispatch) => {
-  document.cookie = `token=${''}`;
+  document.cookie = `tokenMaster=${''}`;
   dispatch(setToken(null));
   dispatch(setTokenLoaded(false));
 
@@ -113,7 +113,7 @@ export const logoutUserThunk = (): AppThunk => async (dispatch) => {
 export const logoutExpiredUserThunk = (): AppThunk => async (dispatch) => {
   if (!getToken()) return;
 
-  document.cookie = `token=${''}`;
+  document.cookie = `tokenMaster=${''}`;
   dispatch(setToken(null));
   dispatch(setTokenLoaded(false));
 

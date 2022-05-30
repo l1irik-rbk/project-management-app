@@ -3,7 +3,7 @@ import { getUsers } from './users';
 export const apiUrl = 'https://kanbanboar.herokuapp.com';
 
 export const getToken = () => {
-  return getCookie('token');
+  return getCookie('tokenMaster');
 };
 
 export const getLogin = () => {

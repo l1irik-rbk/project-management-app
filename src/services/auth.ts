@@ -36,10 +36,12 @@ export const signin = async (login: string, password: string): Promise<Signin | 
   const result = await response.json();
 
   if (result.hasOwnProperty('token')) {
-    document.cookie = `token=${result.token}; expires=${new Date(
-      Date.now() + 1000 * 30
+    document.cookie = `tokenMaster=${result.token}; expires=${new Date(
+      Date.now() + 1000 * 60 * 10
     ).toUTCString()}`;
-    document.cookie = `login=${login}; expires=${new Date(Date.now() + 1000 * 30).toUTCString()}`;
+    document.cookie = `login=${login}; expires=${new Date(
+      Date.now() + 1000 * 60 * 10
+    ).toUTCString()}`;
   }
   return result;
 };
