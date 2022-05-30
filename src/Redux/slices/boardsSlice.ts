@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
 import { createBoard, deleteBoard, getBoards, updateBoard } from '../../services/boards';
-import { Board, Errors } from '../../services/interfaces/boards';
+import { Board } from '../../services/interfaces/boards';
+import { ResponseError, ResponseErrorWithFieldError } from '../../services/interfaces/error';
 import { AppThunk } from '../store';
 import { setBoardTitle } from './boardSlice';
-import { setToken, setTokenLoaded } from './userSlice';
+import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
 export interface Boards {
   isOpenModalCreateNewBoard: boolean;
@@ -43,9 +43,6 @@ export const boardsSlice = createSlice({
       state.isBoardsLoaded = true;
       if (action.payload) state.boardsArray = action.payload;
     });
-    builder.addCase(fetchBoardsThunk.rejected, () => {
-      showError('toasterNotifications.unauthorizated');
-    });
 
     builder.addCase(deleteBoardThunk.fulfilled, (state) => {
       if (state.boardsArray)
@@ -62,29 +59,11 @@ export const boardsSlice = createSlice({
   },
 });
 
-export const fetchBoardsThunk = createAsyncThunk(
-  'boards/fetchBoards',
-  async (_, { dispatch, rejectWithValue }) => {
-    try {
-      const boards = await getBoards();
-
-      if (boards.hasOwnProperty('statusCode') && (boards as Errors).statusCode === 401) {
-        document.cookie = `token=${''}`;
-        dispatch(setToken(null));
-        dispatch(setTokenLoaded(false));
-        throw new Error('Unauthorizated');
-      }
-
-      if (Array.isArray(boards)) return boards;
-      else showError('toasterNotifications.boards.errors.fetchBoards');
-    } catch (error) {
-      return rejectWithValue('Unauthorizated');
-    }
-
-    // if (Array.isArray(boards)) return boards;
-    // else showError('toasterNotifications.boards.errors.fetchBoards');
-  }
-);
+export const fetchBoardsThunk = createAsyncThunk('boards/fetchBoards', async () => {
+  const response = await getBoards();
+  if (Array.isArray(response)) return response;
+  else showError((response as ResponseError).message);
+});
 
 export const deleteBoardThunk = createAsyncThunk(
   'boards/deleteBoard',
@@ -95,7 +74,7 @@ export const deleteBoardThunk = createAsyncThunk(
       showSuccess('toasterNotifications.boards.success.deleteBoard');
       return response;
     } else {
-      showError('toasterNotifications.boards.errors.deleteBoard');
+      showError((response as ResponseError).message);
     }
   }
 );
@@ -108,7 +87,12 @@ export const createBoardThunk = createAsyncThunk(
     if (response.hasOwnProperty('id')) {
       showSuccess('toasterNotifications.boards.success.addBoard');
       return response as Board;
-    } else showError('toasterNotifications.boards.errors.addBoard');
+    } else
+      showError(
+        `${(response as ResponseErrorWithFieldError).message} ${
+          (response as ResponseErrorWithFieldError).error
+        }`
+      );
   }
 );
 
