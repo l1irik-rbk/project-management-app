@@ -8,7 +8,7 @@ import { FullColumn } from '../../services/interfaces/columns';
 import { createTask, deleteTask, updateTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
-import { FullTask } from '../../services/interfaces/tasks';
+import { FullTask, UpdateError } from '../../services/interfaces/tasks';
 import { ResponseError } from '../../services/interfaces/error';
 
 export interface BoardInt {
@@ -114,7 +114,7 @@ export const deleteColumnThunk =
       dispatch(setColumns(updatedColumns));
       dispatch(setSelectedColumnId(null));
       showSuccess('toasterNotifications.board.success.deleteColumn');
-    } else showError('toasterNotifications.board.errors.deleteColumn');
+    } else showError((response as ResponseError).message);
   };
 
 export const deleteTaskThunk =
@@ -137,7 +137,7 @@ export const deleteTaskThunk =
       dispatch(setSelectedColumnId(null));
       dispatch(setSelectedTaskId(null));
       showSuccess('toasterNotifications.board.success.deleteTask');
-    } else showError('toasterNotifications.board.errors.deleteTask');
+    } else showError((response as ResponseError).message);
   };
 
 export const createColumnThunk =
@@ -151,7 +151,7 @@ export const createColumnThunk =
 
       dispatch(setColumns([...columns, newColumn]));
       showSuccess('toasterNotifications.board.success.createColumn');
-    } else showError('toasterNotifications.board.errors.createColumn');
+    } else showError((response as ResponseError).message);
   };
 
 export const createTaskThunk =
@@ -179,6 +179,7 @@ export const createTaskThunk =
       dispatch(setColumns(updatedColumns));
       showSuccess('toasterNotifications.board.success.createTask');
     } else showError('toasterNotifications.board.errors.createTask');
+    // TODO: проблема с типизация возвращаемой от async
   };
 
 export const editTaskThunk =
@@ -199,7 +200,10 @@ export const editTaskThunk =
     if (!updateResponse.hasOwnProperty('error')) {
       dispatch(fetchBoard(boardId));
       showSuccess('toasterNotifications.board.success.updateTask');
-    } else showError('toasterNotifications.board.errors.updateTask');
+    } else
+      showError(
+        `${(updateResponse as UpdateError).message} ${(updateResponse as UpdateError).error}`
+      );
     // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
   };
 
