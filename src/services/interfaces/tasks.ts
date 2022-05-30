@@ -1,7 +1,7 @@
 import { successObject } from '../utils';
-import { Error } from './error';
+import { ResponseError } from './error';
 
-export type TaskError = Error;
+export type TaskError = ResponseError;
 
 // TasksController_getAll
 export type GetTasks = Task[] | TaskError;

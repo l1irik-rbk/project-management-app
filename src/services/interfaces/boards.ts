@@ -1,5 +1,5 @@
 import { successObject } from '../utils';
-import { Error as BoardError } from './error';
+import { ResponseError as BoardError } from './error';
 
 // BoardsController_getAll
 export type GetBoards = Board[] | BoardError;

@@ -1,12 +1,12 @@
 import { Signup, Signin } from './interfaces/auth';
-import { Error } from './interfaces/error';
+import { ResponseError } from './interfaces/error';
 import { apiUrl } from './utils';
 
 export const signup = async (
   name: string,
   login: string,
   password: string
-): Promise<Signup | Error> => {
+): Promise<Signup | ResponseError> => {
   const response = await fetch(`${apiUrl}/signup`, {
     method: 'POST',
     headers: {
@@ -21,7 +21,7 @@ export const signup = async (
   return await response.json();
 };
 
-export const signin = async (login: string, password: string): Promise<Signin | Error> => {
+export const signin = async (login: string, password: string): Promise<Signin | ResponseError> => {
   const response = await fetch(`${apiUrl}/signin`, {
     method: 'POST',
     headers: {

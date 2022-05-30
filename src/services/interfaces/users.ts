@@ -1,7 +1,7 @@
 import { successObject } from '../utils';
-import { Error } from './error';
+import { ResponseError } from './error';
 
-export type UserError = Error & {
+export type UserError = ResponseError & {
   error: string;
 };
 
