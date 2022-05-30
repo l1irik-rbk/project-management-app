@@ -14,7 +14,7 @@ export const Profile = () => {
   const login = getLogin();
 
   useEffect(() => {
-    document.title = `${typeForm} ${t('profile.docTitle')} ${user?.login} | KanbanBoar`;
+    document.title = `${typeForm} ${t('profile.docTitle')} ${login} | KanbanBoar`;
 
     users();
   }, [typeForm]);
