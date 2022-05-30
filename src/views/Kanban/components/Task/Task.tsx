@@ -9,9 +9,7 @@ import { DeleteTaskButton } from '../DeleteTaskButton/DeleteTaskButton';
 import { Modal } from '../../../../components/Modal/Modal';
 import { useAppDispatch } from '../../../../Redux/hooks';
 import { getUserId } from '../../../../services/utils';
-import { updateTask } from '../../../../services/tasks';
-import { fetchBoard } from '../../../../Redux/slices/boardSlice';
-import { showError, showSuccess } from '../../../../components/ToasterMessage/ToasterMessage';
+import { editTaskThunk } from '../../../../Redux/slices/boardSlice';
 
 type Props = {
   task: FullTask;
@@ -45,27 +43,15 @@ export const Task = (props: Props) => {
     const userId = await getUserId();
     const { boardId, columnId } = props;
     const { title, description } = data;
+    if (!boardId || !columnId || !userId) return;
 
-    if (boardId && columnId && userId) {
-      const updateResponse = await updateTask(boardId, columnId, {
-        ...props.task,
-        title,
-        description,
-      });
+    dispatch(editTaskThunk(boardId, columnId, props.task, title, description));
 
-      handleCloseModal();
-
-      if (updateResponse.hasOwnProperty('error'))
-        showError('toasterNotifications.board.errors.updateTask');
-      else {
-        reset({
-          title: '',
-          description: '',
-        });
-        dispatch(fetchBoard(boardId));
-        showSuccess('toasterNotifications.board.success.updateTask');
-      }
-    }
+    handleCloseModal();
+    reset({
+      title: '',
+      description: '',
+    });
   };
 
   const createContent = () => {

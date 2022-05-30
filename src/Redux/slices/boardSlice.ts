@@ -5,9 +5,10 @@ import { getBoard } from '../../services/boards';
 import { createColumn, deleteColumn } from '../../services/columns';
 import { AppThunk } from '../store';
 import { FullColumn } from '../../services/interfaces/columns';
-import { createTask, deleteTask } from '../../services/tasks';
+import { createTask, deleteTask, updateTask } from '../../services/tasks';
 import { getUserId } from '../../services/utils';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
+import { FullTask } from '../../services/interfaces/tasks';
 
 export interface BoardInt {
   selectedColumnId: string | null;
@@ -177,6 +178,28 @@ export const createTaskThunk =
       dispatch(setColumns(updatedColumns));
       showSuccess('toasterNotifications.board.success.createTask');
     } else showError('toasterNotifications.board.errors.createTask');
+  };
+
+export const editTaskThunk =
+  (
+    boardId: string,
+    columnId: string,
+    task: FullTask,
+    title: string,
+    description: string
+  ): AppThunk =>
+  async (dispatch) => {
+    const updateResponse = await updateTask(boardId, columnId, {
+      ...task,
+      title,
+      description,
+    });
+
+    if (!updateResponse.hasOwnProperty('error')) {
+      dispatch(fetchBoard(boardId));
+      showSuccess('toasterNotifications.board.success.updateTask');
+    } else showError('toasterNotifications.board.errors.updateTask');
+    // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
   };
 
 export const {
