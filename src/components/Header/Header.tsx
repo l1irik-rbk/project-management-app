@@ -6,7 +6,7 @@ import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { userSlice } from '../../Redux/slices/userSlice';
+import { logoutUserThunk, userSlice } from '../../Redux/slices/userSlice';
 import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
 import { getLanguage } from '../../services/utils';
@@ -20,9 +20,7 @@ export const Header = () => {
   const { isOpenModalCreateNewBoard } = useAppSelector((state) => state.boards);
   const { isTokenLoaded } = useAppSelector((state) => state.user);
   const { setIsOpenModalCreateNewBoard } = boardsSlice.actions;
-  const { setToken, setTokenLoaded } = userSlice.actions;
   const currentLang = getLanguage();
-
   const navigate = useNavigate();
   const redirectRedux = useAppSelector((state) => state.user.redirect);
 
@@ -37,10 +35,8 @@ export const Header = () => {
     i18n.changeLanguage(lang);
   };
 
-  const logout = () => {
-    document.cookie = `token=${''}`;
-    dispatch(setToken(null));
-    dispatch(setTokenLoaded(false));
+  const handlelogout = () => {
+    dispatch(logoutUserThunk());
   };
 
   const createNewBoard = async () => {
@@ -120,7 +116,7 @@ export const Header = () => {
                 <Link to="/profile">
                   <button className={`${g.button} ${g.drop_shadow} ${s.avatar}`}></button>
                 </Link>
-                <button className={`${g.button} ${g.drop_shadow}`} onClick={logout}>
+                <button className={`${g.button} ${g.drop_shadow}`} onClick={handlelogout}>
                   {t('header.logout')}
                 </button>
               </div>

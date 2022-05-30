@@ -101,4 +101,13 @@ export const editUserThunk =
     } else showError((response as ResponseError).message);
   };
 
+export const logoutUserThunk = (): AppThunk => async (dispatch) => {
+  document.cookie = `token=${''}`;
+  dispatch(setToken(null));
+  dispatch(setTokenLoaded(false));
+
+  dispatch(redirectThunk('/'));
+  showSuccess('toasterNotifications.unauthorizated');
+};
+
 export const { setToken, setTokenLoaded } = userSlice.actions;
