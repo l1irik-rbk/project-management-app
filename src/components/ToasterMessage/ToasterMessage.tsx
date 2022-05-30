@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -28,7 +29,9 @@ export const showSuccess = (translationPath: string) => {
 
 const Toaster = (props: { message: string }) => {
   const dispatch = useAppDispatch();
-  if (props.message === 'Unauthorized') dispatch(logoutExpiredUserThunk());
+  useEffect(() => {
+    if (props.message === 'Unauthorized') dispatch(logoutExpiredUserThunk());
+  }, [props.message, dispatch]);
 
   return <div>{props.message}</div>;
 };
