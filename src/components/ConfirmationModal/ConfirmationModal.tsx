@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { deleteUserThunk } from '../../Redux/slices/authSlice';
+import { deleteUserThunk } from '../../Redux/slices/userSlice';
 import { deleteColumnThunk, deleteTaskThunk } from '../../Redux/slices/boardSlice';
 import { deleteBoardThunk } from '../../Redux/slices/boardsSlice';
 import { CreatePortal } from './CreatePortal/CreatePortal';

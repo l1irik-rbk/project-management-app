@@ -1,12 +1,12 @@
 import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
-import { authSlice } from './slices/authSlice';
+import { userSlice } from './slices/userSlice';
 import { boardSlice } from './slices/boardSlice';
 import { boardsSlice } from './slices/boardsSlice';
 import { confirmationModalSlice } from './slices/confirmationModalSlice';
 
 const rootReducer = combineReducers({
-  auth: authSlice.reducer,
+  user: userSlice.reducer,
   boards: boardsSlice.reducer,
   board: boardSlice.reducer,
   confirmationModal: confirmationModalSlice.reducer,

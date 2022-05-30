@@ -7,7 +7,7 @@ import { useAppSelector } from '../../Redux/hooks';
 import { useTranslation } from 'react-i18next';
 
 export const Welcome = () => {
-  const { isTokenLoaded } = useAppSelector((state) => state.auth);
+  const { isTokenLoaded } = useAppSelector((state) => state.user);
   const { t } = useTranslation();
 
   useEffect(() => {

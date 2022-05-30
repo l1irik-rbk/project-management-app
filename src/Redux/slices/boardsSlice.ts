@@ -6,7 +6,7 @@ import {
 
 import { createBoard, deleteBoard, getBoards } from '../../services/boards';
 import { Board, Errors } from '../../services/interfaces/boards';
-import { setToken, setTokenLoaded } from './authSlice';
+import { setToken, setTokenLoaded } from './userSlice';
 
 export interface Boards {
   isOpenModalCreateNewBoard: boolean;
