@@ -1,5 +1,5 @@
 import { successObject } from '../utils';
-import { ResponseError } from './error';
+import { ResponseError, ResponseErrorWithFieldError } from './error';
 
 export type TaskError = ResponseError;
 
@@ -26,5 +26,5 @@ export type FullTask = Task;
 export type RemoveTask = typeof successObject | TaskError;
 
 // TasksController_update
-export type UpdateError = TaskError & { error: string };
+export type UpdateError = ResponseErrorWithFieldError;
 export type UpdateTask = Task | UpdateError;
