@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from '../../Redux/hooks';
+import { logoutExpiredUserThunk } from '../../Redux/slices/userSlice';
+import { getToken } from '../../services/utils';
 
 type MessageType = {
   translationPath: string;
@@ -24,6 +27,9 @@ export const showSuccess = (translationPath: string) => {
 };
 
 const Toaster = (props: { message: string }) => {
+  const dispatch = useAppDispatch();
+  if (props.message === 'Unauthorized') dispatch(logoutExpiredUserThunk());
+
   return <div>{props.message}</div>;
 };
 

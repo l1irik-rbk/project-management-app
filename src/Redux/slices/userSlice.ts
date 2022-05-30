@@ -110,4 +110,15 @@ export const logoutUserThunk = (): AppThunk => async (dispatch) => {
   showSuccess('toasterNotifications.unauthorizated');
 };
 
+export const logoutExpiredUserThunk = (): AppThunk => async (dispatch) => {
+  if (!getToken()) return;
+
+  document.cookie = `token=${''}`;
+  dispatch(setToken(null));
+  dispatch(setTokenLoaded(false));
+
+  dispatch(redirectThunk('/'));
+  showError('Token expired, please sign in again');
+};
+
 export const { setToken, setTokenLoaded } = userSlice.actions;
