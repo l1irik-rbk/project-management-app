@@ -26,7 +26,7 @@ const translationRU = {
   },
   auth: {
     docTitle: 'Авторизация',
-    login: 'Войти',
+    login: 'Логин',
     signUp: 'Регистрация',
     password: 'Пароль',
     register: 'Зарегистрироваться',
