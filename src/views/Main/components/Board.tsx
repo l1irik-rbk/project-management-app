@@ -1,20 +1,17 @@
 import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import s from '../Main.module.scss';
 import g from '../../../App.module.scss';
 import { useAppDispatch } from '../../../Redux/hooks';
-import { boardsSlice, fetchBoardsThunk } from '../../../Redux/slices/boardsSlice';
+import { boardsSlice, changeBoardThunk } from '../../../Redux/slices/boardsSlice';
 import { confirmationModalSlice } from '../../../Redux/slices/confirmationModalSlice';
 import { ActionType } from '../../../components/ConfirmationModal/ConfirmationModal';
 import type { Board as BoardType } from '../../../services/interfaces/boards';
-import { useForm } from 'react-hook-form';
 import { BoardData } from '../../Kanban/components/Task/Task';
-import { useTranslation } from 'react-i18next';
 import { Modal } from '../../../components/Modal/Modal';
-import { updateBoard } from '../../../services/boards';
-import { showError, showSuccess } from '../../../components/ToasterMessage/ToasterMessage';
-import { setBoardTitle } from '../../../Redux/slices/boardSlice';
 
 export const Board = ({ id, title, description }: BoardType) => {
   const dispatch = useAppDispatch();
@@ -48,21 +45,13 @@ export const Board = ({ id, title, description }: BoardType) => {
 
   const changeDescription = async (data: BoardData) => {
     const { title, description } = data;
+    dispatch(changeBoardThunk(id, title, description));
 
-    const response = await updateBoard(id, title, description);
-
-    if (response.hasOwnProperty('error')) {
-      showError('toasterNotifications.board.errors.updateTask');
-      handleCloseModal();
-    } else {
-      reset({
-        title: '',
-        description: '',
-      });
-      dispatch(fetchBoardsThunk());
-      dispatch(setBoardTitle(title));
-      showSuccess('toasterNotifications.board.success.updateTask');
-    }
+    handleCloseModal();
+    reset({
+      title: '',
+      description: '',
+    });
   };
 
   const createContent = () => {

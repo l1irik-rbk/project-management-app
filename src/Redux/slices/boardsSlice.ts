@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { showError, showSuccess } from '../../components/ToasterMessage/ToasterMessage';
 
-import { createBoard, deleteBoard, getBoards } from '../../services/boards';
+import { createBoard, deleteBoard, getBoards, updateBoard } from '../../services/boards';
 import { Board, Errors } from '../../services/interfaces/boards';
+import { AppThunk } from '../store';
+import { setBoardTitle } from './boardSlice';
 import { setToken, setTokenLoaded } from './userSlice';
 
 export interface Boards {
@@ -109,5 +111,19 @@ export const createBoardThunk = createAsyncThunk(
     } else showError('toasterNotifications.boards.errors.addBoard');
   }
 );
+
+export const changeBoardThunk =
+  (id: string, title: string, description: string): AppThunk =>
+  async (dispatch) => {
+    const response = await updateBoard(id, title, description);
+    if (!response.hasOwnProperty('error')) {
+      dispatch(fetchBoardsThunk());
+      dispatch(setBoardTitle(title));
+      showSuccess('toasterNotifications.board.success.updateTask');
+    } else {
+      // TODO: edit type updateBoard
+      showError('toasterNotifications.board.errors.updateTask');
+    }
+  };
 
 export const { setIsOpenModalCreateNewBoard, setSelectedBoardId } = boardsSlice.actions;
