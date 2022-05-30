@@ -200,10 +200,7 @@ export const editTaskThunk =
     if (!updateResponse.hasOwnProperty('error')) {
       dispatch(fetchBoard(boardId));
       showSuccess('toasterNotifications.board.success.updateTask');
-    } else
-      showError(
-        `${(updateResponse as UpdateError).message} ${(updateResponse as UpdateError).error}`
-      );
+    } else showError((updateResponse as UpdateError).message);
     // TODO: в случае ошибки от сервера вернуть действия в редаксе назад
   };
 

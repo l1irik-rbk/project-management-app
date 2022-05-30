@@ -8,7 +8,6 @@ import type { FullTask } from '../../../../services/interfaces/tasks';
 import { DeleteTaskButton } from '../DeleteTaskButton/DeleteTaskButton';
 import { Modal } from '../../../../components/Modal/Modal';
 import { useAppDispatch } from '../../../../Redux/hooks';
-import { getUserId } from '../../../../services/utils';
 import { editTaskThunk } from '../../../../Redux/slices/boardSlice';
 
 type Props = {
@@ -40,10 +39,9 @@ export const Task = (props: Props) => {
   } = useForm<TaskData>();
 
   const handleEditTask = async (data: TaskData) => {
-    const userId = await getUserId();
     const { boardId, columnId } = props;
     const { title, description } = data;
-    if (!boardId || !columnId || !userId) return;
+    if (!boardId || !columnId) return;
 
     dispatch(editTaskThunk(boardId, columnId, props.task, title, description));
 

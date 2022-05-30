@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+
 import { useAppDispatch } from '../../Redux/hooks';
 import { logoutExpiredUserThunk } from '../../Redux/slices/userSlice';
-import { getToken } from '../../services/utils';
 
 type MessageType = {
   translationPath: string;
