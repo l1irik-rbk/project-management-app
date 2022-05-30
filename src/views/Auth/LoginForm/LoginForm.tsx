@@ -1,17 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch } from '../../../Redux/hooks';
-import { signin } from '../../../services/auth';
 import s from './../Auth.module.scss';
 import g from './../../../App.module.scss';
-import { Signin } from '../../../services/interfaces/auth';
-import { authSlice } from '../../../Redux/slices/authSlice';
-import {
-  showErrorToaster,
-  showSuccessToaster,
-} from '../../../components/ToasterMessage/ToasterMessage';
+import { useAppDispatch } from '../../../Redux/hooks';
+import { loginUserThunk } from '../../../Redux/slices/userSlice';
 
 type FormData = {
   login: string;
@@ -26,23 +19,11 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { setToken, setTokenLoaded } = authSlice.actions;
 
   const loginHandler = async (data: FormData) => {
     const { login, password } = data;
-    const signinResponse = await signin(login, password);
-
-    if (signinResponse.hasOwnProperty('statusCode')) {
-      showErrorToaster('toasterNotifications.auth.errors.signin');
-    } else {
-      const token = (signinResponse as Signin).token;
-      dispatch(setToken(token));
-      dispatch(setTokenLoaded(true));
-      navigate('/main');
-      showSuccessToaster('toasterNotifications.auth.success.signin');
-    }
+    dispatch(loginUserThunk(login, password));
   };
 
   return (
