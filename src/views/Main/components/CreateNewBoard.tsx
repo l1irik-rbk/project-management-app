@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import g from './../../../App.module.scss';
 import { Modal } from '../../../components/Modal/Modal';
 import { useAppDispatch } from '../../../Redux/hooks';
-import { createBoardThunk } from '../../../Redux/slices/boardsSlice';
+import { createBoardThunk, setIsOpenModalCreateNewBoard } from '../../../Redux/slices/boardsSlice';
 
 export type CreateBoardData = {
   title: string;
@@ -17,7 +17,10 @@ export const CreateNewBoard = () => {
   const dispatch = useAppDispatch();
 
   const [isOpenModal, setIsOpenModal] = useState(true);
-  const handleCloseModal = () => setIsOpenModal(false);
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+    dispatch(setIsOpenModalCreateNewBoard(false));
+  };
 
   const {
     register,

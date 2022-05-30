@@ -6,8 +6,8 @@ import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { logoutUserThunk, userSlice } from '../../Redux/slices/userSlice';
-import { boardsSlice } from '../../Redux/slices/boardsSlice';
+import { logoutUserThunk } from '../../Redux/slices/userSlice';
+import { boardsSlice, fetchBoardsThunk } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
 import { getLanguage } from '../../services/utils';
 
@@ -17,7 +17,6 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const board = useAppSelector((state) => state.board.board);
   const isBoardLoaded = useAppSelector((state) => state.board.isBoardLoaded);
-  const { isOpenModalCreateNewBoard } = useAppSelector((state) => state.boards);
   const { isTokenLoaded } = useAppSelector((state) => state.user);
   const { setIsOpenModalCreateNewBoard } = boardsSlice.actions;
   const currentLang = getLanguage();
@@ -40,7 +39,7 @@ export const Header = () => {
   };
 
   const createNewBoard = async () => {
-    dispatch(setIsOpenModalCreateNewBoard(!isOpenModalCreateNewBoard));
+    dispatch(setIsOpenModalCreateNewBoard(true));
   };
 
   const changeSticky = () => {
@@ -121,6 +120,7 @@ export const Header = () => {
                 </button>
               </div>
             )}
+            <button onClick={() => dispatch(fetchBoardsThunk())}>test</button>
           </nav>
         </ScrollMenu>
       </div>
