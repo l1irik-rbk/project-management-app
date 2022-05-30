@@ -7,7 +7,7 @@ import s from './Header.module.scss';
 import g from './../../App.module.scss';
 import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
 import { logoutUserThunk } from '../../Redux/slices/userSlice';
-import { boardsSlice, fetchBoardsThunk } from '../../Redux/slices/boardsSlice';
+import { boardsSlice } from '../../Redux/slices/boardsSlice';
 import i18n from '../../languagesInit';
 import { getLanguage } from '../../services/utils';
 
@@ -120,7 +120,6 @@ export const Header = () => {
                 </button>
               </div>
             )}
-            <button onClick={() => dispatch(fetchBoardsThunk())}>test</button>
           </nav>
         </ScrollMenu>
       </div>
