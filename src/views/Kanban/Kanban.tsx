@@ -19,6 +19,9 @@ import {
 } from './utils';
 import { updateColumnTask } from '../../services/tasks';
 import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
+import { showError } from '../../components/ToasterMessage/ToasterMessage';
+import { ColumnError } from '../../services/interfaces/columns';
+import { UpdateError } from '../../services/interfaces/tasks';
 
 export const Kanban = () => {
   const navigate = useNavigate();
@@ -64,7 +67,14 @@ export const Kanban = () => {
       dispatch(setColumns(newOrders));
 
       const draggedColumn = columns[fromIndex];
-      await syncColumnOrderToServer(currentBoardId, draggedColumn, toIndex + 1);
+
+      // syncWithServer
+      const columnResponse = await syncColumnOrderToServer(
+        currentBoardId,
+        draggedColumn,
+        toIndex + 1
+      );
+      if (!columnResponse.hasOwnProperty('id')) showError((columnResponse as ColumnError).message);
     }
 
     if (type === 'task') {
@@ -81,7 +91,15 @@ export const Kanban = () => {
         dispatch(setBoard(newBoard as FullBoard));
 
         const draggedTask = tasks[fromIndex];
-        await syncTaskOrderWithServer(draggedTask, currentBoardId, currentColumn.id, toIndex + 1);
+
+        // syncWithServer
+        const response = await syncTaskOrderWithServer(
+          draggedTask,
+          currentBoardId,
+          currentColumn.id,
+          toIndex + 1
+        );
+        if (!response.hasOwnProperty('id')) showError((response as UpdateError).message);
       }
 
       if (fromParentId !== toColumnId) {
@@ -105,10 +123,11 @@ export const Kanban = () => {
         dispatch(setColumns(newColumns));
 
         // syncWithServer
-        await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
+        const response = await updateColumnTask(currentBoardId, currentColumn.id, toColumn.id, {
           ...draggedTask,
           order: toIndex + 1,
         });
+        if (!response.hasOwnProperty('id')) showError((response as UpdateError).message);
       }
     }
   };
