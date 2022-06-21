@@ -1,0 +1,17 @@
+.create__column {
+  cursor: pointer;
+  width: 290px;
+  max-height: 157px;
+  border: 3px dashed #D4D7D9;
+  text-align: center;
+  align-items: center;
+  padding: 60px 70px;
+  transition: all .3s;
+  background-color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.create__column:hover {
+  border: 3px dashed #767677;
+}

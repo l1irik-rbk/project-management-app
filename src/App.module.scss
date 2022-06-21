@@ -1,0 +1,156 @@
+$color__mine_shaft: #323232;
+$color__shark: #25272c;
+$color__white: #ffffff;
+$color__black_haze: #f6f8fa;
+$color__iron: #d4d7d9;
+$color__error: #eb3941;
+$color__scroll: #78797a;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: $color__shark;
+}
+
+a {
+  text-decoration: none;
+}
+
+textarea {
+  resize: none;
+}
+
+.wrapper {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 10px;
+}
+
+@media screen and (max-width: 960px) {
+  .wrapper {
+    padding: 0 10px;
+  }
+}
+
+.main {
+  width: 100%;
+}
+
+.kanban {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.font_logo {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  color: $color__mine_shaft;
+  white-space: nowrap;
+}
+
+.font_title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  color: $color__shark;
+}
+
+.font_error {
+  font-size: 14px;
+  font-weight: 700;
+  color: $color__error;
+}
+
+.button {
+  height: 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+
+  border-radius: 12px;
+  border: 1px solid $color__mine_shaft;
+  background-color: transparent;
+  color: $color__shark;
+
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:active {
+  box-shadow: -2px -2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+  @extend .inner_shadow;
+  padding: 12px;
+  font: inherit;
+  border: 1px solid $color__iron;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.label {
+  width: 100%;
+}
+
+.drop_shadow {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.inner_shadow {
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* полоса прокрутки (скроллбар) */
+::-webkit-scrollbar {
+  width: 4px; /* ширина для вертикального скролла */
+  height: 4px; /* высота для горизонтального скролла */
+  background-color: inherit;
+}
+
+/* ползунок скроллбара */
+::-webkit-scrollbar-thumb {
+  background-color: $color__scroll;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ababac;
+}
+
+.toggle {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 12px;
+  border: none;
+}
+
+.one {
+  border-radius: 12px 0px 0px 12px;
+}
+
+.two {
+  border-radius: 0px 12px 12px 0px;
+}
+
+.active {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  color: $color__shark;
+}

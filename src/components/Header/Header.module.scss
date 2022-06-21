@@ -1,0 +1,78 @@
+.header {
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.6s;
+
+  position: sticky;
+  top: 0;
+}
+
+.sticky_active {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 59.37%, #f6f8fa 100%);
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  &__icon {
+    font-size: 64px;
+    transition: 0.6s;
+  }
+
+  &__rotate {
+    animation: rotation 2s;
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+  padding-right: 5px;
+}
+
+.avatar {
+  border-radius: 100%;
+  width: 40px;
+  padding: 0;
+}
+
+.profile {
+  display: flex;
+  gap: 8px;
+}
+
+.create_button {
+  width: 225px;
+}
+
+.separator_menu {
+  width: 154px;
+}
+
+.login_button {
+  white-space: nowrap;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .header {
+    width: 100vw;
+  }
+
+  .separator_menu {
+    min-width: 24px;
+  }
+}
