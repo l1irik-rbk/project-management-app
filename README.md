@@ -1,6 +1,6 @@
 # Project management app
 
-Deploy: https://broboar.netlify.app/main
+Deploy: https://broboar.netlify.app/
 
 #### **Welcome route** 
 - На приветственной странице отображаются общие сведения о проекте.
